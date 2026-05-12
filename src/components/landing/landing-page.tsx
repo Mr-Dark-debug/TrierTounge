@@ -82,49 +82,47 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Elastic Roles Section */}
-      <section className="py-20 px-4 md:px-8 bg-primary/5 overflow-hidden">
+      {/* Roles Section */}
+      <section className="py-16 px-4 md:px-8 bg-primary/5 overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-8 md:gap-6 group/container md:h-[500px] items-stretch">
+          <div className="flex flex-col md:flex-row gap-6 md:h-[380px] items-stretch">
             {/* Teacher Card */}
             <div 
               className={cn(
-                "neo-card p-8 md:p-12 bg-primary flex flex-col transition-all duration-500 ease-in-out cursor-pointer h-full",
-                "md:flex-1 md:group-hover/container:flex-[0.3] md:group-hover/container:hover:flex-[1.7]",
-                "hover:bg-accent/80 md:hover:rotate-[-1deg]"
+                "neo-card p-6 md:p-8 bg-primary flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full",
+                "hover:bg-accent/80 hover:-translate-y-1"
               )}
               onClick={onGetStarted}
             >
-              <div className="flex items-center gap-6 mb-6">
-                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
-                  <GraduationCap className="h-10 w-10" />
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-white border-2 border-black shadow-neo-sm">
+                  <GraduationCap className="h-8 w-8" />
                 </div>
-                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none whitespace-nowrap overflow-hidden">{t('beTeacher')}</h3>
+                <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
               </div>
-              <p className="text-xl md:text-2xl font-bold leading-tight italic mb-8 overflow-hidden">{t('beTeacherDesc')}</p>
+              <p className="text-lg md:text-xl font-bold leading-tight italic mb-6">{t('beTeacherDesc')}</p>
               <Button className="mt-auto neo-button bg-white text-black w-fit uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-primary transition-colors">
-                {t('letsGo')} <ArrowRight className="ml-2 h-5 w-5" />
+                {t('letsGo')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
             
             {/* Student Card */}
             <div 
               className={cn(
-                "neo-card p-8 md:p-12 bg-accent flex flex-col transition-all duration-500 ease-in-out cursor-pointer h-full",
-                "md:flex-1 md:group-hover/container:flex-[0.3] md:group-hover/container:hover:flex-[1.7]",
-                "hover:bg-primary/80 md:hover:rotate-[1deg]"
+                "neo-card p-6 md:p-8 bg-accent flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full",
+                "hover:bg-primary/80 hover:-translate-y-1"
               )}
               onClick={onGetStarted}
             >
-              <div className="flex items-center gap-6 mb-6">
-                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
-                  <Languages className="h-10 w-10" />
+              <div className="flex items-center gap-4 mb-4">
+                <div className="p-3 bg-white border-2 border-black shadow-neo-sm">
+                  <Languages className="h-8 w-8" />
                 </div>
-                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none whitespace-nowrap overflow-hidden">{t('beStudent')}</h3>
+                <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
-              <p className="text-xl md:text-2xl font-bold leading-tight italic mb-8 overflow-hidden">{t('beStudentDesc')}</p>
+              <p className="text-lg md:text-xl font-bold leading-tight italic mb-6">{t('beStudentDesc')}</p>
               <Button className="mt-auto neo-button bg-white text-black w-fit uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-accent transition-colors">
-                {t('letsGo')} <ArrowRight className="ml-2 h-5 w-5" />
+                {t('letsGo')} <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
