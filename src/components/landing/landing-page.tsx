@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, ShieldCheck, Database } from 'lucide-react';
+import { Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -84,31 +84,27 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
 
       {/* Roles Section */}
       <section className="py-20 px-4 md:px-8 bg-primary/5">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <div className="neo-card p-8 bg-primary rotate-[-1deg]">
-              <div className="flex items-center gap-4 mb-4">
-                <GraduationCap className="h-10 w-10" />
-                <h3 className="text-3xl font-black uppercase italic">{t('beTeacher')}</h3>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <div className="neo-card p-8 md:p-12 bg-primary rotate-[-1deg] flex flex-col h-full">
+              <div className="flex items-center gap-6 mb-6">
+                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
+                  <GraduationCap className="h-10 w-10" />
+                </div>
+                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
               </div>
-              <p className="text-lg font-bold leading-tight">{t('beTeacherDesc')}</p>
+              <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beTeacherDesc')}</p>
             </div>
-            <div className="neo-card p-8 bg-accent rotate-[1deg]">
-              <div className="flex items-center gap-4 mb-4">
-                <Languages className="h-10 w-10" />
-                <h3 className="text-3xl font-black uppercase italic">{t('beStudent')}</h3>
+            
+            <div className="neo-card p-8 md:p-12 bg-accent rotate-[1deg] flex flex-col h-full">
+              <div className="flex items-center gap-6 mb-6">
+                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
+                  <Languages className="h-10 w-10" />
+                </div>
+                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
-              <p className="text-lg font-bold leading-tight">{t('beStudentDesc')}</p>
+              <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beStudentDesc')}</p>
             </div>
-          </div>
-          <div className="relative aspect-square md:aspect-auto h-[400px] md:h-[600px] border-4 border-black shadow-neo-lg overflow-hidden grayscale hover:grayscale-0 transition-all duration-700">
-            <Image 
-              src="https://picsum.photos/seed/trier-uni-landing/800/800" 
-              alt="Trier Campus" 
-              fill 
-              className="object-cover" 
-              data-ai-hint="university campus"
-            />
           </div>
         </div>
       </section>
