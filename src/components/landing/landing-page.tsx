@@ -153,36 +153,42 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
           </div>
         </FlowSection>
 
-        {/* Language Spotlight Section */}
-        <FlowSection aria-label="Languages" style={{ backgroundColor: 'hsl(var(--primary))', color: 'black' }}>
+        {/* Language Spotlight Section - REVAMPED DESIGN */}
+        <FlowSection aria-label="Languages" style={{ backgroundColor: 'hsl(var(--accent))', color: 'black' }}>
           <p className="text-xs font-bold uppercase tracking-[0.2em]">04 — Diversity</p>
           <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div className="flex flex-col lg:flex-row items-center gap-12">
-            <div className="flex-1 space-y-8">
-              <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.8] uppercase tracking-tighter italic">
-                {t('langSpotlightTitle')}
-              </h2>
-              <p className="text-2xl font-bold uppercase italic">{t('langSpotlightSub')}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => (
-                  <div key={i} className="neo-card bg-white p-4 flex items-center gap-3 font-black uppercase italic text-sm">
-                     <Globe className="h-5 w-5 text-accent" /> {lang}
+          <div className="flex flex-col space-y-4 overflow-hidden">
+            <h2 className="text-[clamp(3.5rem,11vw,14rem)] font-black leading-[0.75] uppercase tracking-tighter italic break-words">
+              {t('langSpotlightTitle')}
+            </h2>
+            
+            <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-2 md:gap-y-4 mt-6 md:mt-12">
+              {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => {
+                // Extracts the main language name for the massive text effect
+                const mainName = lang.split(' ')[0].replace('(', '');
+                return (
+                  <div 
+                    key={i} 
+                    className="group relative cursor-default"
+                  >
+                    <span className="text-[clamp(2.5rem,8vw,10rem)] font-black uppercase italic tracking-tighter leading-none hover:text-white transition-colors duration-200 block">
+                      {mainName}
+                    </span>
+                    <div className="absolute -top-4 left-0 bg-black text-white px-2 py-0.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                      {lang}
+                    </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
-            <div className="shrink-0 hidden lg:block">
-               <div className="neo-card bg-black p-2 rotate-3 hover:rotate-0 transition-transform">
-                 <div className="relative w-64 h-80 border-2 border-white grayscale">
-                   <Image 
-                     src="https://picsum.photos/seed/trier-lang/600/800" 
-                     alt="Language exchange" 
-                     fill 
-                     className="object-cover" 
-                     data-ai-hint="student smiling"
-                   />
-                 </div>
-               </div>
+
+            <div className="mt-8 md:mt-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+              <p className="text-xl md:text-3xl font-black uppercase italic leading-tight max-w-xl">
+                {t('langSpotlightSub')}
+              </p>
+              <div className="hidden lg:block shrink-0 p-4 border-2 border-black bg-black text-white rotate-3">
+                 <Globe className="h-12 w-12 animate-spin-slow" />
+              </div>
             </div>
           </div>
         </FlowSection>
