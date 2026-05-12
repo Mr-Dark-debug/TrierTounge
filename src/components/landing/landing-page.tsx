@@ -12,7 +12,6 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import FlowArt, { FlowSection } from '@/components/ui/story-scroll';
 
 export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const { t } = useLanguage();
@@ -61,21 +60,16 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Story Scroll Experience */}
-      <FlowArt aria-label="TrierTongue Story">
-        {/* How it Works Section */}
-        <FlowSection aria-label="How it works" style={{ backgroundColor: 'white', color: 'black' }}>
-          <p className="text-xs font-bold uppercase tracking-[0.2em]">01 — Process</p>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div>
-            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic">
-              {t('howItWorks').split(' ')[0]}
-              <br />
-              {t('howItWorks').split(' ').slice(1).join(' ')}
-            </h2>
-          </div>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[3vw]">
+      {/* How it Works Section */}
+      <section className="py-20 px-4 md:px-8 bg-white border-t-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4">01 — Process</p>
+          <h2 className="text-5xl md:text-8xl font-black leading-[0.85] uppercase tracking-tighter italic mb-12">
+            {t('howItWorks').split(' ')[0]}
+            <br />
+            {t('howItWorks').split(' ').slice(1).join(' ')}
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <LandingCard 
               icon={<UserCheck className="h-10 w-10" />} 
               title={t('step1Title')} 
@@ -95,23 +89,17 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               bgColor="bg-white"
             />
           </div>
-        </FlowSection>
+        </div>
+      </section>
 
-        {/* Trust & Exclusivity Section */}
-        <FlowSection aria-label="Trust" style={{ backgroundColor: 'black', color: 'white' }}>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">02 — Security</p>
-          <hr className="my-[2vw] border-none border-t-2 border-primary/40" />
-          <div>
-            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic text-primary">
-              SAFE.
-              <br />
-              EXCLUSIVE.
-              <br />
-              TRIER-ONLY.
-            </h2>
-          </div>
-          <hr className="my-[2vw] border-none border-t-2 border-primary/40" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[3vw]">
+      {/* Trust & Exclusivity Section */}
+      <section className="py-20 px-4 md:px-8 bg-black text-white border-t-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary mb-4">02 — Security</p>
+          <h2 className="text-5xl md:text-8xl font-black leading-[0.85] uppercase tracking-tighter italic text-primary mb-12">
+            SAFE.<br />EXCLUSIVE.<br />TRIER-ONLY.
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="neo-card bg-zinc-900 border-primary p-8 space-y-4">
               <ShieldCheck className="h-12 w-12 text-primary" />
               <h3 className="text-2xl font-black uppercase italic">{t('trust1Title')}</h3>
@@ -128,22 +116,16 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               <p className="font-bold text-sm text-zinc-400">{t('trust3Desc')}</p>
             </div>
           </div>
-        </FlowSection>
+        </div>
+      </section>
 
-        {/* Campus Hotspots Section */}
-        <FlowSection aria-label="Campus Hotspots" style={{ backgroundColor: 'white', color: 'black' }}>
-          <p className="text-xs font-bold uppercase tracking-[0.2em]">03 — Locations</p>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div>
-            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic">
-              WHERE
-              <br />
-              IT
-              <br />
-              HAPPENS.
-            </h2>
-          </div>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
+      {/* Campus Hotspots Section */}
+      <section className="py-20 px-4 md:px-8 bg-white border-t-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4">03 — Locations</p>
+          <h2 className="text-5xl md:text-8xl font-black leading-[0.85] uppercase tracking-tighter italic mb-12">
+            WHERE<br />IT<br />HAPPENS.
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <SpotCard icon={<Coffee />} title={t('spot1Title')} desc={t('spot1Desc')} color="bg-primary" />
             <SpotCard icon={<Library />} title={t('spot2Title')} desc={t('spot2Desc')} color="bg-accent" />
@@ -151,77 +133,51 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
             <SpotCard icon={<Building />} title={t('spot4Title')} desc={t('spot4Desc')} color="bg-accent/20" />
             <SpotCard icon={<Home />} title={t('spot5Title')} desc={t('spot5Desc')} color="bg-white" />
           </div>
-        </FlowSection>
+        </div>
+      </section>
 
-        {/* Language Spotlight Section - REVAMPED DESIGN */}
-        <FlowSection aria-label="Languages" style={{ backgroundColor: 'hsl(var(--accent))', color: 'black' }}>
-          <p className="text-xs font-bold uppercase tracking-[0.2em]">04 — Diversity</p>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div className="flex flex-col space-y-4 overflow-hidden">
-            <h2 className="text-[clamp(3.5rem,11vw,14rem)] font-black leading-[0.75] uppercase tracking-tighter italic break-words">
-              {t('langSpotlightTitle')}
-            </h2>
-            
-            <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-2 md:gap-y-4 mt-6 md:mt-12">
-              {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => {
-                // Extracts the main language name for the massive text effect
-                const mainName = lang.split(' ')[0].replace('(', '');
-                return (
-                  <div 
-                    key={i} 
-                    className="group relative cursor-default"
-                  >
-                    <span className="text-[clamp(2.5rem,8vw,10rem)] font-black uppercase italic tracking-tighter leading-none hover:text-white transition-colors duration-200 block">
-                      {mainName}
-                    </span>
-                    <div className="absolute -top-4 left-0 bg-black text-white px-2 py-0.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                      {lang}
-                    </div>
+      {/* Language Spotlight Section */}
+      <section className="py-20 px-4 md:px-8 bg-[#ff69b4] text-black border-t-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4">04 — Diversity</p>
+          <h2 className="text-[clamp(3rem,10vw,12rem)] font-black leading-[0.75] uppercase tracking-tighter italic break-words mb-12">
+            {t('langSpotlightTitle')}
+          </h2>
+          
+          <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-4">
+            {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => {
+              const mainName = lang.split(' ')[0].replace('(', '');
+              return (
+                <div key={i} className="group relative cursor-default">
+                  <span className="text-[clamp(2.5rem,8vw,10rem)] font-black uppercase italic tracking-tighter leading-none hover:text-white transition-colors duration-200 block">
+                    {mainName}
+                  </span>
+                  <div className="absolute -top-4 left-0 bg-black text-white px-2 py-0.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                    {lang}
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
+          </div>
 
-            <div className="mt-8 md:mt-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
-              <p className="text-xl md:text-3xl font-black uppercase italic leading-tight max-w-xl">
-                {t('langSpotlightSub')}
-              </p>
-              <div className="hidden lg:block shrink-0 p-4 border-2 border-black bg-black text-white rotate-3">
-                 <Globe className="h-12 w-12 animate-spin-slow" />
-              </div>
+          <div className="mt-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
+            <p className="text-xl md:text-3xl font-black uppercase italic leading-tight max-w-xl">
+              {t('langSpotlightSub')}
+            </p>
+            <div className="hidden lg:block shrink-0 p-4 border-2 border-black bg-black text-white rotate-3">
+               <Globe className="h-12 w-12 animate-spin-slow" />
             </div>
           </div>
-        </FlowSection>
-
-        {/* Testimonials Section */}
-        <FlowSection aria-label="Testimonials" style={{ backgroundColor: 'hsl(var(--accent))', color: 'black' }}>
-          <p className="text-xs font-bold uppercase tracking-[0.2em]">05 — Stories</p>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div>
-            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic">
-              CAMPUS
-              <br />
-              VOICES.
-            </h2>
-          </div>
-          <hr className="my-[2vw] border-none border-t-2 border-black" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <Testimonial quote={t('test1')} author={t('test1Author')} image="sarah" color="bg-white" />
-            <Testimonial quote={t('test2')} author={t('test2Author')} image="lukas" color="bg-white" />
-          </div>
-        </FlowSection>
-      </FlowArt>
+        </div>
+      </section>
 
       {/* Roles Section */}
-      <section className="py-20 px-4 md:px-8 bg-background overflow-hidden border-b-2 border-black">
+      <section className="py-20 px-4 md:px-8 bg-background border-y-2 border-black">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-6 md:h-[450px] items-stretch">
+          <div className="flex flex-col md:flex-row gap-6 items-stretch">
             {/* Teacher Card */}
             <div 
-              className={cn(
-                "neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full group",
-                "hover:bg-accent"
-              )}
+              className="neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer group hover:bg-accent"
               onClick={onGetStarted}
             >
               <div className="flex items-center gap-4 mb-6">
@@ -238,10 +194,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
             
             {/* Student Card */}
             <div 
-              className={cn(
-                "neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full group",
-                "hover:bg-primary"
-              )}
+              className="neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer group hover:bg-primary"
               onClick={onGetStarted}
             >
               <div className="flex items-center gap-4 mb-6">
@@ -260,7 +213,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       </section>
 
       {/* Async Section */}
-      <section className="py-24 px-4 md:px-8 bg-accent text-black border-y-2 border-black">
+      <section className="py-24 px-4 md:px-8 bg-accent text-black border-b-2 border-black">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
            <div className="neo-card bg-white p-6 rotate-[-2deg] shrink-0">
              <MessageCircle className="h-24 w-24" />
@@ -272,8 +225,8 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* About Us / Vision Section */}
-      <section className="py-24 px-4 md:px-8 bg-white">
+      {/* About Us Section */}
+      <section className="py-24 px-4 md:px-8 bg-white border-b-2 border-black">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row items-start gap-12">
             <div className="flex-1 space-y-8">
@@ -290,7 +243,6 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                   </p>
                 </div>
                 
-                {/* Small Accent Image */}
                 <div className="shrink-0">
                   <div className="neo-card bg-primary p-1 -rotate-3 hover:rotate-0 transition-transform">
                     <div className="relative w-32 h-32 md:w-48 md:h-48 border-2 border-black overflow-hidden grayscale contrast-125">
@@ -304,9 +256,6 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                       />
                     </div>
                   </div>
-                  <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase italic tracking-widest text-accent">
-                    <Globe className="h-4 w-4" /> TR-COMMUNITY
-                  </div>
                 </div>
               </div>
             </div>
@@ -315,7 +264,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       </section>
 
       {/* Stats Block */}
-      <section className="py-24 px-4 md:px-8 bg-black text-white border-t-2 border-primary">
+      <section className="py-24 px-4 md:px-8 bg-black text-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-black italic uppercase text-center mb-16 tracking-widest text-zinc-500">{t('statsTitle')}</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -356,7 +305,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
 
 function LandingCard({ icon, title, desc, bgColor }: any) {
   return (
-    <div className={`neo-card p-8 ${bgColor} flex flex-col items-center text-center space-y-4`}>
+    <div className={cn("neo-card p-8 flex flex-col items-center text-center space-y-4", bgColor)}>
       <div className="p-4 bg-white border-2 border-black mb-4">
         {icon}
       </div>
@@ -374,21 +323,6 @@ function SpotCard({ icon, title, desc, color }: any) {
       </div>
       <h4 className="font-black uppercase italic text-sm leading-none">{title}</h4>
       <p className="text-[10px] font-bold leading-tight uppercase opacity-60">{desc}</p>
-    </div>
-  )
-}
-
-function Testimonial({ quote, author, image, color }: any) {
-  return (
-    <div className={cn("neo-card p-10 flex flex-col gap-8 relative", color)}>
-       <div className="absolute -top-6 -left-6 bg-white border-2 border-black p-4 rotate-[-6deg] text-3xl">"</div>
-       <p className="text-2xl font-bold italic leading-tight">"{quote}"</p>
-       <div className="mt-auto flex items-center gap-4 pt-6 border-t-2 border-black/20">
-         <div className="relative h-12 w-12 border-2 border-black grayscale overflow-hidden">
-           <Image src={`https://picsum.photos/seed/${image}/100/100`} alt={author} fill className="object-cover" />
-         </div>
-         <p className="font-black uppercase italic text-sm">{author}</p>
-       </div>
     </div>
   )
 }
