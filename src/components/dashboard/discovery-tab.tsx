@@ -8,13 +8,14 @@ import { MatchCard } from '@/components/dashboard/match-card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Filter, Sparkles } from 'lucide-react';
+import { useLanguage } from '@/context/language-context';
 
 export function DiscoveryTab({ profile }: { profile: any }) {
   const db = useFirestore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMajor, setFilterMajor] = useState<string | null>(null);
+  const { t } = useLanguage();
 
-  // Fetch potential language partners (simplified discovery)
   const studentsQuery = useMemo(() => {
     if (!db) return null;
     return query(
@@ -42,11 +43,11 @@ export function DiscoveryTab({ profile }: { profile: any }) {
       <header className="flex flex-col gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black uppercase bg-accent px-2 py-0.5 border-2 border-black">Trier University</span>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase">Campus Network</span>
+            <span className="text-[10px] font-black uppercase bg-accent px-2 py-0.5 border-2 border-black italic">Trier University</span>
+            <span className="text-[10px] font-bold text-muted-foreground uppercase italic tracking-widest">Campus Network</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-[0.9] md:leading-none">
-            FIND YOUR<br className="hidden md:block"/> TONGUE.
+            {t('findYourTongue')}
           </h2>
         </div>
 
@@ -54,7 +55,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input 
-              placeholder="Search by major, name..." 
+              placeholder={t('searchPlaceholder')} 
               className="neo-input pl-12 h-12 md:h-14 w-full text-base md:text-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -62,7 +63,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
           </div>
           <Button className="neo-button h-12 md:h-14 bg-white px-6 w-full sm:w-auto">
             <Filter className="h-5 w-5 mr-2 sm:mr-0" />
-            <span className="sm:hidden font-bold">FILTERS</span>
+            <span className="sm:hidden font-bold">{t('settings')}</span>
           </Button>
         </div>
       </header>
@@ -80,7 +81,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
           ) : (
             <div className="col-span-full py-16 md:py-20 text-center neo-card bg-white border-dashed p-6">
               <Sparkles className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
-              <p className="text-lg md:text-xl font-black italic uppercase text-muted-foreground">No students found for this search.</p>
+              <p className="text-lg md:text-xl font-black italic uppercase text-muted-foreground">{t('noStudents')}</p>
             </div>
           )}
         </div>

@@ -7,9 +7,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { MessageSquare, CheckCircle, UserPlus, XCircle } from 'lucide-react';
 import Image from 'next/image';
+import { useLanguage } from '@/context/language-context';
 
 export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: (id: string) => void }) {
   const db = useFirestore();
+  const { t } = useLanguage();
   
   const matchesQuery = useMemo(() => {
     if (!db) return null;
@@ -43,17 +45,17 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
 
   const acceptMatch = async (matchId: string) => {
     if (!db) return;
-    await updateDoc(doc(db, 'matches', matchId), { status: 'accepted' });
+    updateDoc(doc(db, 'matches', matchId), { status: 'accepted' });
   };
 
   return (
     <div className="space-y-10 animate-in slide-in-from-right-10 duration-500">
       <header>
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[10px] font-black uppercase bg-primary px-2 py-0.5 border-2 border-black tracking-widest">Active Links</span>
+          <span className="text-[10px] font-black uppercase bg-primary px-2 py-0.5 border-2 border-black tracking-widest italic">{t('activeLinks')}</span>
         </div>
         <h2 className="text-6xl font-black italic tracking-tighter uppercase leading-none">
-          MUTUAL<br/>CONNECTIONS.
+          {t('mutualConnections')}
         </h2>
       </header>
 
@@ -77,7 +79,7 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
                 
                 <div className="flex-1 text-center md:text-left">
                   <h3 className="text-2xl font-black uppercase italic tracking-tight">{m.otherUser?.name}</h3>
-                  <div className="text-xs font-bold text-muted-foreground uppercase flex items-center justify-center md:justify-start gap-2">
+                  <div className="text-xs font-bold text-muted-foreground uppercase flex items-center justify-center md:justify-start gap-2 italic tracking-tighter">
                     {m.otherUser?.major} • {m.otherUser?.nativeLanguage} → {m.otherUser?.targetLanguage}
                   </div>
                 </div>
@@ -85,16 +87,16 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
                 <div className="flex gap-4 w-full md:w-auto">
                   {m.status === 'pending' ? (
                     <div className="flex gap-2 w-full">
-                      <Button onClick={() => acceptMatch(m.matchId)} className="neo-button bg-primary flex-1 py-6">
-                        <CheckCircle className="mr-2 h-4 w-4" /> ACCEPT
+                      <Button onClick={() => acceptMatch(m.matchId)} className="neo-button bg-primary flex-1 py-6 h-14 uppercase tracking-tighter">
+                        <CheckCircle className="mr-2 h-4 w-4" /> {t('accept')}
                       </Button>
-                      <Button variant="outline" className="neo-button bg-white text-destructive border-destructive px-4 py-6">
+                      <Button variant="outline" className="neo-button bg-white text-destructive border-destructive px-4 h-14">
                         <XCircle className="h-5 w-5" />
                       </Button>
                     </div>
                   ) : (
-                    <Button onClick={() => onChatOpen(m.matchId)} className="neo-button bg-accent w-full md:w-auto py-6">
-                      <MessageSquare className="mr-2 h-4 w-4" /> OPEN CHAT
+                    <Button onClick={() => onChatOpen(m.matchId)} className="neo-button bg-accent w-full md:w-auto py-6 h-14 uppercase tracking-tighter">
+                      <MessageSquare className="mr-2 h-4 w-4" /> {t('openChat')}
                     </Button>
                   )}
                 </div>
@@ -103,7 +105,7 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
           ) : (
             <div className="py-20 text-center neo-card bg-white border-dashed">
               <UserPlus className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
-              <p className="text-xl font-black italic uppercase text-muted-foreground">No matches yet. Go to Discovery!</p>
+              <p className="text-xl font-black italic uppercase text-muted-foreground">{t('noMatches')}</p>
             </div>
           )}
         </div>

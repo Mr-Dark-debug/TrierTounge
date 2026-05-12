@@ -8,7 +8,9 @@ import { DiscoveryTab } from '@/components/dashboard/discovery-tab';
 import { MatchesTab } from '@/components/dashboard/matches-tab';
 import { ChatTab } from '@/components/dashboard/chat-tab';
 import { ProfileTab } from '@/components/dashboard/profile-tab';
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/context/language-context';
 
 interface DashboardViewProps {
   profile: any;
@@ -18,6 +20,7 @@ interface DashboardViewProps {
 export function DashboardView({ profile, onLogout }: DashboardViewProps) {
   const [activeTab, setActiveTab] = useState('discovery');
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   const handleOpenChat = (chatId: string) => {
     setSelectedChatId(chatId);
@@ -28,12 +31,15 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Sidebar - Desktop */}
       <aside className="hidden md:flex w-72 border-r-2 border-black flex-col p-6 bg-white shrink-0 sticky top-0 h-screen overflow-y-auto">
-        <h1 className="text-3xl font-black italic mb-12 tracking-tighter">TRIERTONGUE</h1>
+        <div className="flex items-center justify-between mb-12">
+          <h1 className="text-3xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>
+          <LanguageSwitcher />
+        </div>
         
         <nav className="flex-1 space-y-4">
           <NavButton 
             icon={<Compass className="h-5 w-5" />} 
-            label="DISCOVERY" 
+            label={t('discovery')} 
             active={activeTab === 'discovery'} 
             onClick={() => {
               setActiveTab('discovery');
@@ -42,7 +48,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
           />
           <NavButton 
             icon={<LayoutDashboard className="h-5 w-5" />} 
-            label="MY MATCHES" 
+            label={t('matches')} 
             active={activeTab === 'matches'} 
             onClick={() => {
               setActiveTab('matches');
@@ -51,13 +57,13 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
           />
           <NavButton 
             icon={<MessageSquare className="h-5 w-5" />} 
-            label="CHAT" 
+            label={t('chat')} 
             active={activeTab === 'chat'} 
             onClick={() => setActiveTab('chat')} 
           />
           <NavButton 
             icon={<User className="h-5 w-5" />} 
-            label="PROFILE" 
+            label={t('profile')} 
             active={activeTab === 'profile'} 
             onClick={() => {
               setActiveTab('profile');
@@ -70,18 +76,23 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
           <div className="p-3 bg-accent/10 border-2 border-black border-dashed">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase">YOUR CODE</span>
+              <span className="text-[10px] font-black uppercase">{t('profileCode')}</span>
             </div>
             <div className="text-lg font-black tracking-widest font-code">{profile.profileCode}</div>
           </div>
           <Button onClick={onLogout} variant="outline" className="w-full neo-button bg-white text-xs py-2">
-            <LogOut className="mr-2 h-4 w-4" /> LOGOUT
+            <LogOut className="mr-2 h-4 w-4" /> {t('logout')}
           </Button>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden pb-24 md:pb-0">
+        {/* Header - Mobile Only */}
+        <div className="md:hidden p-4 border-b-2 border-black bg-white flex items-center justify-between sticky top-0 z-40">
+           <h1 className="text-2xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>
+           <LanguageSwitcher />
+        </div>
         <div className="p-4 md:p-10 max-w-7xl mx-auto">
           {activeTab === 'discovery' && <DiscoveryTab profile={profile} />}
           {activeTab === 'matches' && <MatchesTab profile={profile} onChatOpen={handleOpenChat} />}
@@ -91,7 +102,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
       </main>
 
       {/* Bottom Nav - Mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-black flex justify-around p-2 z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-black flex justify-around p-2 z-50 shadow-[0_-4px_10px_rgba(0,0,0,0.1)]">
         <MobileNavButton 
           icon={<Compass />} 
           active={activeTab === 'discovery'} 
