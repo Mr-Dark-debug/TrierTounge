@@ -111,34 +111,41 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
 
       {/* About Us Section */}
       <section className="py-24 px-4 md:px-8 bg-white border-t-2 border-black">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h2 className="text-5xl md:text-7xl font-black italic uppercase leading-none tracking-tighter">
-              {t('aboutUsTitle')}
-            </h2>
-            <div className="space-y-6">
-              <p className="text-xl md:text-2xl font-bold leading-tight uppercase italic border-l-8 border-primary pl-6">
-                {t('aboutUsDesc')}
-              </p>
-              <p className="text-lg font-medium text-muted-foreground leading-relaxed">
-                {t('aboutUsMission')}
-              </p>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="neo-card bg-primary p-2 rotate-2">
-              <div className="relative aspect-square border-2 border-black overflow-hidden grayscale">
-                <Image 
-                  src="https://picsum.photos/seed/trier-about/800/800" 
-                  alt="Trier University Campus" 
-                  fill 
-                  className="object-cover"
-                />
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
+            <div className="flex-1 space-y-8">
+              <h2 className="text-5xl md:text-7xl font-black italic uppercase leading-none tracking-tighter">
+                {t('aboutUsTitle')}
+              </h2>
+              <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className="space-y-6 flex-1">
+                  <p className="text-xl md:text-2xl font-bold leading-tight uppercase italic border-l-8 border-primary pl-6">
+                    {t('aboutUsDesc')}
+                  </p>
+                  <p className="text-lg font-medium text-muted-foreground leading-relaxed">
+                    {t('aboutUsMission')}
+                  </p>
+                </div>
+                
+                {/* Small Accent Image */}
+                <div className="shrink-0">
+                  <div className="neo-card bg-primary p-1 -rotate-3 hover:rotate-0 transition-transform">
+                    <div className="relative w-32 h-32 md:w-48 md:h-48 border-2 border-black overflow-hidden grayscale contrast-125">
+                      <Image 
+                        src="https://picsum.photos/seed/trier-about/400/400" 
+                        alt="About TrierTongue" 
+                        width={400}
+                        height={400}
+                        className="object-cover"
+                        data-ai-hint="portrait illustration"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase italic tracking-widest text-accent">
+                    <Globe className="h-4 w-4" /> TR-COMMUNITY
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="absolute -bottom-6 -left-6 neo-card bg-accent p-6 hidden md:block -rotate-3">
-              <Globe className="h-12 w-12" />
-              <p className="mt-2 font-black uppercase italic text-xs tracking-widest">Connect. Learn. Repeat.</p>
             </div>
           </div>
         </div>
