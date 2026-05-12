@@ -10,7 +10,10 @@ import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
 import { LogOut, ChevronRight, ChevronLeft, MapPin, Globe, Sparkles, Calendar, Lock, GraduationCap as GradCap, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 import { faculties, englishMasters, campuses, residentialAreas, dorms } from '@/lib/trier-data';
+import teacherImg from '@/assets/ill4.jpg';
+import studentImg from '@/assets/ill6.jpg';
 
 interface ProfileBuilderProps {
   user: any;
@@ -221,8 +224,13 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                 <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Linguistic Exchange</h3>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                <div className="neo-card p-4 md:p-6 bg-primary/20">
-                  <Label className="font-bold uppercase text-[10px] md:text-xs mb-3 md:mb-4 block">I Can Teach (Native)</Label>
+                <div className="neo-card p-4 md:p-6 bg-primary/20 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-12 w-12 border-2 border-black overflow-hidden bg-white shrink-0">
+                      <Image src={teacherImg} alt="Teacher" fill className="object-cover" />
+                    </div>
+                    <Label className="font-bold uppercase text-[10px] md:text-xs">I Can Teach (Native)</Label>
+                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-2">
                     {languages.map(lang => (
                       <button 
@@ -238,8 +246,13 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                     ))}
                   </div>
                 </div>
-                <div className="neo-card p-4 md:p-6 bg-accent/20">
-                  <Label className="font-bold uppercase text-[10px] md:text-xs mb-3 md:mb-4 block">I Want To Learn</Label>
+                <div className="neo-card p-4 md:p-6 bg-accent/20 space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="relative h-12 w-12 border-2 border-black overflow-hidden bg-white shrink-0">
+                      <Image src={studentImg} alt="Student" fill className="object-cover" />
+                    </div>
+                    <Label className="font-bold uppercase text-[10px] md:text-xs">I Want To Learn</Label>
+                  </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-2">
                     {languages.map(lang => (
                       <button 

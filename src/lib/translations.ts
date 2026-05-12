@@ -70,7 +70,7 @@ export const translations = {
     pitchPoint2Desc: "Ensure a closed, verified environment exclusively for enrolled students.",
     pitchPoint3: "Data Synergy",
     pitchPoint3Desc: "Automatic synchronization with faculty and department records.",
-    contactUni: "CONTACT ADMINISTRATION",
+    contactUni: "CONTACT Meeeeeeeeeee",
     // Call/Settings
     startCall: "START PRACTICE CALL",
     practiceRoom: "PRACTICE ROOM",

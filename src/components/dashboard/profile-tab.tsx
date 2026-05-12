@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/context/language-context';
+import teacherImg from '@/assets/ill4.jpg';
+import studentImg from '@/assets/ill6.jpg';
 
 export function ProfileTab({ profile }: { profile: any }) {
   const { t } = useLanguage();
@@ -75,15 +77,23 @@ export function ProfileTab({ profile }: { profile: any }) {
         {/* Details & Goals */}
         <div className="lg:col-span-2 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="neo-card bg-primary p-6 space-y-3">
-              <Languages className="h-8 w-8" />
-              <h4 className="text-xl font-black italic uppercase">{t('beTeacher')}</h4>
-              <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.nativeLanguage}</p>
+            <div className="neo-card bg-primary p-6 space-y-4">
+              <div className="relative h-16 w-16 border-2 border-black overflow-hidden bg-white">
+                <Image src={teacherImg} alt="Teacher" fill className="object-cover" />
+              </div>
+              <div>
+                <h4 className="text-xl font-black italic uppercase">{t('beTeacher')}</h4>
+                <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.nativeLanguage}</p>
+              </div>
             </div>
-            <div className="neo-card bg-accent p-6 space-y-3">
-              <Sparkles className="h-8 w-8" />
-              <h4 className="text-xl font-black italic uppercase">{t('beStudent')}</h4>
-              <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.targetLanguage}</p>
+            <div className="neo-card bg-accent p-6 space-y-4">
+              <div className="relative h-16 w-16 border-2 border-black overflow-hidden bg-white">
+                <Image src={studentImg} alt="Student" fill className="object-cover" />
+              </div>
+              <div>
+                <h4 className="text-xl font-black italic uppercase">{t('beStudent')}</h4>
+                <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.targetLanguage}</p>
+              </div>
             </div>
           </div>
 

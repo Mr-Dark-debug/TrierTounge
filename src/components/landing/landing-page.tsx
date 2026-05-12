@@ -16,6 +16,11 @@ import bgImage from '@/assets/bg 2.jpg';
 import step1Img from '@/assets/ill 3.jpg';
 import step2Img from '@/assets/ill2.jpg';
 import step3Img from '@/assets/ill3.jpg';
+import teacherImg from '@/assets/teacher-img.jpg';
+import studentImg from '@/assets/student-img.jpg';
+import asyncImg from '@/assets/async-img.jpg';
+import openSourceImg from '@/assets/opensource-img.jpg';
+import visionImg from '@/assets/vision-img.jpg';
 
 export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const { t } = useLanguage();
@@ -217,9 +222,9 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               className="neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer group hover:bg-accent"
               onClick={onGetStarted}
             >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 bg-white border-2 border-black shadow-neo-sm group-hover:bg-black group-hover:text-white transition-colors">
-                  <GraduationCap className="h-10 w-10" />
+              <div className="flex items-center gap-6 mb-8">
+                <div className="relative h-24 w-24 bg-white border-2 border-black shadow-neo-sm shrink-0 overflow-hidden">
+                  <Image src={teacherImg} alt="Teacher" fill className="object-cover" />
                 </div>
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
               </div>
@@ -234,9 +239,9 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               className="neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer group hover:bg-primary"
               onClick={onGetStarted}
             >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 bg-white border-2 border-black shadow-neo-sm group-hover:bg-black group-hover:text-white transition-colors">
-                  <Languages className="h-10 w-10" />
+              <div className="flex items-center gap-6 mb-8">
+                <div className="relative h-24 w-24 bg-white border-2 border-black shadow-neo-sm shrink-0 overflow-hidden">
+                  <Image src={studentImg} alt="Student" fill className="object-cover" />
                 </div>
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
@@ -252,8 +257,8 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       {/* Async Section */}
       <section className="py-24 px-4 md:px-8 bg-primary text-black border-b-2 border-black">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-           <div className="neo-card bg-white p-6 rotate-[-2deg] shrink-0 border-4">
-             <MessageCircle className="h-24 w-24" />
+           <div className="neo-card bg-white p-0 rotate-[-2deg] shrink-0 border-4 overflow-hidden h-40 w-40 relative">
+             <Image src={asyncImg} alt="Async Exchange" fill className="object-cover" />
            </div>
            <div className="space-y-6">
              <h2 className="text-4xl md:text-6xl font-black italic uppercase leading-none">{t('asyncTitle')}</h2>
@@ -307,12 +312,14 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               </div>
             </div>
 
-            <div className="hidden lg:block relative h-[500px] neo-card bg-zinc-900 border-accent">
-               <div className="absolute inset-0 bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat opacity-20" />
-               <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center rotate-[-10deg]">
-                    <Github className="h-48 w-48 text-accent opacity-50 mb-4 mx-auto" />
-                    <span className="font-code font-black text-6xl text-primary">git push</span>
+            <div className="hidden lg:block relative h-[500px] neo-card bg-zinc-900 border-accent overflow-hidden">
+               <Image src={openSourceImg} alt="Open Source Community" fill className="object-cover opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500" />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none" />
+               <div className="absolute bottom-8 left-8">
+                  <div className="text-left rotate-[-5deg]">
+                    <Github className="h-24 w-24 text-accent mb-4" />
+                    <span className="font-code font-black text-4xl text-primary block">git push</span>
+                    <span className="font-code font-bold text-xl text-white">origin main</span>
                   </div>
                </div>
             </div>
@@ -340,14 +347,12 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 
                 <div className="shrink-0">
                   <div className="neo-card bg-primary p-1 -rotate-3 hover:rotate-0 transition-transform">
-                    <div className="relative w-32 h-32 md:w-48 md:h-48 border-2 border-black overflow-hidden grayscale contrast-125">
+                    <div className="relative w-32 h-32 md:w-48 md:h-48 border-2 border-black overflow-hidden bg-white">
                       <Image 
-                        src="https://picsum.photos/seed/trier-about/400/400" 
-                        alt="About TrierTongue" 
-                        width={400}
-                        height={400}
+                        src={visionImg} 
+                        alt="Our Vision" 
+                        fill
                         className="object-cover"
-                        data-ai-hint="portrait illustration"
                       />
                     </div>
                   </div>

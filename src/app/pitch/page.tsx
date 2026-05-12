@@ -8,6 +8,7 @@ import { Database, ShieldCheck, UserCheck, ArrowLeft, Globe, Zap, Send } from 'l
 import Link from 'next/link';
 import Image from 'next/image';
 import adminImg from '@/assets/ill8.jpg';
+import visionImg from '@/assets/ill7.jpg';
 
 export default function PitchPage() {
   const { t } = useLanguage();
@@ -73,7 +74,22 @@ export default function PitchPage() {
           </div>
         </div>
 
-        {/* Integration Details */}
+        {/* Our Vision */}
+        <div className="neo-card bg-accent text-white p-10 space-y-8 mb-12">
+          <div className="flex flex-col md:flex-row items-center gap-10">
+            <div className="relative w-full md:w-1/3 aspect-square border-4 border-black overflow-hidden bg-white shrink-0">
+               <Image src={visionImg} alt="Our Vision" fill className="object-cover" />
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-4xl font-black italic uppercase text-white">Our Vision</h3>
+              <p className="text-xl font-bold italic leading-tight">
+                To create a unified campus where language is a bridge, not a barrier. We envision every student at University of Trier graduating with global perspectives and local roots.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Integration Details - Commented out as requested
         <div className="neo-card bg-black text-white p-10 space-y-8">
           <h3 className="text-4xl font-black italic uppercase text-primary">Technical Specs</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -91,6 +107,7 @@ export default function PitchPage() {
             </div>
           </div>
         </div>
+        */}
       </main>
     </div>
   );
