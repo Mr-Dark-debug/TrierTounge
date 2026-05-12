@@ -7,7 +7,15 @@ import { collection, query, where, limit } from 'firebase/firestore';
 import { MatchCard } from '@/components/dashboard/match-card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Filter, Sparkles } from 'lucide-react';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
+} from '@/components/ui/dropdown-menu';
+import { Search, Filter, Sparkles, X } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 
 export function DiscoveryTab({ profile }: { profile: any }) {
@@ -21,18 +29,26 @@ export function DiscoveryTab({ profile }: { profile: any }) {
     return query(
       collection(db, 'users'),
       where('onboardingCompleted', '==', true),
-      limit(20)
+      limit(50)
     );
   }, [db]);
 
   const { data: students, loading } = useCollection(studentsQuery);
+
+  const majors = useMemo(() => {
+    if (!students) return [];
+    const uniqueMajors = Array.from(new Set(students.map(s => s.major))).filter(Boolean);
+    return uniqueMajors.sort();
+  }, [students]);
 
   const filteredStudents = useMemo(() => {
     if (!students) return [];
     return students.filter(s => {
       if (s.uid === profile.uid) return false;
       const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            s.major.toLowerCase().includes(searchQuery.toLowerCase());
+                            s.major.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            s.nativeLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            s.targetLanguage.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesMajor = !filterMajor || s.major === filterMajor;
       return matchesSearch && matchesMajor;
     });
@@ -61,10 +77,48 @@ export function DiscoveryTab({ profile }: { profile: any }) {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="neo-button h-12 md:h-14 bg-white px-6 w-full sm:w-auto">
-            <Filter className="h-5 w-5 mr-2 sm:mr-0" />
-            <span className="sm:hidden font-bold">{t('settings')}</span>
-          </Button>
+          
+          <div className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="neo-button h-12 md:h-14 bg-white px-6 grow sm:grow-0">
+                  <Filter className="h-5 w-5 mr-2" />
+                  <span className="font-bold uppercase text-xs md:text-sm">
+                    {filterMajor || t('settings')}
+                  </span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="neo-card bg-white p-1 max-h-[300px] overflow-y-auto w-56">
+                <DropdownMenuLabel className="font-black italic uppercase text-[10px] tracking-widest">Filter by Major</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-black" />
+                <DropdownMenuItem 
+                  onClick={() => setFilterMajor(null)}
+                  className="font-bold uppercase text-xs p-3 hover:bg-primary"
+                >
+                  All Majors
+                </DropdownMenuItem>
+                {majors.map(major => (
+                  <DropdownMenuItem 
+                    key={major} 
+                    onClick={() => setFilterMajor(major)}
+                    className="font-bold uppercase text-xs p-3 hover:bg-primary"
+                  >
+                    {major}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {filterMajor && (
+              <Button 
+                onClick={() => setFilterMajor(null)}
+                variant="destructive" 
+                className="neo-button h-12 md:h-14 aspect-square p-0"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -82,6 +136,13 @@ export function DiscoveryTab({ profile }: { profile: any }) {
             <div className="col-span-full py-16 md:py-20 text-center neo-card bg-white border-dashed p-6">
               <Sparkles className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
               <p className="text-lg md:text-xl font-black italic uppercase text-muted-foreground">{t('noStudents')}</p>
+              <Button 
+                variant="outline" 
+                onClick={() => {setSearchQuery(''); setFilterMajor(null);}}
+                className="mt-6 neo-button bg-white"
+              >
+                CLEAR ALL FILTERS
+              </Button>
             </div>
           )}
         </div>
