@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const { t } = useLanguage();
@@ -35,7 +36,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
           <div className="inline-block bg-accent px-4 py-1 border-2 border-black mb-8 font-black uppercase tracking-widest text-xs md:text-sm rotate-2">
             {t('exclusive')}
           </div>
-          <h2 className="text-5xl sm:text-7xl md:text-9xl font-black leading-[0.85] mb-8 tracking-tighter italic">
+          <h2 className="text-5xl sm:text-7xl md:text-9xl font-black leading-[0.85] mb-8 tracking-tighter italic text-black">
             {t('heroTitle')}<br/>
             <span className="text-accent underline decoration-black underline-offset-8">{t('heroHighlight')}</span>
           </h2>
@@ -82,32 +83,48 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Roles Section */}
-      <section className="py-20 px-4 md:px-8 bg-primary/5">
+      {/* Elastic Roles Section */}
+      <section className="py-20 px-4 md:px-8 bg-primary/5 overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-            <div className="neo-card p-8 md:p-12 bg-primary rotate-[-1deg] flex flex-col h-full">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-6 group/container">
+            {/* Teacher Card */}
+            <div 
+              className={cn(
+                "neo-card p-8 md:p-12 bg-primary flex flex-col h-full transition-all duration-500 ease-in-out cursor-pointer",
+                "md:flex-1 md:group-hover/container:flex-[0.7] md:group-hover/container:hover:flex-[1.8] md:hover:rotate-[-1deg] md:hover:scale-[1.02]",
+                "hover:bg-primary-foreground/5"
+              )}
+              onClick={onGetStarted}
+            >
               <div className="flex items-center gap-6 mb-6">
                 <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
                   <GraduationCap className="h-10 w-10" />
                 </div>
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
               </div>
-              <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beTeacherDesc')}</p>
-              <Button onClick={onGetStarted} className="mt-8 neo-button bg-white text-black w-fit uppercase italic tracking-tighter">
+              <p className="text-xl md:text-2xl font-bold leading-tight italic mb-8">{t('beTeacherDesc')}</p>
+              <Button className="mt-auto neo-button bg-white text-black w-fit uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-primary transition-colors">
                 {t('letsGo')} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
             
-            <div className="neo-card p-8 md:p-12 bg-accent rotate-[1deg] flex flex-col h-full">
+            {/* Student Card */}
+            <div 
+              className={cn(
+                "neo-card p-8 md:p-12 bg-accent flex flex-col h-full transition-all duration-500 ease-in-out cursor-pointer",
+                "md:flex-1 md:group-hover/container:flex-[0.7] md:group-hover/container:hover:flex-[1.8] md:hover:rotate-[1deg] md:hover:scale-[1.02]",
+                "hover:bg-accent-foreground/5"
+              )}
+              onClick={onGetStarted}
+            >
               <div className="flex items-center gap-6 mb-6">
                 <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
                   <Languages className="h-10 w-10" />
                 </div>
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
-              <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beStudentDesc')}</p>
-              <Button onClick={onGetStarted} className="mt-8 neo-button bg-white text-black w-fit uppercase italic tracking-tighter">
+              <p className="text-xl md:text-2xl font-bold leading-tight italic mb-8">{t('beStudentDesc')}</p>
+              <Button className="mt-auto neo-button bg-white text-black w-fit uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-accent transition-colors">
                 {t('letsGo')} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
