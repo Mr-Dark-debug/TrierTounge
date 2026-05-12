@@ -6,8 +6,8 @@ import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { 
   Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, 
-  Globe, ShieldCheck, LocateFixed, HeartHandshake, Coffee, Library, 
-  TreePine, Building, Home, Users, BookOpen, AppWindow, MessageCircle, Github, Code, ExternalLink
+  LocateFixed, HeartHandshake, Coffee, Library, 
+  TreePine, Building, Home, Users, BookOpen, AppWindow, MessageCircle, Github, Code, ExternalLink, ShieldCheck, Globe
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -105,9 +105,6 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 EXCLUSIVE.<br />
                 <span className="text-accent">TRIER</span>-ONLY.
               </h2>
-            </div>
-            <div className="lg:pt-20 hidden lg:block">
-              <ShieldCheck className="h-32 w-32 text-primary opacity-20" />
             </div>
           </div>
 
@@ -344,11 +341,11 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Stats Block */}
+      {/* Stats Block - Revamped */}
       <section className="py-24 px-4 md:px-8 bg-black text-white border-b-2 border-black overflow-hidden">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-12 text-center">06 — OUR SCALE</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-primary border-4 border-primary">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-16 text-center">06 — OUR SCALE</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
              <StatItem icon={<Users />} number="1,000+" text={t('stat1')} />
              <StatItem icon={<BookOpen />} number="6" text={t('stat2')} />
              <StatItem icon={<Sparkles />} number="0" text={t('stat3')} />
@@ -410,15 +407,15 @@ function SpotCard({ icon, title, desc, color }: any) {
 
 function StatItem({ icon, number, text }: { icon: React.ReactNode, number: string, text: string }) {
   return (
-    <div className="bg-black p-10 flex flex-col items-center text-center group transition-colors hover:bg-zinc-900">
-      <div className="text-primary mb-6 transition-transform group-hover:scale-110">
+    <div className="bg-black p-12 md:p-16 flex flex-col items-center text-center group transition-all duration-300 hover:bg-primary hover:text-black cursor-default border-primary/10 first:border-l-0 border-l border-y md:border-y-0">
+      <div className="text-primary mb-8 transition-transform group-hover:scale-125 group-hover:text-black">
         {icon}
       </div>
-      <div className="text-6xl md:text-7xl font-black italic tracking-tighter uppercase leading-none mb-4 text-primary">
+      <div className="text-[clamp(4rem,10vw,8rem)] font-black italic tracking-tighter uppercase leading-none mb-6 text-primary group-hover:text-black transition-colors">
         {number}
       </div>
-      <p className="font-black uppercase italic text-xs tracking-widest text-zinc-400 group-hover:text-white transition-colors">
-        {text.includes('+') ? text.split(' ').slice(1).join(' ') : text}
+      <p className="font-black uppercase italic text-sm md:text-base tracking-[0.2em] text-zinc-400 group-hover:text-black transition-colors leading-tight">
+        {text}
       </p>
     </div>
   )
