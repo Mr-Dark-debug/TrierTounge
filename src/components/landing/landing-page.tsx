@@ -7,7 +7,7 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { 
   Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, 
   Globe, ShieldCheck, LocateFixed, HeartHandshake, Coffee, Library, 
-  TreePine, Building, Home, Users, BookOpen, AppWindow, MessageCircle
+  TreePine, Building, Home, Users, BookOpen, AppWindow, MessageCircle, Github, Code, ExternalLink
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -93,7 +93,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       </section>
 
       {/* Trust & Exclusivity Section */}
-      <section className="py-24 px-4 md:px-8 bg-black text-primary border-y-[4px] border-black">
+      <section className="py-24 px-4 md:px-8 bg-black text-primary border-y-[4px] border-black overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-20">
             <div className="space-y-6">
@@ -248,6 +248,64 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
+      {/* Open Source & Community Driven Section */}
+      <section className="py-24 px-4 md:px-8 bg-black text-white border-b-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16">
+            <p className="text-xs font-black uppercase tracking-[0.4em] text-accent mb-4">05 — COMMUNITY BUILT</p>
+            <h2 className="text-5xl md:text-8xl font-black leading-[0.85] uppercase tracking-tighter italic text-accent">
+              {t('openSourceTitle').split(' ').slice(0, 2).join(' ')}<br />
+              {t('openSourceTitle').split(' ').slice(2).join(' ')}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-12">
+              <div className="space-y-4">
+                <h3 className="text-3xl font-black uppercase italic flex items-center gap-3">
+                  <Code className="h-8 w-8 text-primary" /> {t('openSourceSubtitle')}
+                </h3>
+                <p className="text-xl font-bold leading-tight text-zinc-400">
+                  {t('openSourceDesc')}
+                </p>
+                <Link href="https://github.com/Mr-Dark-debug/TrierTongue" target="_blank">
+                  <Button className="neo-button bg-primary text-black mt-6 px-8 py-8 text-xl h-auto">
+                    {t('viewRepo')} <Github className="ml-2 h-6 w-6" />
+                  </Button>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t-2 border-zinc-800">
+                <div className="space-y-2">
+                  <h4 className="font-black uppercase italic text-primary">{t('builtByTitle')}</h4>
+                  <p className="text-sm font-bold text-zinc-500">{t('builtByDesc')}</p>
+                  <Link href="https://github.com/Mr-Dark-debug" target="_blank" className="inline-flex items-center text-xs font-black uppercase text-accent hover:underline gap-1 mt-2">
+                    @Mr-Dark-debug <ExternalLink className="h-3 w-3" />
+                  </Link>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-black uppercase italic text-accent">{t('contributeTitle')}</h4>
+                  <p className="text-sm font-bold text-zinc-500">{t('contributeDesc')}</p>
+                  <Link href="https://github.com/Mr-Dark-debug/TrierTongue" target="_blank" className="inline-flex items-center text-xs font-black uppercase text-primary hover:underline gap-1 mt-2">
+                    {t('startContributing')} <Github className="h-3 w-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="hidden lg:block relative h-[500px] neo-card bg-zinc-900 border-accent">
+               <div className="absolute inset-0 bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat opacity-20" />
+               <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center rotate-[-10deg]">
+                    <Github className="h-48 w-48 text-accent opacity-50 mb-4 mx-auto" />
+                    <span className="font-code font-black text-6xl text-primary">git push</span>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* About Us Section */}
       <section className="py-24 px-4 md:px-8 bg-white border-b-2 border-black">
         <div className="max-w-6xl mx-auto">
@@ -286,10 +344,10 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Stats Block - REVAMPED */}
+      {/* Stats Block */}
       <section className="py-24 px-4 md:px-8 bg-black text-white border-b-2 border-black overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-12 text-center">05 — OUR SCALE</p>
+          <p className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-12 text-center">06 — OUR SCALE</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-primary border-4 border-primary">
              <StatItem icon={<Users />} number="1,000+" text={t('stat1')} />
              <StatItem icon={<BookOpen />} number="6" text={t('stat2')} />
