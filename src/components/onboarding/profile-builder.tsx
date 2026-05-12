@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState } from 'react';
@@ -8,8 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { LogOut, ChevronRight, ChevronLeft, MapPin, Globe, Sparkles, Calendar, Lock, GraduationCap as GradCap } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { LogOut, ChevronRight, ChevronLeft, MapPin, Globe, Sparkles, Calendar, Lock, GraduationCap as GradCap, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { faculties, englishMasters, campuses, residentialAreas, dorms } from '@/lib/trier-data';
 
 interface ProfileBuilderProps {
   user: any;
@@ -20,19 +21,25 @@ interface ProfileBuilderProps {
 export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    major: '',
+    faculty: '',
+    major: '', // department/subject
     year: '',
+    isEnglishProgramme: false,
+    englishProgramme: '',
+    campus: '',
+    residentialArea: '',
+    dorm: '',
     nativeLanguage: '',
     targetLanguage: '',
     academicGoals: '',
     socialGoals: '',
-    availability: Array(21).fill(false), // 7x3 grid
+    availability: Array(21).fill(false),
     instagram: '',
     telegram: '',
     showContactOnMatch: true
   });
 
-  const nextStep = () => setStep(s => Math.min(s + 1, 5));
+  const nextStep = () => setStep(s => Math.min(s + 1, 6));
   const prevStep = () => setStep(s => Math.max(s - 1, 1));
 
   const toggleAvailability = (index: number) => {
@@ -42,9 +49,10 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
   };
 
   const isStepValid = () => {
-    if (step === 1) return formData.major && formData.year;
-    if (step === 2) return formData.nativeLanguage && formData.targetLanguage;
-    if (step === 3) return formData.academicGoals.length >= 20 && formData.socialGoals.length >= 20;
+    if (step === 1) return formData.faculty && formData.major && formData.year;
+    if (step === 2) return formData.campus && formData.residentialArea;
+    if (step === 3) return formData.nativeLanguage && formData.targetLanguage;
+    if (step === 4) return formData.academicGoals.length >= 20 && formData.socialGoals.length >= 20;
     return true;
   };
 
@@ -52,10 +60,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
     onComplete(formData);
   };
 
-  const majors = [
-    "Computer Science", "Business Informatics", "Law", "Psychology", 
-    "Economics", "History", "Literature", "Digital Humanities", "Biology"
-  ];
+  const selectedFaculty = faculties.find(f => f.name === formData.faculty);
 
   const languages = ["German", "English", "French", "Spanish", "Chinese", "Italian", "Turkish", "Arabic", "Japanese", "Russian"];
 
@@ -64,7 +69,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
       <header className="flex justify-between items-center mb-8 md:mb-12">
         <div className="shrink-0">
           <h2 className="text-xl md:text-3xl font-black uppercase tracking-tighter italic leading-none">Building Profile</h2>
-          <p className="font-bold text-muted-foreground text-xs md:text-sm">Step {step} of 5</p>
+          <p className="font-bold text-muted-foreground text-xs md:text-sm">Step {step} of 6</p>
         </div>
         <Button variant="ghost" onClick={onLogout} className="font-bold border-2 border-black text-xs h-8 md:h-10">
           <LogOut className="mr-2 h-3 w-3 md:h-4 md:w-4" /> Exit
@@ -73,34 +78,74 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
 
       <div className="max-w-3xl mx-auto w-full flex-1 flex flex-col">
         <div className="mb-8 md:mb-12">
-          <Progress value={(step / 5) * 100} className="h-4 md:h-6 border-2 border-black bg-white" />
+          <Progress value={(step / 6) * 100} className="h-4 md:h-6 border-2 border-black bg-white" />
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-8">
           {step === 1 && (
             <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="bg-primary p-2 md:p-3 border-2 border-black shrink-0">
                   <GradCap className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
-                <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Who are you at Uni Trier?</h3>
+                <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Academic Identity</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              
+              <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-bold uppercase text-[10px] md:text-xs">Current Major</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, major: v})} value={formData.major}>
-                    <SelectTrigger className="neo-input h-12 md:h-14 text-base md:text-lg">
-                      <SelectValue placeholder="Select Major" />
+                  <Label className="font-bold uppercase text-[10px] md:text-xs">Faculty</Label>
+                  <Select onValueChange={(v) => setFormData({...formData, faculty: v, major: ''})} value={formData.faculty}>
+                    <SelectTrigger className="neo-input h-12 md:h-14">
+                      <SelectValue placeholder="Select Faculty" />
                     </SelectTrigger>
                     <SelectContent>
-                      {majors.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                      {faculties.map(f => <SelectItem key={f.id} value={f.name}>{f.name}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
+
+                <div className="space-y-2">
+                  <Label className="font-bold uppercase text-[10px] md:text-xs">Department / Subject</Label>
+                  <Select 
+                    onValueChange={(v) => setFormData({...formData, major: v})} 
+                    value={formData.major}
+                    disabled={!formData.faculty}
+                  >
+                    <SelectTrigger className="neo-input h-12 md:h-14">
+                      <SelectValue placeholder={formData.faculty ? "Select Subject" : "Select Faculty first"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {selectedFaculty?.subjects.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center gap-4 py-4 border-y-2 border-black border-dashed">
+                  <Switch 
+                    checked={formData.isEnglishProgramme}
+                    onCheckedChange={(v) => setFormData({...formData, isEnglishProgramme: v, englishProgramme: ''})}
+                  />
+                  <Label className="font-bold text-xs uppercase italic">I am in an English-taught Master's Programme</Label>
+                </div>
+
+                {formData.isEnglishProgramme && (
+                  <div className="space-y-2 animate-in slide-in-from-top-2">
+                    <Label className="font-bold uppercase text-[10px] md:text-xs">English Programme</Label>
+                    <Select onValueChange={(v) => setFormData({...formData, englishProgramme: v})} value={formData.englishProgramme}>
+                      <SelectTrigger className="neo-input h-12 md:h-14">
+                        <SelectValue placeholder="Select Programme" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {englishMasters.map(m => <SelectItem key={m} value={m}>{m}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Study Year</Label>
                   <Select onValueChange={(v) => setFormData({...formData, year: v})} value={formData.year}>
-                    <SelectTrigger className="neo-input h-12 md:h-14 text-base md:text-lg">
+                    <SelectTrigger className="neo-input h-12 md:h-14">
                       <SelectValue placeholder="Select Year" />
                     </SelectTrigger>
                     <SelectContent>
@@ -121,6 +166,56 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
             <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="bg-accent p-2 md:p-3 border-2 border-black shrink-0">
+                  <MapPin className="h-6 w-6 md:h-8 md:w-8" />
+                </div>
+                <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Campus & Residence</h3>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="font-bold uppercase text-[10px] md:text-xs">Primary Campus</Label>
+                  <Select onValueChange={(v) => setFormData({...formData, campus: v})} value={formData.campus}>
+                    <SelectTrigger className="neo-input h-12 md:h-14">
+                      <SelectValue placeholder="Select Campus" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {campuses.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="font-bold uppercase text-[10px] md:text-xs">Residential Area</Label>
+                  <Select onValueChange={(v) => setFormData({...formData, residentialArea: v})} value={formData.residentialArea}>
+                    <SelectTrigger className="neo-input h-12 md:h-14">
+                      <SelectValue placeholder="Select Area" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {residentialAreas.map(a => <SelectItem key={a} value={a}>{a}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="font-bold uppercase text-[10px] md:text-xs">Dormitory (Optional)</Label>
+                  <Select onValueChange={(v) => setFormData({...formData, dorm: v})} value={formData.dorm}>
+                    <SelectTrigger className="neo-input h-12 md:h-14">
+                      <SelectValue placeholder="Select Dorm (if applicable)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Not in a Dorm</SelectItem>
+                      {dorms.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex items-center gap-3 md:gap-4">
+                <div className="bg-primary p-2 md:p-3 border-2 border-black shrink-0">
                   <Globe className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
                 <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Linguistic Exchange</h3>
@@ -164,7 +259,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
             </div>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="bg-primary p-2 md:p-3 border-2 border-black shrink-0">
@@ -177,7 +272,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Academic Goals & Interests</Label>
                   <Textarea 
                     placeholder="e.g. I want to study for the Law exams together and learn German terminology..." 
-                    className="neo-input min-h-[100px] md:min-h-[120px] text-sm md:text-base"
+                    className="neo-input min-h-[100px] md:min-h-[120px]"
                     value={formData.academicGoals}
                     onChange={(e) => setFormData({...formData, academicGoals: e.target.value})}
                   />
@@ -187,7 +282,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Social Goals & Activities</Label>
                   <Textarea 
                     placeholder="e.g. I love hiking in the vineyards near Trier and want to talk about films..." 
-                    className="neo-input min-h-[100px] md:min-h-[120px] text-sm md:text-base"
+                    className="neo-input min-h-[100px] md:min-h-[120px]"
                     value={formData.socialGoals}
                     onChange={(e) => setFormData({...formData, socialGoals: e.target.value})}
                   />
@@ -197,7 +292,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
             <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="bg-accent p-2 md:p-3 border-2 border-black shrink-0">
@@ -235,13 +330,10 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                   </div>
                 </div>
               </div>
-              <p className="text-[10px] md:text-sm font-bold bg-white p-3 border-2 border-black text-center italic">
-                Click slots to highlight when you are usually free for a coffee at Mensa.
-              </p>
             </div>
           )}
 
-          {step === 5 && (
+          {step === 6 && (
             <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center gap-3 md:gap-4">
                 <div className="bg-primary p-2 md:p-3 border-2 border-black shrink-0">
@@ -272,19 +364,11 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                     </div>
                   </div>
                   <div className="flex items-center gap-4 pt-4 border-t-2 border-black">
-                    <button 
-                      onClick={() => setFormData({...formData, showContactOnMatch: !formData.showContactOnMatch})}
-                      className={cn(
-                        "w-10 h-5 md:w-12 md:h-6 border-2 border-black relative transition-colors shrink-0",
-                        formData.showContactOnMatch ? "bg-primary" : "bg-muted"
-                      )}
-                    >
-                      <div className={cn(
-                        "absolute top-0.5 md:top-1 w-2 md:w-2 h-3 md:h-2 bg-black transition-all",
-                        formData.showContactOnMatch ? "left-6 md:left-8" : "left-1"
-                      )} />
-                    </button>
-                    <Label className="font-bold text-xs md:text-sm">Reveal contact handles only after mutual match acceptance.</Label>
+                    <Switch 
+                      checked={formData.showContactOnMatch}
+                      onCheckedChange={(v) => setFormData({...formData, showContactOnMatch: v})}
+                    />
+                    <Label className="font-bold text-xs md:text-sm">Reveal handles only after mutual match acceptance.</Label>
                   </div>
                 </div>
               </div>
@@ -292,7 +376,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
           )}
         </div>
 
-        <footer className="mt-8 md:mt-12 py-4 md:py-8 border-t-2 border-black flex justify-between items-center bg-white p-4 neo-card shrink-0">
+        <footer className="mt-auto py-4 md:py-8 border-t-2 border-black flex justify-between items-center bg-white p-4 neo-card shrink-0">
           <Button 
             variant="outline" 
             onClick={prevStep} 
@@ -302,7 +386,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
             <ChevronLeft className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> BACK
           </Button>
           
-          {step < 5 ? (
+          {step < 6 ? (
             <Button 
               onClick={nextStep} 
               disabled={!isStepValid()}

@@ -1,21 +1,20 @@
-
 "use client"
 
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { GraduationCap, Languages, Sparkles, MapPin, Instagram, Send, Edit, ShieldCheck } from 'lucide-react';
+import { GraduationCap, Languages, Sparkles, MapPin, Instagram, Send, Edit, ShieldCheck, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 export function ProfileTab({ profile }: { profile: any }) {
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-500">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-500 pb-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-black uppercase bg-primary px-2 py-0.5 border-2 border-black tracking-widest">Settings & Identity</span>
           </div>
-          <h2 className="text-6xl font-black italic tracking-tighter uppercase leading-none">
+          <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-none">
             YOUR<br/>PROFILE.
           </h2>
         </div>
@@ -37,8 +36,9 @@ export function ProfileTab({ profile }: { profile: any }) {
               />
             </div>
             <div>
-              <h3 className="text-4xl font-black italic tracking-tighter uppercase">{profile.name}</h3>
-              <p className="text-sm font-bold text-muted-foreground uppercase">{profile.major} • Year {profile.year}</p>
+              <h3 className="text-4xl font-black italic tracking-tighter uppercase leading-none mb-2">{profile.name}</h3>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{profile.major}</p>
+              <p className="text-[10px] font-black text-primary uppercase">Year {profile.year}</p>
             </div>
             <div className="p-4 bg-primary/20 border-2 border-black border-dashed">
               <span className="text-[10px] font-black uppercase block mb-1">Unique Profile Code</span>
@@ -47,14 +47,20 @@ export function ProfileTab({ profile }: { profile: any }) {
           </div>
 
           <div className="neo-card bg-white p-6 space-y-4">
-            <h4 className="font-black italic uppercase border-b-2 border-black pb-2 text-sm tracking-widest">Connect Handles</h4>
-            <div className="flex items-center gap-3 p-3 bg-muted/30 border-2 border-black">
-              <Instagram className="h-5 w-5" />
-              <span className="font-bold">{profile.instagram || 'Not set'}</span>
+            <h4 className="font-black italic uppercase border-b-2 border-black pb-2 text-sm tracking-widest">Location Info</h4>
+            <div className="flex items-center gap-3 p-3 bg-muted/10 border-2 border-black">
+              <Building2 className="h-5 w-5 text-accent" />
+              <div>
+                <p className="text-[8px] font-black uppercase text-muted-foreground">Primary Campus</p>
+                <p className="font-bold text-sm">{profile.campus}</p>
+              </div>
             </div>
-            <div className="flex items-center gap-3 p-3 bg-muted/30 border-2 border-black">
-              <Send className="h-5 w-5" />
-              <span className="font-bold">{profile.telegram || 'Not set'}</span>
+            <div className="flex items-center gap-3 p-3 bg-muted/10 border-2 border-black">
+              <MapPin className="h-5 w-5 text-primary" />
+              <div>
+                <p className="text-[8px] font-black uppercase text-muted-foreground">Area / Residence</p>
+                <p className="font-bold text-sm">{profile.dorm && profile.dorm !== 'none' ? profile.dorm : profile.residentialArea}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -65,16 +71,23 @@ export function ProfileTab({ profile }: { profile: any }) {
             <div className="neo-card bg-primary p-6 space-y-3">
               <Languages className="h-8 w-8" />
               <h4 className="text-xl font-black italic uppercase">Native Speaker</h4>
-              <p className="font-bold text-2xl tracking-tighter uppercase">{profile.nativeLanguage}</p>
+              <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.nativeLanguage}</p>
             </div>
             <div className="neo-card bg-accent p-6 space-y-3">
               <Sparkles className="h-8 w-8" />
               <h4 className="text-xl font-black italic uppercase">Learning Target</h4>
-              <p className="font-bold text-2xl tracking-tighter uppercase">{profile.targetLanguage}</p>
+              <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.targetLanguage}</p>
             </div>
           </div>
 
           <div className="neo-card bg-white p-8 space-y-8">
+            {profile.isEnglishProgramme && (
+              <div className="p-4 bg-black text-white border-2 border-black mb-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-2 block">English Taught Master's</span>
+                <p className="text-lg font-black italic uppercase">{profile.englishProgramme}</p>
+              </div>
+            )}
+
             <div>
               <h4 className="text-[10px] font-black uppercase mb-4 text-muted-foreground tracking-[0.2em] flex items-center gap-2">
                 <GraduationCap className="h-4 w-4" /> Academic Focus Area
@@ -94,16 +107,16 @@ export function ProfileTab({ profile }: { profile: any }) {
             </div>
           </div>
 
-          <div className="neo-card bg-black text-white p-8 flex items-center justify-between">
+          <div className="neo-card bg-black text-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <ShieldCheck className="h-10 w-10 text-primary" />
+              <ShieldCheck className="h-10 w-10 text-primary shrink-0" />
               <div>
-                <h4 className="font-black italic uppercase text-lg">Safety & Privacy</h4>
-                <p className="text-sm text-white/60">Your handles are only shared with mutual matches.</p>
+                <h4 className="font-black italic uppercase text-lg leading-none mb-1">Safety & Privacy</h4>
+                <p className="text-xs text-white/60">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
               </div>
             </div>
-            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black">
-              SETTINGS
+            <Button variant="outline" className="w-full md:w-auto border-white text-white hover:bg-white hover:text-black neo-button bg-transparent">
+              SECURITY SETTINGS
             </Button>
           </div>
         </div>

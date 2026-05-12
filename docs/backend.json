@@ -1,4 +1,3 @@
-
 {
   "entities": {
     "UserProfile": {
@@ -9,8 +8,14 @@
         "uid": { "type": "string" },
         "name": { "type": "string" },
         "email": { "type": "string" },
-        "major": { "type": "string" },
+        "faculty": { "type": "string" },
+        "major": { "type": "string", "description": "Subject or department" },
         "year": { "type": "string" },
+        "isEnglishProgramme": { "type": "boolean" },
+        "englishProgramme": { "type": "string" },
+        "campus": { "type": "string" },
+        "residentialArea": { "type": "string" },
+        "dorm": { "type": "string" },
         "nativeLanguage": { "type": "string" },
         "targetLanguage": { "type": "string" },
         "academicGoals": { "type": "string" },
