@@ -12,6 +12,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import FlowArt, { FlowSection } from '@/components/ui/story-scroll';
 
 export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const { t } = useLanguage();
@@ -60,11 +61,21 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* How it Works Section */}
-      <section className="py-20 px-4 md:px-8 border-y-2 border-black bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-black italic uppercase mb-16 text-center">{t('howItWorks')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Story Scroll Experience */}
+      <FlowArt aria-label="TrierTongue Story">
+        {/* How it Works Section */}
+        <FlowSection aria-label="How it works" style={{ backgroundColor: 'white', color: 'black' }}>
+          <p className="text-xs font-bold uppercase tracking-[0.2em]">01 — Process</p>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div>
+            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic">
+              {t('howItWorks').split(' ')[0]}
+              <br />
+              {t('howItWorks').split(' ').slice(1).join(' ')}
+            </h2>
+          </div>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[3vw]">
             <LandingCard 
               icon={<UserCheck className="h-10 w-10" />} 
               title={t('step1Title')} 
@@ -84,16 +95,23 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               bgColor="bg-white"
             />
           </div>
-        </div>
-      </section>
+        </FlowSection>
 
-      {/* Trust & Exclusivity Section */}
-      <section className="py-20 px-4 md:px-8 bg-black text-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-black italic uppercase text-primary mb-4">{t('trustTitle')}</h2>
+        {/* Trust & Exclusivity Section */}
+        <FlowSection aria-label="Trust" style={{ backgroundColor: 'black', color: 'white' }}>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">02 — Security</p>
+          <hr className="my-[2vw] border-none border-t-2 border-primary/40" />
+          <div>
+            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic text-primary">
+              SAFE.
+              <br />
+              EXCLUSIVE.
+              <br />
+              TRIER-ONLY.
+            </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <hr className="my-[2vw] border-none border-t-2 border-primary/40" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[3vw]">
             <div className="neo-card bg-zinc-900 border-primary p-8 space-y-4">
               <ShieldCheck className="h-12 w-12 text-primary" />
               <h3 className="text-2xl font-black uppercase italic">{t('trust1Title')}</h3>
@@ -110,17 +128,92 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               <p className="font-bold text-sm text-zinc-400">{t('trust3Desc')}</p>
             </div>
           </div>
-        </div>
-      </section>
+        </FlowSection>
 
-      {/* Roles Section with Elastic Interaction */}
+        {/* Campus Hotspots Section */}
+        <FlowSection aria-label="Campus Hotspots" style={{ backgroundColor: 'white', color: 'black' }}>
+          <p className="text-xs font-bold uppercase tracking-[0.2em]">03 — Locations</p>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div>
+            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic">
+              WHERE
+              <br />
+              IT
+              <br />
+              HAPPENS.
+            </h2>
+          </div>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <SpotCard icon={<Coffee />} title={t('spot1Title')} desc={t('spot1Desc')} color="bg-primary" />
+            <SpotCard icon={<Library />} title={t('spot2Title')} desc={t('spot2Desc')} color="bg-accent" />
+            <SpotCard icon={<TreePine />} title={t('spot3Title')} desc={t('spot3Desc')} color="bg-primary/20" />
+            <SpotCard icon={<Building />} title={t('spot4Title')} desc={t('spot4Desc')} color="bg-accent/20" />
+            <SpotCard icon={<Home />} title={t('spot5Title')} desc={t('spot5Desc')} color="bg-white" />
+          </div>
+        </FlowSection>
+
+        {/* Language Spotlight Section */}
+        <FlowSection aria-label="Languages" style={{ backgroundColor: 'hsl(var(--primary))', color: 'black' }}>
+          <p className="text-xs font-bold uppercase tracking-[0.2em]">04 — Diversity</p>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1 space-y-8">
+              <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.8] uppercase tracking-tighter italic">
+                {t('langSpotlightTitle')}
+              </h2>
+              <p className="text-2xl font-bold uppercase italic">{t('langSpotlightSub')}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => (
+                  <div key={i} className="neo-card bg-white p-4 flex items-center gap-3 font-black uppercase italic text-sm">
+                     <Globe className="h-5 w-5 text-accent" /> {lang}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="shrink-0 hidden lg:block">
+               <div className="neo-card bg-black p-2 rotate-3 hover:rotate-0 transition-transform">
+                 <div className="relative w-64 h-80 border-2 border-white grayscale">
+                   <Image 
+                     src="https://picsum.photos/seed/trier-lang/600/800" 
+                     alt="Language exchange" 
+                     fill 
+                     className="object-cover" 
+                     data-ai-hint="student smiling"
+                   />
+                 </div>
+               </div>
+            </div>
+          </div>
+        </FlowSection>
+
+        {/* Testimonials Section */}
+        <FlowSection aria-label="Testimonials" style={{ backgroundColor: 'hsl(var(--accent))', color: 'black' }}>
+          <p className="text-xs font-bold uppercase tracking-[0.2em]">05 — Stories</p>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div>
+            <h2 className="text-[clamp(3.5rem,10vw,12rem)] font-black leading-[0.85] uppercase tracking-tighter italic">
+              CAMPUS
+              <br />
+              VOICES.
+            </h2>
+          </div>
+          <hr className="my-[2vw] border-none border-t-2 border-black" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <Testimonial quote={t('test1')} author={t('test1Author')} image="sarah" color="bg-white" />
+            <Testimonial quote={t('test2')} author={t('test2Author')} image="lukas" color="bg-white" />
+          </div>
+        </FlowSection>
+      </FlowArt>
+
+      {/* Roles Section */}
       <section className="py-20 px-4 md:px-8 bg-background overflow-hidden border-b-2 border-black">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row gap-6 md:h-[450px] items-stretch">
             {/* Teacher Card */}
             <div 
               className={cn(
-                "neo-card p-8 md:p-10 bg-primary flex flex-col flex-1 transition-all duration-500 cursor-pointer h-full group",
+                "neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full group",
                 "hover:bg-accent"
               )}
               onClick={onGetStarted}
@@ -140,7 +233,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
             {/* Student Card */}
             <div 
               className={cn(
-                "neo-card p-8 md:p-10 bg-accent flex flex-col flex-1 transition-all duration-500 cursor-pointer h-full group",
+                "neo-card p-8 md:p-10 bg-white flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full group",
                 "hover:bg-primary"
               )}
               onClick={onGetStarted}
@@ -156,63 +249,6 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 {t('letsGo')} <ArrowRight className="ml-2 h-6 w-6" />
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Campus Hotspots Section */}
-      <section className="py-24 px-4 md:px-8 bg-white border-b-2 border-black">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-7xl font-black italic uppercase mb-16 leading-none">{t('campusSpotsTitle')}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <SpotCard icon={<Coffee />} title={t('spot1Title')} desc={t('spot1Desc')} color="bg-primary" />
-            <SpotCard icon={<Library />} title={t('spot2Title')} desc={t('spot2Desc')} color="bg-accent" />
-            <SpotCard icon={<TreePine />} title={t('spot3Title')} desc={t('spot3Desc')} color="bg-primary/20" />
-            <SpotCard icon={<Building />} title={t('spot4Title')} desc={t('spot4Desc')} color="bg-accent/20" />
-            <SpotCard icon={<Home />} title={t('spot5Title')} desc={t('spot5Desc')} color="bg-white" />
-          </div>
-        </div>
-      </section>
-
-      {/* Language Spotlight Section */}
-      <section className="py-24 px-4 md:px-8 bg-primary">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12">
-          <div className="flex-1 space-y-8">
-            <h2 className="text-5xl md:text-8xl font-black italic uppercase leading-[0.8] tracking-tighter">
-              {t('langSpotlightTitle')}
-            </h2>
-            <p className="text-2xl font-bold uppercase italic">{t('langSpotlightSub')}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => (
-                <div key={i} className="neo-card bg-white p-4 flex items-center gap-3 font-black uppercase italic text-sm">
-                   <Globe className="h-5 w-5 text-accent" /> {lang}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="shrink-0">
-             <div className="neo-card bg-black p-2 rotate-3 hover:rotate-0 transition-transform">
-               <div className="relative w-64 h-80 border-2 border-white grayscale">
-                 <Image 
-                   src="https://picsum.photos/seed/trier-lang/600/800" 
-                   alt="Language exchange" 
-                   fill 
-                   className="object-cover" 
-                   data-ai-hint="student smiling"
-                 />
-               </div>
-             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-24 px-4 md:px-8 bg-background">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-6xl font-black italic uppercase mb-16 text-center">{t('testimonialsTitle')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <Testimonial quote={t('test1')} author={t('test1Author')} image="sarah" color="bg-primary" />
-            <Testimonial quote={t('test2')} author={t('test2Author')} image="lukas" color="bg-accent" />
           </div>
         </div>
       </section>
