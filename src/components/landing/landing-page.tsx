@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck } from 'lucide-react';
+import { Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, Globe } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -104,6 +104,41 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
               <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beStudentDesc')}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Us Section */}
+      <section className="py-24 px-4 md:px-8 bg-white border-t-2 border-black">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-8">
+            <h2 className="text-5xl md:text-7xl font-black italic uppercase leading-none tracking-tighter">
+              {t('aboutUsTitle')}
+            </h2>
+            <div className="space-y-6">
+              <p className="text-xl md:text-2xl font-bold leading-tight uppercase italic border-l-8 border-primary pl-6">
+                {t('aboutUsDesc')}
+              </p>
+              <p className="text-lg font-medium text-muted-foreground leading-relaxed">
+                {t('aboutUsMission')}
+              </p>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="neo-card bg-primary p-2 rotate-2">
+              <div className="relative aspect-square border-2 border-black overflow-hidden grayscale">
+                <Image 
+                  src="https://picsum.photos/seed/trier-about/800/800" 
+                  alt="Trier University Campus" 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            <div className="absolute -bottom-6 -left-6 neo-card bg-accent p-6 hidden md:block -rotate-3">
+              <Globe className="h-12 w-12" />
+              <p className="mt-2 font-black uppercase italic text-xs tracking-widest">Connect. Learn. Repeat.</p>
             </div>
           </div>
         </div>

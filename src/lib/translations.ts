@@ -79,6 +79,10 @@ export const translations = {
     settingsTitle: "ACCOUNT SETTINGS",
     saveSettings: "SAVE CHANGES",
     settingsSaved: "Settings updated successfully!",
+    // About Us
+    aboutUsTitle: "OUR VISION.",
+    aboutUsDesc: "TrierTongue was born from a simple observation: Campus I and II are melting pots of international talent, yet domestic and international students often study in parallel without ever crossing paths. We built this to bridge that gap.",
+    aboutUsMission: "Our mission is to turn every coffee break at the Mensa into a linguistic adventure, making cultural exchange a standard part of the Trier student experience."
   },
   de: {
     appName: "TRIERTONGUE",
@@ -157,6 +161,10 @@ export const translations = {
     settingsTitle: "KONTO-EINSTELLUNGEN",
     saveSettings: "ÄNDERUNGEN SPEICHERN",
     settingsSaved: "Einstellungen erfolgreich aktualisiert!",
+    // About Us
+    aboutUsTitle: "UNSERE VISION.",
+    aboutUsDesc: "TrierTongue entstand aus einer einfachen Beobachtung: Campus I und II sind Schmelztiegel internationaler Talente, doch einheimische und internationale Studierende studieren oft parallel, ohne sich zu begegnen. Wir haben dies gebaut, um diese Lücke zu schließen.",
+    aboutUsMission: "Unsere Mission ist es, jede Kaffeepause in der Mensa in ein sprachliches Abenteuer zu verwandeln und den kulturellen Austausch zu einem Standardteil des Trierer Studienerlebnisses zu machen."
   },
   es: {
     appName: "TRIERTONGUE",
@@ -232,6 +240,10 @@ export const translations = {
     settingsTitle: "AJUSTES DE CUENTA",
     saveSettings: "GUARDAR CAMBIOS",
     settingsSaved: "¡Ajustes actualizados correctamente!",
+    // About Us
+    aboutUsTitle: "NUESTRA VISIÓN.",
+    aboutUsDesc: "TrierTongue nació de una simple observación: los Campus I y II son crisoles de talento internacional, sin embargo, los estudiantes locales e internacionales a menudo estudian en paralelo sin cruzarse nunca. Construimos esto para cerrar esa brecha.",
+    aboutUsMission: "Nuestra misión es convertir cada pausa para el café en la Mensa en una aventura lingüística, haciendo del intercambio cultural una parte estándar de la experiencia estudiantil en Trier."
   },
   fr: {
     appName: "TRIERTONGUE",
@@ -307,5 +319,9 @@ export const translations = {
     settingsTitle: "PARAMÈTRES DU COMPTE",
     saveSettings: "ENREGISTRER",
     settingsSaved: "Paramètres mis à jour avec succès !",
+    // About Us
+    aboutUsTitle: "NOTRE VISION.",
+    aboutUsDesc: "TrierTongue est né d'une simple observation : les Campus I et II sont des creusets de talents internationaux, pourtant les étudiants locaux et internationaux étudient souvent en parallèle sans jamais se croiser. Nous avons construit cela pour combler ce fossé.",
+    aboutUsMission: "Notre mission est de transformer chaque pause café à la Mensa en une aventure linguistique, faisant de l'échange culturel une partie standard de l'expérience étudiante à Trèves."
   }
 };
