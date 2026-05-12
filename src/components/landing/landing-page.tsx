@@ -1,9 +1,14 @@
+
 "use client"
 
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, Globe } from 'lucide-react';
+import { 
+  Languages, GraduationCap, MapPin, Sparkles, ArrowRight, UserCheck, 
+  Globe, ShieldCheck, LocateFixed, HeartHandshake, Coffee, Library, 
+  TreePine, Building, Home, Users, BookOpen, AppWindow, MessageCircle
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -82,55 +87,151 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Roles Section */}
-      <section className="py-16 px-4 md:px-8 bg-primary/5 overflow-hidden">
+      {/* Trust & Exclusivity Section */}
+      <section className="py-20 px-4 md:px-8 bg-black text-white">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-6 md:h-[380px] items-stretch">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-black italic uppercase text-primary mb-4">{t('trustTitle')}</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="neo-card bg-zinc-900 border-primary p-8 space-y-4">
+              <ShieldCheck className="h-12 w-12 text-primary" />
+              <h3 className="text-2xl font-black uppercase italic">{t('trust1Title')}</h3>
+              <p className="font-bold text-sm text-zinc-400">{t('trust1Desc')}</p>
+            </div>
+            <div className="neo-card bg-zinc-900 border-accent p-8 space-y-4">
+              <LocateFixed className="h-12 w-12 text-accent" />
+              <h3 className="text-2xl font-black uppercase italic">{t('trust2Title')}</h3>
+              <p className="font-bold text-sm text-zinc-400">{t('trust2Desc')}</p>
+            </div>
+            <div className="neo-card bg-zinc-900 border-white p-8 space-y-4">
+              <HeartHandshake className="h-12 w-12 text-white" />
+              <h3 className="text-2xl font-black uppercase italic">{t('trust3Title')}</h3>
+              <p className="font-bold text-sm text-zinc-400">{t('trust3Desc')}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Roles Section with Elastic Interaction */}
+      <section className="py-20 px-4 md:px-8 bg-background overflow-hidden border-b-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-6 md:h-[450px] items-stretch">
             {/* Teacher Card */}
             <div 
               className={cn(
-                "neo-card p-6 md:p-8 bg-primary flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full",
-                "hover:bg-accent/80 hover:-translate-y-1"
+                "neo-card p-8 md:p-10 bg-primary flex flex-col flex-1 transition-all duration-500 cursor-pointer h-full group",
+                "hover:bg-accent"
               )}
               onClick={onGetStarted}
             >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-white border-2 border-black shadow-neo-sm">
-                  <GraduationCap className="h-8 w-8" />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
+                  <GraduationCap className="h-10 w-10" />
                 </div>
-                <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
+                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
               </div>
-              <p className="text-lg md:text-xl font-bold leading-tight italic mb-6">{t('beTeacherDesc')}</p>
-              <Button className="mt-auto neo-button bg-white text-black w-fit uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-primary transition-colors">
-                {t('letsGo')} <ArrowRight className="ml-2 h-4 w-4" />
+              <p className="text-xl md:text-2xl font-bold leading-tight italic mb-8">{t('beTeacherDesc')}</p>
+              <Button className="mt-auto neo-button bg-white text-black w-fit text-xl py-8 px-10 uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-primary transition-colors">
+                {t('letsGo')} <ArrowRight className="ml-2 h-6 w-6" />
               </Button>
             </div>
             
             {/* Student Card */}
             <div 
               className={cn(
-                "neo-card p-6 md:p-8 bg-accent flex flex-col flex-1 transition-all duration-300 cursor-pointer h-full",
-                "hover:bg-primary/80 hover:-translate-y-1"
+                "neo-card p-8 md:p-10 bg-accent flex flex-col flex-1 transition-all duration-500 cursor-pointer h-full group",
+                "hover:bg-primary"
               )}
               onClick={onGetStarted}
             >
-              <div className="flex items-center gap-4 mb-4">
-                <div className="p-3 bg-white border-2 border-black shadow-neo-sm">
-                  <Languages className="h-8 w-8" />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
+                  <Languages className="h-10 w-10" />
                 </div>
-                <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
+                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
-              <p className="text-lg md:text-xl font-bold leading-tight italic mb-6">{t('beStudentDesc')}</p>
-              <Button className="mt-auto neo-button bg-white text-black w-fit uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-accent transition-colors">
-                {t('letsGo')} <ArrowRight className="ml-2 h-4 w-4" />
+              <p className="text-xl md:text-2xl font-bold leading-tight italic mb-8">{t('beStudentDesc')}</p>
+              <Button className="mt-auto neo-button bg-white text-black w-fit text-xl py-8 px-10 uppercase italic tracking-tighter border-2 border-black hover:bg-black hover:text-accent transition-colors">
+                {t('letsGo')} <ArrowRight className="ml-2 h-6 w-6" />
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* About Us Section */}
-      <section className="py-24 px-4 md:px-8 bg-white border-t-2 border-black">
+      {/* Campus Hotspots Section */}
+      <section className="py-24 px-4 md:px-8 bg-white border-b-2 border-black">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-7xl font-black italic uppercase mb-16 leading-none">{t('campusSpotsTitle')}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <SpotCard icon={<Coffee />} title={t('spot1Title')} desc={t('spot1Desc')} color="bg-primary" />
+            <SpotCard icon={<Library />} title={t('spot2Title')} desc={t('spot2Desc')} color="bg-accent" />
+            <SpotCard icon={<TreePine />} title={t('spot3Title')} desc={t('spot3Desc')} color="bg-primary/20" />
+            <SpotCard icon={<Building />} title={t('spot4Title')} desc={t('spot4Desc')} color="bg-accent/20" />
+            <SpotCard icon={<Home />} title={t('spot5Title')} desc={t('spot5Desc')} color="bg-white" />
+          </div>
+        </div>
+      </section>
+
+      {/* Language Spotlight Section */}
+      <section className="py-24 px-4 md:px-8 bg-primary">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+          <div className="flex-1 space-y-8">
+            <h2 className="text-5xl md:text-8xl font-black italic uppercase leading-[0.8] tracking-tighter">
+              {t('langSpotlightTitle')}
+            </h2>
+            <p className="text-2xl font-bold uppercase italic">{t('langSpotlightSub')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => (
+                <div key={i} className="neo-card bg-white p-4 flex items-center gap-3 font-black uppercase italic text-sm">
+                   <Globe className="h-5 w-5 text-accent" /> {lang}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="shrink-0">
+             <div className="neo-card bg-black p-2 rotate-3 hover:rotate-0 transition-transform">
+               <div className="relative w-64 h-80 border-2 border-white grayscale">
+                 <Image 
+                   src="https://picsum.photos/seed/trier-lang/600/800" 
+                   alt="Language exchange" 
+                   fill 
+                   className="object-cover" 
+                   data-ai-hint="student smiling"
+                 />
+               </div>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 px-4 md:px-8 bg-background">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-6xl font-black italic uppercase mb-16 text-center">{t('testimonialsTitle')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <Testimonial quote={t('test1')} author={t('test1Author')} image="sarah" color="bg-primary" />
+            <Testimonial quote={t('test2')} author={t('test2Author')} image="lukas" color="bg-accent" />
+          </div>
+        </div>
+      </section>
+
+      {/* Async Section */}
+      <section className="py-24 px-4 md:px-8 bg-accent text-black border-y-2 border-black">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+           <div className="neo-card bg-white p-6 rotate-[-2deg] shrink-0">
+             <MessageCircle className="h-24 w-24" />
+           </div>
+           <div className="space-y-6">
+             <h2 className="text-4xl md:text-6xl font-black italic uppercase leading-none">{t('asyncTitle')}</h2>
+             <p className="text-xl md:text-2xl font-bold italic max-w-2xl">{t('asyncDesc')}</p>
+           </div>
+        </div>
+      </section>
+
+      {/* About Us / Vision Section */}
+      <section className="py-24 px-4 md:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row items-start gap-12">
             <div className="flex-1 space-y-8">
@@ -171,18 +272,39 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 border-t-2 border-black bg-white px-4 md:px-8">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-2">{t('appName')}</h2>
-            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest italic">{t('campusFocused')}</p>
+      {/* Stats Block */}
+      <section className="py-24 px-4 md:px-8 bg-black text-white border-t-2 border-primary">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-black italic uppercase text-center mb-16 tracking-widest text-zinc-500">{t('statsTitle')}</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+             <StatItem icon={<Users />} text={t('stat1')} />
+             <StatItem icon={<BookOpen />} text={t('stat2')} />
+             <StatItem icon={<Sparkles />} text={t('stat3')} />
+             <StatItem icon={<AppWindow />} text={t('stat4')} />
           </div>
-          <div className="flex gap-8 items-center text-[10px] md:text-xs font-black uppercase italic tracking-tighter">
-            <Link href="/pitch" className="hover:text-accent underline underline-offset-4">FOR THE UNIVERSITY</Link>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" /> TRIER, GERMANY
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-16 border-t-2 border-black bg-white px-4 md:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 mb-12">
+            <div>
+              <h2 className="text-4xl font-black italic tracking-tighter uppercase mb-4">{t('appName')}</h2>
+              <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest italic max-w-xs">{t('campusFocused')}</p>
             </div>
+            <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-xs font-black uppercase italic tracking-tighter">
+              <Link href="/pitch" className="hover:text-accent underline underline-offset-4">FOR THE UNIVERSITY</Link>
+              <Link href="#" className="hover:text-accent underline underline-offset-4">{t('impressum')}</Link>
+              <Link href="#" className="hover:text-accent underline underline-offset-4">{t('privacy')}</Link>
+              <Link href="#" className="hover:text-accent underline underline-offset-4">{t('tos')}</Link>
+            </div>
+          </div>
+          <div className="pt-8 border-t-2 border-black/5 flex flex-col md:flex-row justify-between items-center gap-4">
+             <p className="text-[10px] font-black uppercase text-muted-foreground italic">{t('madeWithLove')}</p>
+             <div className="flex items-center gap-2 text-[10px] font-black uppercase italic">
+               <MapPin className="h-3 w-3" /> TRIER, GERMANY
+             </div>
           </div>
         </div>
       </footer>
@@ -200,4 +322,42 @@ function LandingCard({ icon, title, desc, bgColor }: any) {
       <p className="font-bold text-sm leading-tight text-muted-foreground">{desc}</p>
     </div>
   );
+}
+
+function SpotCard({ icon, title, desc, color }: any) {
+  return (
+    <div className={cn("neo-card p-6 space-y-4 group transition-transform hover:-translate-y-2", color)}>
+      <div className="p-2 bg-white border-2 border-black w-fit group-hover:bg-black group-hover:text-white transition-colors">
+        {icon}
+      </div>
+      <h4 className="font-black uppercase italic text-sm leading-none">{title}</h4>
+      <p className="text-[10px] font-bold leading-tight uppercase opacity-60">{desc}</p>
+    </div>
+  )
+}
+
+function Testimonial({ quote, author, image, color }: any) {
+  return (
+    <div className={cn("neo-card p-10 flex flex-col gap-8 relative", color)}>
+       <div className="absolute -top-6 -left-6 bg-white border-2 border-black p-4 rotate-[-6deg] text-3xl">"</div>
+       <p className="text-2xl font-bold italic leading-tight">"{quote}"</p>
+       <div className="mt-auto flex items-center gap-4 pt-6 border-t-2 border-black/20">
+         <div className="relative h-12 w-12 border-2 border-black grayscale overflow-hidden">
+           <Image src={`https://picsum.photos/seed/${image}/100/100`} alt={author} fill className="object-cover" />
+         </div>
+         <p className="font-black uppercase italic text-sm">{author}</p>
+       </div>
+    </div>
+  )
+}
+
+function StatItem({ icon, text }: any) {
+  return (
+    <div className="flex flex-col items-center text-center gap-4">
+      <div className="p-4 bg-zinc-800 border-2 border-zinc-700 text-primary">
+        {icon}
+      </div>
+      <p className="font-black uppercase italic text-sm tracking-tight">{text}</p>
+    </div>
+  )
 }

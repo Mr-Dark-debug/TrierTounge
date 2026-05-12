@@ -1,41 +1,47 @@
+
 # TRIERTONGUE 👅
 
-**TrierTongue** is a neo-brutalist language exchange platform exclusively designed for students at the **University of Trier**. It facilitates reciprocal language learning by pairing native speakers with students eager to master new languages, all within a secure, campus-focused environment.
+**TrierTongue** is a high-contrast, neo-brutalist language exchange platform designed exclusively for students at the **University of Trier**. It bridges the gap between domestic and international students through reciprocal matching and smart campus integration.
 
 ## 🚀 Key Features
 
-- **Reciprocal Matching**: An AI-powered system that pairs you with partners who need the language you speak and can teach you the language you want.
-- **Campus-Centric Discovery**: Filter by major, study year, and campus (Campus I or II).
-- **Smart Practice Rooms**: In-app practice calls featuring AI-generated conversation starters tailored to your academic and social goals.
-- **Availability Heatmaps**: Find overlapping free time for Mensa or Library meetups.
-- **Multilingual Support**: Available in English, Deutsch, Español, and Français.
-- **Neo-Brutalist UI**: A high-contrast, bold, and modern interface optimized for all devices.
+### 1. Reciprocal Matching (Powered by Genkit)
+- **AI Compatibility Analysis**: Analyzes student profiles to find the best match based on academic and social goals.
+- **Mutual Acceptance**: Privacy first. Social media handles (Instagram/Telegram) are only revealed after both parties accept the match.
+
+### 2. Hyper-Local Campus Integration
+- **Trier Specific Data**: Built-in support for all 6 faculties, official departments, and student dorms (Studierendenwerk & private).
+- **Campus Hotspots**: Specific meeting suggestions for **BibTop** (Campus I Library), **Geozentrum** (Campus II), and various local Mensas.
+- **Availability Heatmaps**: Find overlapping free time specifically for library or dining hall sessions.
+
+### 3. Smart Practice Rooms
+- **In-App Practice Calls**: High-performance UI for virtual practice.
+- **AI Ice Breakers**: Genkit-powered conversation starters generated based on the participants' shared academic subjects and personal hobbies.
+
+### 4. Safety & Exclusivity
+- **Verified Access**: Restricted to `@uni-trier.de` or `@studierende.uni-trier.de` email addresses.
+- **Safe meeting spots**: Emphasis on public, well-lit campus areas.
 
 ## 🛠 Tech Stack
 
 - **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with [Shadcn UI](https://ui.shadcn.com/)
-- **Backend/Database**: [Firebase Firestore](https://firebase.google.com/docs/firestore)
-- **Authentication**: [Firebase Auth](https://firebase.google.com/docs/auth)
-- **AI/GenAI**: [Google Genkit](https://firebase.google.com/docs/genkit) (Gemini 1.5 Flash)
-- **Icons**: [Lucide React](https://lucide.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a custom Neo-Brutalist design system.
+- **Backend**: [Firebase Firestore](https://firebase.google.com/docs/firestore) & [Authentication](https://firebase.google.com/docs/auth).
+- **AI**: [Google Genkit](https://firebase.google.com/docs/genkit) using Gemini 1.5 Flash for matching and content generation.
+- **Localization**: Full English, German, Spanish, and French support.
 
 ## 📂 Project Structure
 
-- `src/app`: Next.js routes and pages.
-- `src/components`: Reusable UI components (Dashboard, Onboarding, Landing).
-- `src/firebase`: Firebase configuration, hooks, and providers.
-- `src/ai`: Genkit flows for AI compatibility analysis and conversation starters.
-- `src/context`: React contexts (Language, etc.).
-- `src/lib`: Data constants (Trier faculties, dorms) and utility functions.
+- `src/app`: Core application routes (Home, Call, Settings, Pitch).
+- `src/components`: UI components organized by feature (Auth, Dashboard, Onboarding).
+- `src/firebase`: Firebase configuration, hooks, and error management.
+- `src/ai`: Genkit flows for matching analysis and ice breakers.
+- `src/context`: React contexts for application state (Language, etc.).
+- `src/lib`: Constants for Trier-specific university data and shared translations.
 
-## 🔒 Security & Privacy
+## 🏫 Administrative Integration
 
-TrierTongue is designed with student safety in mind. Social media handles (Instagram/Telegram) are **only** revealed after a mutual match is accepted. We encourage the use of university email addresses to maintain a verified campus community.
-
-## 🏫 For Administration
-
-We are actively seeking integration with the University of Trier's official LDAP/SSO systems. See the `/pitch` page for our integration proposal.
+A dedicated `/pitch` page is available for the **Studierendenwerk** or **University Administration** to review integration proposals for SSO (LDAP/OIDC) and official campus data synchronization.
 
 ---
-*Created with 🖤 for the Trier University Community.*
+*Developed with ❤️ for the Trier University community.*
