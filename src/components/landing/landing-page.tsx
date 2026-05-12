@@ -103,7 +103,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               <h2 className="text-6xl md:text-[10rem] font-black leading-[0.75] uppercase tracking-tighter italic text-primary">
                 SAFE.<br />
                 EXCLUSIVE.<br />
-                TRIER-ONLY.
+                <span className="text-accent">TRIER</span>-ONLY.
               </h2>
             </div>
             <div className="lg:pt-20 hidden lg:block">
