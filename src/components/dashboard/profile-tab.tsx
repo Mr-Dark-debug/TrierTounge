@@ -1,0 +1,113 @@
+
+"use client"
+
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { GraduationCap, Languages, Sparkles, MapPin, Instagram, Send, Edit, ShieldCheck } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+
+export function ProfileTab({ profile }: { profile: any }) {
+  return (
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-500">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-black uppercase bg-primary px-2 py-0.5 border-2 border-black tracking-widest">Settings & Identity</span>
+          </div>
+          <h2 className="text-6xl font-black italic tracking-tighter uppercase leading-none">
+            YOUR<br/>PROFILE.
+          </h2>
+        </div>
+        <Button className="neo-button bg-white h-14 px-8 flex items-center gap-2">
+          <Edit className="h-5 w-5" /> EDIT DETAILS
+        </Button>
+      </header>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        {/* Identity Card */}
+        <div className="lg:col-span-1 space-y-8">
+          <div className="neo-card bg-white p-6 text-center space-y-6">
+            <div className="relative h-48 w-48 mx-auto border-2 border-black bg-muted grayscale">
+              <Image 
+                src={`https://picsum.photos/seed/${profile.uid}/400/400`} 
+                alt={profile.name} 
+                fill 
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <h3 className="text-4xl font-black italic tracking-tighter uppercase">{profile.name}</h3>
+              <p className="text-sm font-bold text-muted-foreground uppercase">{profile.major} • Year {profile.year}</p>
+            </div>
+            <div className="p-4 bg-primary/20 border-2 border-black border-dashed">
+              <span className="text-[10px] font-black uppercase block mb-1">Unique Profile Code</span>
+              <span className="text-2xl font-black tracking-widest font-code">{profile.profileCode}</span>
+            </div>
+          </div>
+
+          <div className="neo-card bg-white p-6 space-y-4">
+            <h4 className="font-black italic uppercase border-b-2 border-black pb-2 text-sm tracking-widest">Connect Handles</h4>
+            <div className="flex items-center gap-3 p-3 bg-muted/30 border-2 border-black">
+              <Instagram className="h-5 w-5" />
+              <span className="font-bold">{profile.instagram || 'Not set'}</span>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-muted/30 border-2 border-black">
+              <Send className="h-5 w-5" />
+              <span className="font-bold">{profile.telegram || 'Not set'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Details & Goals */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="neo-card bg-primary p-6 space-y-3">
+              <Languages className="h-8 w-8" />
+              <h4 className="text-xl font-black italic uppercase">Native Speaker</h4>
+              <p className="font-bold text-2xl tracking-tighter uppercase">{profile.nativeLanguage}</p>
+            </div>
+            <div className="neo-card bg-accent p-6 space-y-3">
+              <Sparkles className="h-8 w-8" />
+              <h4 className="text-xl font-black italic uppercase">Learning Target</h4>
+              <p className="font-bold text-2xl tracking-tighter uppercase">{profile.targetLanguage}</p>
+            </div>
+          </div>
+
+          <div className="neo-card bg-white p-8 space-y-8">
+            <div>
+              <h4 className="text-[10px] font-black uppercase mb-4 text-muted-foreground tracking-[0.2em] flex items-center gap-2">
+                <GraduationCap className="h-4 w-4" /> Academic Focus Area
+              </h4>
+              <p className="text-xl font-medium leading-relaxed italic border-l-4 border-black pl-6">
+                "{profile.academicGoals}"
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-[10px] font-black uppercase mb-4 text-muted-foreground tracking-[0.2em] flex items-center gap-2">
+                <MapPin className="h-4 w-4" /> Social & Local Goals
+              </h4>
+              <p className="text-xl font-medium leading-relaxed italic border-l-4 border-accent pl-6">
+                "{profile.socialGoals}"
+              </p>
+            </div>
+          </div>
+
+          <div className="neo-card bg-black text-white p-8 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <ShieldCheck className="h-10 w-10 text-primary" />
+              <div>
+                <h4 className="font-black italic uppercase text-lg">Safety & Privacy</h4>
+                <p className="text-sm text-white/60">Your handles are only shared with mutual matches.</p>
+              </div>
+            </div>
+            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black">
+              SETTINGS
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

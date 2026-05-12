@@ -1,0 +1,65 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Information about a university student including their languages and academic goals.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "major": { "type": "string" },
+        "year": { "type": "string" },
+        "nativeLanguage": { "type": "string" },
+        "targetLanguage": { "type": "string" },
+        "academicGoals": { "type": "string" },
+        "socialGoals": { "type": "string" },
+        "availability": { "type": "array", "items": { "type": "boolean" } },
+        "instagram": { "type": "string" },
+        "telegram": { "type": "string" },
+        "profileCode": { "type": "string", "description": "A unique identifier like #A1B2-C3D4" },
+        "onboardingCompleted": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "email", "profileCode"]
+    },
+    "Match": {
+      "title": "Match",
+      "description": "A reciprocal connection between two students.",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["pending", "accepted"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Message": {
+      "title": "Message",
+      "description": "A chat message between matched users.",
+      "type": "object",
+      "properties": {
+        "senderId": { "type": "string" },
+        "text": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Collection of student profiles."
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Collection of match connections."
+    },
+    "/matches/{matchId}/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Sub-collection of messages for a specific match."
+    }
+  }
+}
