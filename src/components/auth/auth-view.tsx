@@ -29,7 +29,6 @@ export function AuthView() {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        // We'll update the profile in onboarding
       }
     } catch (error: any) {
       toast({
@@ -43,98 +42,98 @@ export function AuthView() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-background">
-      <div className="md:w-1/2 p-8 md:p-16 flex flex-col justify-center border-b-2 md:border-b-0 md:border-r-2 border-black">
-        <div className="mb-12">
-          <div className="inline-block bg-accent px-4 py-1 border-2 border-black mb-4 font-bold uppercase tracking-widest text-sm">
+    <div className="min-h-screen flex flex-col md:flex-row bg-background overflow-x-hidden">
+      <div className="md:w-1/2 p-6 md:p-16 flex flex-col justify-center border-b-2 md:border-b-0 md:border-r-2 border-black bg-primary/5">
+        <div className="mb-8 md:mb-12">
+          <div className="inline-block bg-accent px-3 py-0.5 md:px-4 md:py-1 border-2 border-black mb-4 font-bold uppercase tracking-widest text-[10px] md:text-sm">
             Trier University Exclusive
           </div>
-          <h1 className="text-6xl md:text-8xl font-black leading-tight mb-6">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.85] mb-6 tracking-tighter italic">
             TRIER<br/>TONGUE.
           </h1>
-          <p className="text-xl md:text-2xl font-semibold max-w-md">
-            The Neo-brutalist language exchange platform for Uni Trier students. Find your reciprocal match.
+          <p className="text-lg md:text-2xl font-bold max-w-md leading-tight">
+            The Neo-brutalist language exchange for Uni Trier students. Find your reciprocal match.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
-          <div className="neo-card p-6 bg-primary flex gap-4 items-start">
-            <Languages className="shrink-0 h-8 w-8" />
+        <div className="grid grid-cols-1 gap-4 md:gap-6 max-w-md">
+          <div className="neo-card p-4 md:p-6 bg-primary flex gap-4 items-start">
+            <Languages className="shrink-0 h-6 w-6 md:h-8 md:w-8" />
             <div>
-              <h3 className="font-bold text-lg text-black">Reciprocal Matching</h3>
-              <p className="text-black/80">AI-powered pairing based on what you need and what you can give.</p>
+              <h3 className="font-bold text-base md:text-lg text-black leading-none mb-1">Reciprocal Matching</h3>
+              <p className="text-xs md:text-sm text-black/80 font-medium">AI-powered pairing based on what you need and what you can give.</p>
             </div>
           </div>
-          <div className="neo-card p-6 bg-white flex gap-4 items-start">
-            <GraduationCap className="shrink-0 h-8 w-8" />
+          <div className="neo-card p-4 md:p-6 bg-white flex gap-4 items-start">
+            <GraduationCap className="shrink-0 h-6 w-6 md:h-8 md:w-8" />
             <div>
-              <h3 className="font-bold text-lg">Campus Focused</h3>
-              <p>Filters for Trier majors, study years, and local meeting spots.</p>
+              <h3 className="font-bold text-base md:text-lg leading-none mb-1">Campus Focused</h3>
+              <p className="text-xs md:text-sm font-medium">Filters for Trier majors, study years, and local meeting spots.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="md:w-1/2 p-8 md:p-16 flex items-center justify-center bg-[#fdfdfd]">
-        <div className="w-full max-w-md neo-card p-10 bg-white">
+      <div className="md:w-1/2 p-6 md:p-16 flex items-center justify-center bg-[#fdfdfd]">
+        <div className="w-full max-w-md neo-card p-6 md:p-10 bg-white">
           <div className="mb-8 text-center">
-            <h2 className="text-3xl font-black mb-2 uppercase italic">{isLogin ? 'Welcome Back' : 'Join the Tribe'}</h2>
-            <p className="font-medium text-muted-foreground italic tracking-tight">Access with your university email</p>
+            <h2 className="text-2xl md:text-3xl font-black mb-2 uppercase italic leading-none">{isLogin ? 'Welcome Back' : 'Join the Tribe'}</h2>
+            <p className="font-bold text-xs md:text-sm text-muted-foreground italic tracking-tight uppercase">Access with your university email</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             {!isLogin && (
               <div className="space-y-2">
-                <Label htmlFor="name" className="font-bold uppercase tracking-wider text-xs">Full Name</Label>
+                <Label htmlFor="name" className="font-bold uppercase tracking-wider text-[10px]">Full Name</Label>
                 <Input 
                   id="name" 
                   placeholder="Max Mustermann" 
                   required 
-                  className="neo-input" 
+                  className="neo-input h-12" 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email" className="font-bold uppercase tracking-wider text-xs">Email</Label>
+              <Label htmlFor="email" className="font-bold uppercase tracking-wider text-[10px]">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="s4mumu00@uni-trier.de" 
                 required 
-                className="neo-input" 
+                className="neo-input h-12" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="pass" className="font-bold uppercase tracking-wider text-xs">Password</Label>
+              <Label htmlFor="pass" className="font-bold uppercase tracking-wider text-[10px]">Password</Label>
               <Input 
                 id="pass" 
                 type="password" 
                 placeholder="••••••••" 
                 required 
-                className="neo-input" 
+                className="neo-input h-12" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full neo-button text-lg py-6 group">
+            <Button type="submit" disabled={loading} className="w-full neo-button text-base md:text-lg py-6 md:py-8 group">
               {loading ? 'PROCESSING...' : (isLogin ? 'LOG IN' : 'CREATE ACCOUNT')} 
-              {!loading && <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />}
+              {!loading && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
             </Button>
           </form>
 
-          <div className="mt-8 pt-8 border-t-2 border-black flex flex-col items-center gap-4">
+          <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t-2 border-black flex flex-col items-center gap-4">
             <button 
               onClick={() => setIsLogin(!isLogin)}
-              className="font-bold text-sm underline underline-offset-4 hover:text-accent transition-colors uppercase"
+              className="font-black text-xs md:text-sm underline underline-offset-4 hover:text-accent transition-colors uppercase italic"
             >
               {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Log In"}
             </button>
-            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase">
+            <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest italic">
               <MapPin className="h-3 w-3" /> TRIER, GERMANY
             </div>
           </div>

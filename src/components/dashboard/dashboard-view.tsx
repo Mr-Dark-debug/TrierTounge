@@ -25,9 +25,9 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row pb-20 md:pb-0">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex w-72 border-r-2 border-black flex-col p-6 bg-white shrink-0">
+      <aside className="hidden md:flex w-72 border-r-2 border-black flex-col p-6 bg-white shrink-0 sticky top-0 h-screen overflow-y-auto">
         <h1 className="text-3xl font-black italic mb-12 tracking-tighter">TRIERTONGUE</h1>
         
         <nav className="flex-1 space-y-4">
@@ -35,13 +35,19 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             icon={<Compass className="h-5 w-5" />} 
             label="DISCOVERY" 
             active={activeTab === 'discovery'} 
-            onClick={() => setActiveTab('discovery')} 
+            onClick={() => {
+              setActiveTab('discovery');
+              setSelectedChatId(null);
+            }} 
           />
           <NavButton 
             icon={<LayoutDashboard className="h-5 w-5" />} 
             label="MY MATCHES" 
             active={activeTab === 'matches'} 
-            onClick={() => setActiveTab('matches')} 
+            onClick={() => {
+              setActiveTab('matches');
+              setSelectedChatId(null);
+            }} 
           />
           <NavButton 
             icon={<MessageSquare className="h-5 w-5" />} 
@@ -53,7 +59,10 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             icon={<User className="h-5 w-5" />} 
             label="PROFILE" 
             active={activeTab === 'profile'} 
-            onClick={() => setActiveTab('profile')} 
+            onClick={() => {
+              setActiveTab('profile');
+              setSelectedChatId(null);
+            }} 
           />
         </nav>
 
@@ -72,8 +81,8 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="p-6 md:p-10 max-w-7xl mx-auto">
+      <main className="flex-1 overflow-x-hidden pb-24 md:pb-0">
+        <div className="p-4 md:p-10 max-w-7xl mx-auto">
           {activeTab === 'discovery' && <DiscoveryTab profile={profile} />}
           {activeTab === 'matches' && <MatchesTab profile={profile} onChatOpen={handleOpenChat} />}
           {activeTab === 'chat' && <ChatTab profile={profile} initialChatId={selectedChatId} />}
@@ -83,10 +92,35 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
 
       {/* Bottom Nav - Mobile */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-black flex justify-around p-2 z-50">
-        <MobileNavButton icon={<Compass />} active={activeTab === 'discovery'} onClick={() => setActiveTab('discovery')} />
-        <MobileNavButton icon={<LayoutDashboard />} active={activeTab === 'matches'} onClick={() => setActiveTab('matches')} />
-        <MobileNavButton icon={<MessageSquare />} active={activeTab === 'chat'} onClick={() => setActiveTab('chat')} />
-        <MobileNavButton icon={<User />} active={activeTab === 'profile'} onClick={() => setActiveTab('profile')} />
+        <MobileNavButton 
+          icon={<Compass />} 
+          active={activeTab === 'discovery'} 
+          onClick={() => {
+            setActiveTab('discovery');
+            setSelectedChatId(null);
+          }} 
+        />
+        <MobileNavButton 
+          icon={<LayoutDashboard />} 
+          active={activeTab === 'matches'} 
+          onClick={() => {
+            setActiveTab('matches');
+            setSelectedChatId(null);
+          }} 
+        />
+        <MobileNavButton 
+          icon={<MessageSquare />} 
+          active={activeTab === 'chat'} 
+          onClick={() => setActiveTab('chat')} 
+        />
+        <MobileNavButton 
+          icon={<User />} 
+          active={activeTab === 'profile'} 
+          onClick={() => {
+            setActiveTab('profile');
+            setSelectedChatId(null);
+          }} 
+        />
       </nav>
     </div>
   );
@@ -108,7 +142,13 @@ function NavButton({ icon, label, active, onClick }: any) {
 
 function MobileNavButton({ icon, active, onClick }: any) {
   return (
-    <button onClick={onClick} className={cn("p-4 transition-all", active && "bg-primary border-2 border-black")}>
+    <button 
+      onClick={onClick} 
+      className={cn(
+        "p-4 transition-all flex items-center justify-center flex-1", 
+        active && "bg-primary border-2 border-black mx-1"
+      )}
+    >
       {icon}
     </button>
   );

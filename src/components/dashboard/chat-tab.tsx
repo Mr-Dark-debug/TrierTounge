@@ -6,7 +6,7 @@ import { useCollection, useFirestore } from '@/firebase';
 import { collection, query, orderBy, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, MessageSquareCode } from 'lucide-react';
+import { Send, MessageSquareCode, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function ChatTab({ profile, initialChatId }: { profile: any, initialChatId?: string | null }) {
@@ -50,7 +50,7 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
     e.preventDefault();
     if (!db || !activeChatId || !messageText.trim()) return;
 
-    await addDoc(collection(db, 'matches', activeChatId, 'messages'), {
+    addDoc(collection(db, 'matches', activeChatId, 'messages'), {
       senderId: profile.uid,
       text: messageText,
       timestamp: serverTimestamp()
@@ -61,23 +61,25 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
 
   if (!activeChatId) {
     return (
-      <div className="h-[70vh] flex flex-col items-center justify-center neo-card bg-white border-dashed">
+      <div className="h-[60vh] md:h-[70vh] flex flex-col items-center justify-center neo-card bg-white border-dashed p-4 text-center">
         <MessageSquareCode className="h-16 w-16 mb-6 text-muted-foreground opacity-20" />
-        <h2 className="text-3xl font-black italic uppercase text-muted-foreground tracking-tighter">Select a link to start chatting</h2>
-        <p className="font-bold text-muted-foreground/60 mt-2">Communication is key to exchange.</p>
+        <h2 className="text-2xl md:text-3xl font-black italic uppercase text-muted-foreground tracking-tighter">Select a link to start chatting</h2>
+        <p className="font-bold text-muted-foreground/60 mt-2 text-sm md:text-base">Communication is key to exchange.</p>
       </div>
     );
   }
 
   return (
-    <div className="h-[80vh] flex flex-col neo-card bg-white overflow-hidden animate-in zoom-in-95 duration-300">
+    <div className="h-[calc(100vh-12rem)] md:h-[80vh] flex flex-col neo-card bg-white overflow-hidden animate-in zoom-in-95 duration-300">
       {/* Header */}
-      <div className="p-6 border-b-2 border-black flex items-center justify-between bg-accent/5">
-        <div>
-          <h2 className="text-2xl font-black italic uppercase tracking-tighter">{chatUser?.name || 'Loading...'}</h2>
-          <div className="text-[10px] font-bold uppercase text-muted-foreground">Language Reciprocity active</div>
+      <div className="p-4 md:p-6 border-b-2 border-black flex items-center justify-between bg-accent/5 shrink-0">
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter truncate max-w-[150px] md:max-w-none">
+            {chatUser?.name || 'Loading...'}
+          </h2>
+          <div className="hidden sm:block text-[10px] font-bold uppercase text-muted-foreground">Language Reciprocity active</div>
         </div>
-        <div className="text-xs font-black bg-white border-2 border-black px-2 py-1 uppercase italic shadow-neo-sm">
+        <div className="text-[10px] md:text-xs font-black bg-white border-2 border-black px-2 py-1 uppercase italic shadow-neo-sm shrink-0">
           {chatUser?.profileCode}
         </div>
       </div>
@@ -85,14 +87,14 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
       {/* Messages */}
       <div 
         ref={scrollRef}
-        className="flex-1 p-6 overflow-y-auto space-y-6 bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat"
+        className="flex-1 p-4 md:p-6 overflow-y-auto space-y-6 bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat"
       >
         {messages?.map((msg) => {
           const isMine = msg.senderId === profile.uid;
           return (
-            <div key={msg.id} className={cn("flex", isMine ? "justify-end" : "justify-start")}>
+            <div key={msg.id} className={cn("flex w-full", isMine ? "justify-end" : "justify-start")}>
               <div className={cn(
-                "max-w-[80%] p-4 border-2 border-black font-medium shadow-neo-sm",
+                "max-w-[90%] md:max-w-[80%] p-3 md:p-4 border-2 border-black font-medium shadow-neo-sm text-sm md:text-base",
                 isMine ? "bg-primary" : "bg-white"
               )}>
                 {msg.text}
@@ -103,15 +105,15 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
       </div>
 
       {/* Input */}
-      <form onSubmit={sendMessage} className="p-6 border-t-2 border-black bg-white flex gap-4">
+      <form onSubmit={sendMessage} className="p-4 md:p-6 border-t-2 border-black bg-white flex gap-2 md:gap-4 shrink-0">
         <Input 
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type your message..." 
-          className="neo-input h-14 text-lg flex-1"
+          placeholder="Type..." 
+          className="neo-input h-12 md:h-14 text-base md:text-lg flex-1"
         />
-        <Button type="submit" className="neo-button h-14 w-14 p-0 bg-primary">
-          <Send className="h-6 w-6" />
+        <Button type="submit" className="neo-button h-12 w-12 md:h-14 md:w-14 p-0 bg-primary shrink-0">
+          <Send className="h-5 w-5 md:h-6 w-6" />
         </Button>
       </form>
     </div>
