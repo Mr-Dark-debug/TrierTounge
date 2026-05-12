@@ -37,7 +37,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
           </div>
           <h2 className="text-5xl sm:text-7xl md:text-9xl font-black leading-[0.85] mb-8 tracking-tighter italic">
             {t('heroTitle')}<br/>
-            <span className="text-primary underline decoration-black underline-offset-8">{t('heroHighlight')}</span>
+            <span className="text-accent underline decoration-black underline-offset-8">{t('heroHighlight')}</span>
           </h2>
           <p className="text-lg md:text-2xl font-bold max-w-2xl mx-auto leading-tight mb-12 uppercase italic">
             {t('heroSub')}
