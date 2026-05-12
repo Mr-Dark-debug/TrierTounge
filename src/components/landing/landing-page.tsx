@@ -92,28 +92,54 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Trust & Exclusivity Section */}
-      <section className="py-20 px-4 md:px-8 bg-black text-white border-t-2 border-black">
+      {/* Trust & Exclusivity Section - REDESIGNED */}
+      <section className="py-24 px-4 md:px-8 bg-black text-primary border-y-[4px] border-black">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary mb-4">02 — Security</p>
-          <h2 className="text-5xl md:text-8xl font-black leading-[0.85] uppercase tracking-tighter italic text-primary mb-12">
-            SAFE.<br />EXCLUSIVE.<br />TRIER-ONLY.
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="neo-card bg-zinc-900 border-primary p-8 space-y-4">
-              <ShieldCheck className="h-12 w-12 text-primary" />
-              <h3 className="text-2xl font-black uppercase italic">{t('trust1Title')}</h3>
-              <p className="font-bold text-sm text-zinc-400">{t('trust1Desc')}</p>
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-20">
+            <div className="space-y-6">
+              <p className="text-xs font-black uppercase tracking-[0.4em] bg-primary text-black px-3 py-1 w-fit rotate-[-1deg]">
+                02 — SECURITY PROTOCOL
+              </p>
+              <h2 className="text-6xl md:text-[10rem] font-black leading-[0.75] uppercase tracking-tighter italic text-primary">
+                SAFE.<br />
+                EXCLUSIVE.<br />
+                TRIER-ONLY.
+              </h2>
             </div>
-            <div className="neo-card bg-zinc-900 border-accent p-8 space-y-4">
-              <LocateFixed className="h-12 w-12 text-accent" />
-              <h3 className="text-2xl font-black uppercase italic">{t('trust2Title')}</h3>
-              <p className="font-bold text-sm text-zinc-400">{t('trust2Desc')}</p>
+            <div className="lg:pt-20">
+               <div className="p-4 md:p-8 border-4 border-primary bg-primary/10 text-primary rotate-2 max-w-sm">
+                 <ShieldCheck className="h-16 w-16 mb-6" />
+                 <p className="text-2xl font-black uppercase italic leading-none">{t('trustTitle')}</p>
+               </div>
             </div>
-            <div className="neo-card bg-zinc-900 border-white p-8 space-y-4">
-              <HeartHandshake className="h-12 w-12 text-white" />
-              <h3 className="text-2xl font-black uppercase italic">{t('trust3Title')}</h3>
-              <p className="font-bold text-sm text-zinc-400">{t('trust3Desc')}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-4 border-primary divide-y-4 md:divide-y-0 md:divide-x-4 divide-primary overflow-hidden">
+            <div className="p-8 md:p-12 hover:bg-primary hover:text-black transition-colors group cursor-default">
+              <div className="flex items-center gap-4 mb-8">
+                 <span className="text-4xl font-black font-code group-hover:text-black">01</span>
+                 <UserCheck className="h-8 w-8" />
+              </div>
+              <h3 className="text-3xl font-black uppercase italic mb-4 leading-tight">{t('trust1Title')}</h3>
+              <p className="font-bold text-sm uppercase leading-relaxed opacity-80 group-hover:opacity-100">{t('trust1Desc')}</p>
+            </div>
+
+            <div className="p-8 md:p-12 hover:bg-primary hover:text-black transition-colors group cursor-default">
+              <div className="flex items-center gap-4 mb-8">
+                 <span className="text-4xl font-black font-code group-hover:text-black">02</span>
+                 <LocateFixed className="h-8 w-8" />
+              </div>
+              <h3 className="text-3xl font-black uppercase italic mb-4 leading-tight">{t('trust2Title')}</h3>
+              <p className="font-bold text-sm uppercase leading-relaxed opacity-80 group-hover:opacity-100">{t('trust2Desc')}</p>
+            </div>
+
+            <div className="p-8 md:p-12 hover:bg-primary hover:text-black transition-colors group cursor-default">
+              <div className="flex items-center gap-4 mb-8">
+                 <span className="text-4xl font-black font-code group-hover:text-black">03</span>
+                 <HeartHandshake className="h-8 w-8" />
+              </div>
+              <h3 className="text-3xl font-black uppercase italic mb-4 leading-tight">{t('trust3Title')}</h3>
+              <p className="font-bold text-sm uppercase leading-relaxed opacity-80 group-hover:opacity-100">{t('trust3Desc')}</p>
             </div>
           </div>
         </div>
@@ -137,14 +163,14 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       </section>
 
       {/* Language Spotlight Section */}
-      <section className="py-20 px-4 md:px-8 bg-[#ff69b4] text-black border-t-2 border-black">
+      <section className="py-24 px-4 md:px-8 bg-accent text-black border-t-2 border-black">
         <div className="max-w-6xl mx-auto">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4">04 — Diversity</p>
-          <h2 className="text-[clamp(3rem,10vw,12rem)] font-black leading-[0.75] uppercase tracking-tighter italic break-words mb-12">
+          <p className="text-xs font-bold uppercase tracking-[0.4em] mb-4">04 — DIVERSITY</p>
+          <h2 className="text-[clamp(3.5rem,12vw,14rem)] font-black leading-[0.75] uppercase tracking-tighter italic break-words mb-12">
             {t('langSpotlightTitle')}
           </h2>
           
-          <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-4">
+          <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-4 mb-20">
             {[t('langMandarin'), t('langJapanese'), t('langFrench'), t('langGlobal'), t('langGerman')].map((lang, i) => {
               const mainName = lang.split(' ')[0].replace('(', '');
               return (
@@ -160,12 +186,12 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
             })}
           </div>
 
-          <div className="mt-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-8">
-            <p className="text-xl md:text-3xl font-black uppercase italic leading-tight max-w-xl">
+          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 pt-10 border-t-4 border-black">
+            <p className="text-2xl md:text-4xl font-black uppercase italic leading-tight max-w-2xl">
               {t('langSpotlightSub')}
             </p>
-            <div className="hidden lg:block shrink-0 p-4 border-2 border-black bg-black text-white rotate-3">
-               <Globe className="h-12 w-12 animate-spin-slow" />
+            <div className="hidden lg:block shrink-0 p-4 border-4 border-black bg-black text-white rotate-3 hover:rotate-0 transition-transform">
+               <Globe className="h-16 w-16 animate-spin-slow" />
             </div>
           </div>
         </div>
@@ -181,7 +207,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               onClick={onGetStarted}
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
+                <div className="p-4 bg-white border-2 border-black shadow-neo-sm group-hover:bg-black group-hover:text-white transition-colors">
                   <GraduationCap className="h-10 w-10" />
                 </div>
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
@@ -198,7 +224,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               onClick={onGetStarted}
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-4 bg-white border-2 border-black shadow-neo-sm">
+                <div className="p-4 bg-white border-2 border-black shadow-neo-sm group-hover:bg-black group-hover:text-white transition-colors">
                   <Languages className="h-10 w-10" />
                 </div>
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
@@ -213,9 +239,9 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       </section>
 
       {/* Async Section */}
-      <section className="py-24 px-4 md:px-8 bg-accent text-black border-b-2 border-black">
+      <section className="py-24 px-4 md:px-8 bg-primary text-black border-b-2 border-black">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
-           <div className="neo-card bg-white p-6 rotate-[-2deg] shrink-0">
+           <div className="neo-card bg-white p-6 rotate-[-2deg] shrink-0 border-4">
              <MessageCircle className="h-24 w-24" />
            </div>
            <div className="space-y-6">
@@ -337,3 +363,4 @@ function StatItem({ icon, text }: any) {
     </div>
   )
 }
+
