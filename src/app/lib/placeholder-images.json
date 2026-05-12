@@ -1,0 +1,29 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "student-1",
+      "description": "A student in the Trier university library",
+      "imageUrl": "https://picsum.photos/seed/trier1/400/400",
+      "imageHint": "student university"
+    },
+    {
+      "id": "student-2",
+      "description": "Student drinking coffee on Trier campus",
+      "imageUrl": "https://picsum.photos/seed/trier2/400/400",
+      "imageHint": "student coffee"
+    },
+    {
+      "id": "student-3",
+      "description": "Student studying with laptop",
+      "imageUrl": "https://picsum.photos/seed/trier3/400/400",
+      "imageHint": "student laptop"
+    },
+    {
+      "id": "student-4",
+      "description": "Smiling student with backpack",
+      "imageUrl": "https://picsum.photos/seed/trier4/400/400",
+      "imageHint": "student smile"
+    }
+  ]
+}
