@@ -6,11 +6,14 @@ import { useCollection, useFirestore } from '@/firebase';
 import { collection, query, orderBy, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, MessageSquareCode, ArrowLeft } from 'lucide-react';
+import { Send, MessageSquareCode, Video, Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/context/language-context';
+import Link from 'next/link';
 
 export function ChatTab({ profile, initialChatId }: { profile: any, initialChatId?: string | null }) {
   const db = useFirestore();
+  const { t } = useLanguage();
   const [activeChatId, setActiveChatId] = useState<string | null>(initialChatId || null);
   const [chatUser, setChatUser] = useState<any>(null);
   const [messageText, setMessageText] = useState('');
@@ -79,8 +82,16 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
           </h2>
           <div className="hidden sm:block text-[10px] font-bold uppercase text-muted-foreground">Language Reciprocity active</div>
         </div>
-        <div className="text-[10px] md:text-xs font-black bg-white border-2 border-black px-2 py-1 uppercase italic shadow-neo-sm shrink-0">
-          {chatUser?.profileCode}
+        <div className="flex items-center gap-2 md:gap-4">
+          <Link href={`/call/${activeChatId}`}>
+            <Button className="neo-button bg-primary h-10 md:h-12 px-3 md:px-4 flex items-center gap-2">
+              <Video className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="hidden sm:inline text-xs font-black uppercase italic">{t('startCall')}</span>
+            </Button>
+          </Link>
+          <div className="text-[10px] md:text-xs font-black bg-white border-2 border-black px-2 py-1 uppercase italic shadow-neo-sm shrink-0">
+            {chatUser?.profileCode}
+          </div>
         </div>
       </div>
 

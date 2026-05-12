@@ -69,7 +69,16 @@ export const translations = {
     pitchPoint2Desc: "Ensure a closed, verified environment exclusively for enrolled students.",
     pitchPoint3: "Data Synergy",
     pitchPoint3Desc: "Automatic synchronization with faculty and department records.",
-    contactUni: "CONTACT ADMINISTRATION"
+    contactUni: "CONTACT ADMINISTRATION",
+    // New
+    startCall: "START PRACTICE CALL",
+    practiceRoom: "PRACTICE ROOM",
+    genStarters: "GET AI CONVERSATION STARTERS",
+    startersTitle: "Ice Breakers",
+    endCall: "END SESSION",
+    settingsTitle: "ACCOUNT SETTINGS",
+    saveSettings: "SAVE CHANGES",
+    settingsSaved: "Settings updated successfully!",
   },
   de: {
     appName: "TRIERTONGUE",
@@ -138,7 +147,16 @@ export const translations = {
     pitchPoint2Desc: "Gewährleisten Sie eine geschlossene Umgebung exklusiv für eingeschriebene Studierende.",
     pitchPoint3: "Datensynergie",
     pitchPoint3Desc: "Automatische Synchronisation mit Fakultäts- und Fachbereichsdaten.",
-    contactUni: "UNI-VERWALTUNG KONTAKTIEREN"
+    contactUni: "UNI-VERWALTUNG KONTAKTIEREN",
+    // New
+    startCall: "ÜBUNGSANRUF STARTEN",
+    practiceRoom: "ÜBUNGSRAUM",
+    genStarters: "KI-GESPRÄCHSTHEMEN ABRUFEN",
+    startersTitle: "Eisbrecher",
+    endCall: "SITZUNG BEENDEN",
+    settingsTitle: "KONTO-EINSTELLUNGEN",
+    saveSettings: "ÄNDERUNGEN SPEICHERN",
+    settingsSaved: "Einstellungen erfolgreich aktualisiert!",
   },
   es: {
     appName: "TRIERTONGUE",
@@ -205,7 +223,15 @@ export const translations = {
     pitchPoint2Desc: "Garantiza un entorno cerrado exclusivamente para estudiantes matriculados.",
     pitchPoint3: "Sinergia de Datos",
     pitchPoint3Desc: "Sincronización automática con los registros de facultades y departamentos.",
-    contactUni: "CONTACTAR ADMINISTRACIÓN"
+    contactUni: "CONTACTAR ADMINISTRACIÓN",
+    startCall: "INICIAR LLAMADA DE PRÁCTICA",
+    practiceRoom: "SALA DE PRÁCTICA",
+    genStarters: "OBTENER TEMAS DE IA",
+    startersTitle: "Rompehielos",
+    endCall: "FINALIZAR SESIÓN",
+    settingsTitle: "AJUSTES DE CUENTA",
+    saveSettings: "GUARDAR CAMBIOS",
+    settingsSaved: "¡Ajustes actualizados correctamente!",
   },
   fr: {
     appName: "TRIERTONGUE",
@@ -272,6 +298,14 @@ export const translations = {
     pitchPoint2Desc: "Garantissez un environnement fermé exclusivement pour les étudiants inscrits.",
     pitchPoint3: "Synergie des Données",
     pitchPoint3Desc: "Synchronisation automatique avec les registres des facultés et départements.",
-    contactUni: "CONTACTER L'ADMINISTRATION"
+    contactUni: "CONTACTER L'ADMINISTRATION",
+    startCall: "LANCER L'APPEL D'ENTRAÎNEMENT",
+    practiceRoom: "SALLE D'ENTRAÎNEMENT",
+    genStarters: "OBTENIR DES THÈMES IA",
+    startersTitle: "Brise-glace",
+    endCall: "TERMINER LA SESSION",
+    settingsTitle: "PARAMÈTRES DU COMPTE",
+    saveSettings: "ENREGISTRER",
+    settingsSaved: "Paramètres mis à jour avec succès !",
   }
 };

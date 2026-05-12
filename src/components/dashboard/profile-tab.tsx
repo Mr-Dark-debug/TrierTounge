@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Button } from '@/components/ui/button';
@@ -5,8 +6,12 @@ import { Card } from '@/components/ui/card';
 import { GraduationCap, Languages, Sparkles, MapPin, Instagram, Send, Edit, ShieldCheck, Building2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useLanguage } from '@/context/language-context';
 
 export function ProfileTab({ profile }: { profile: any }) {
+  const { t } = useLanguage();
+
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-500 pb-12">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
@@ -15,12 +20,14 @@ export function ProfileTab({ profile }: { profile: any }) {
             <span className="text-[10px] font-black uppercase bg-primary px-2 py-0.5 border-2 border-black tracking-widest">Settings & Identity</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black italic tracking-tighter uppercase leading-none">
-            YOUR<br/>PROFILE.
+            {t('yourProfile').split('.')[0]}<br/>PROFILE.
           </h2>
         </div>
-        <Button className="neo-button bg-white h-14 px-8 flex items-center gap-2">
-          <Edit className="h-5 w-5" /> EDIT DETAILS
-        </Button>
+        <Link href="/settings">
+          <Button className="neo-button bg-white h-14 px-8 flex items-center gap-2">
+            <Edit className="h-5 w-5" /> {t('editDetails')}
+          </Button>
+        </Link>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -41,7 +48,7 @@ export function ProfileTab({ profile }: { profile: any }) {
               <p className="text-[10px] font-black text-primary uppercase">Year {profile.year}</p>
             </div>
             <div className="p-4 bg-primary/20 border-2 border-black border-dashed">
-              <span className="text-[10px] font-black uppercase block mb-1">Unique Profile Code</span>
+              <span className="text-[10px] font-black uppercase block mb-1">{t('profileCode')}</span>
               <span className="text-2xl font-black tracking-widest font-code">{profile.profileCode}</span>
             </div>
           </div>
@@ -70,12 +77,12 @@ export function ProfileTab({ profile }: { profile: any }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="neo-card bg-primary p-6 space-y-3">
               <Languages className="h-8 w-8" />
-              <h4 className="text-xl font-black italic uppercase">Native Speaker</h4>
+              <h4 className="text-xl font-black italic uppercase">{t('beTeacher')}</h4>
               <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.nativeLanguage}</p>
             </div>
             <div className="neo-card bg-accent p-6 space-y-3">
               <Sparkles className="h-8 w-8" />
-              <h4 className="text-xl font-black italic uppercase">Learning Target</h4>
+              <h4 className="text-xl font-black italic uppercase">{t('beStudent')}</h4>
               <p className="font-bold text-2xl tracking-tighter uppercase leading-none">{profile.targetLanguage}</p>
             </div>
           </div>
@@ -111,13 +118,15 @@ export function ProfileTab({ profile }: { profile: any }) {
             <div className="flex items-center gap-4">
               <ShieldCheck className="h-10 w-10 text-primary shrink-0" />
               <div>
-                <h4 className="font-black italic uppercase text-lg leading-none mb-1">Safety & Privacy</h4>
+                <h4 className="font-black italic uppercase text-lg leading-none mb-1">{t('safetyPrivacy')}</h4>
                 <p className="text-xs text-white/60">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
               </div>
             </div>
-            <Button variant="outline" className="w-full md:w-auto border-white text-white hover:bg-white hover:text-black neo-button bg-transparent">
-              SECURITY SETTINGS
-            </Button>
+            <Link href="/settings">
+              <Button variant="outline" className="w-full md:w-auto border-white text-white hover:bg-white hover:text-black neo-button bg-transparent">
+                {t('settings')}
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
