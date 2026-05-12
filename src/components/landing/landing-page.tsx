@@ -92,7 +92,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Trust & Exclusivity Section - REDESIGNED */}
+      {/* Trust & Exclusivity Section */}
       <section className="py-24 px-4 md:px-8 bg-black text-primary border-y-[4px] border-black">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col lg:flex-row items-start justify-between gap-12 mb-20">
@@ -106,11 +106,8 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 TRIER-ONLY.
               </h2>
             </div>
-            <div className="lg:pt-20">
-               <div className="p-4 md:p-8 border-4 border-primary bg-primary/10 text-primary rotate-2 max-w-sm">
-                 <ShieldCheck className="h-16 w-16 mb-6" />
-                 <p className="text-2xl font-black uppercase italic leading-none">{t('trustTitle')}</p>
-               </div>
+            <div className="lg:pt-20 hidden lg:block">
+              <ShieldCheck className="h-32 w-32 text-primary opacity-20" />
             </div>
           </div>
 
@@ -289,15 +286,15 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         </div>
       </section>
 
-      {/* Stats Block */}
-      <section className="py-24 px-4 md:px-8 bg-black text-white">
+      {/* Stats Block - REVAMPED */}
+      <section className="py-24 px-4 md:px-8 bg-black text-white border-b-2 border-black overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-black italic uppercase text-center mb-16 tracking-widest text-zinc-500">{t('statsTitle')}</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-             <StatItem icon={<Users />} text={t('stat1')} />
-             <StatItem icon={<BookOpen />} text={t('stat2')} />
-             <StatItem icon={<Sparkles />} text={t('stat3')} />
-             <StatItem icon={<AppWindow />} text={t('stat4')} />
+          <p className="text-xs font-black uppercase tracking-[0.4em] text-primary mb-12 text-center">05 — OUR SCALE</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-primary border-4 border-primary">
+             <StatItem icon={<Users />} number="1,000+" text={t('stat1')} />
+             <StatItem icon={<BookOpen />} number="6" text={t('stat2')} />
+             <StatItem icon={<Sparkles />} number="0" text={t('stat3')} />
+             <StatItem icon={<AppWindow />} number="1" text={t('stat4')} />
           </div>
         </div>
       </section>
@@ -353,14 +350,18 @@ function SpotCard({ icon, title, desc, color }: any) {
   )
 }
 
-function StatItem({ icon, text }: any) {
+function StatItem({ icon, number, text }: { icon: React.ReactNode, number: string, text: string }) {
   return (
-    <div className="flex flex-col items-center text-center gap-4">
-      <div className="p-4 bg-zinc-800 border-2 border-zinc-700 text-primary">
+    <div className="bg-black p-10 flex flex-col items-center text-center group transition-colors hover:bg-zinc-900">
+      <div className="text-primary mb-6 transition-transform group-hover:scale-110">
         {icon}
       </div>
-      <p className="font-black uppercase italic text-sm tracking-tight">{text}</p>
+      <div className="text-6xl md:text-7xl font-black italic tracking-tighter uppercase leading-none mb-4 text-primary">
+        {number}
+      </div>
+      <p className="font-black uppercase italic text-xs tracking-widest text-zinc-400 group-hover:text-white transition-colors">
+        {text.includes('+') ? text.split(' ').slice(1).join(' ') : text}
+      </p>
     </div>
   )
 }
-
