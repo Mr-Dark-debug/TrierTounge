@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react';
 import { AuthView } from '@/components/auth/auth-view';
 import { DashboardView } from '@/components/dashboard/dashboard-view';
 import { ProfileBuilder } from '@/components/onboarding/profile-builder';
+import { LandingPage } from '@/components/landing/landing-page';
 import { useUser, useDoc, useFirestore, useAuth } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 
 export default function Home() {
   const { user, loading: authLoading } = useUser();
+  const [showAuth, setShowAuth] = useState(false);
   const db = useFirestore();
   const auth = useAuth();
   
@@ -19,13 +21,15 @@ export default function Home() {
   );
 
   const handleLogout = async () => {
-    if (auth) await signOut(auth);
+    if (auth) {
+      await signOut(auth);
+      setShowAuth(false);
+    }
   };
 
   const handleProfileComplete = (updatedData: any) => {
     if (!db || !user) return;
     
-    // Generate a unique profile code if not exists
     const profileCode = profile?.profileCode || `#${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
     
     const fullProfile = {
@@ -48,13 +52,19 @@ export default function Home() {
     );
   }
 
+  // Not logged in
   if (!user) {
-    return <AuthView />;
+    if (showAuth) {
+      return <AuthView onBack={() => setShowAuth(false)} />;
+    }
+    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
   }
 
+  // Logged in but profile incomplete
   if (!profile || !profile.onboardingCompleted) {
     return <ProfileBuilder user={user} onComplete={handleProfileComplete} onLogout={handleLogout} />;
   }
 
+  // Logged in and complete
   return <DashboardView profile={profile} onLogout={handleLogout} />;
 }

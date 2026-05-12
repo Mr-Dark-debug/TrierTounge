@@ -5,14 +5,14 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Languages, GraduationCap, MapPin, ArrowRight } from 'lucide-react';
+import { Languages, GraduationCap, MapPin, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { useLanguage } from '@/context/language-context';
 
-export function AuthView() {
+export function AuthView({ onBack }: { onBack: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,7 +46,12 @@ export function AuthView() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-background overflow-x-hidden">
-      {/* Absolute Language Switcher */}
+      {/* Absolute Header Controls */}
+      <div className="absolute top-4 left-4 z-50">
+        <Button onClick={onBack} variant="ghost" className="neo-button bg-white p-2">
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+      </div>
       <div className="absolute top-4 right-4 z-50">
         <LanguageSwitcher />
       </div>
