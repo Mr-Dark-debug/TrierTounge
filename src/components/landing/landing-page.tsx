@@ -94,6 +94,9 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beTeacher')}</h3>
               </div>
               <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beTeacherDesc')}</p>
+              <Button onClick={onGetStarted} className="mt-8 neo-button bg-white text-black w-fit uppercase italic tracking-tighter">
+                {t('letsGo')} <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
             </div>
             
             <div className="neo-card p-8 md:p-12 bg-accent rotate-[1deg] flex flex-col h-full">
@@ -104,6 +107,9 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
                 <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('beStudent')}</h3>
               </div>
               <p className="text-xl md:text-2xl font-bold leading-tight italic">{t('beStudentDesc')}</p>
+              <Button onClick={onGetStarted} className="mt-8 neo-button bg-white text-black w-fit uppercase italic tracking-tighter">
+                {t('letsGo')} <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
             </div>
           </div>
         </div>
