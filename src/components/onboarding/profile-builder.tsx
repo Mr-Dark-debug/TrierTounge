@@ -12,8 +12,8 @@ import { LogOut, ChevronRight, ChevronLeft, MapPin, Globe, Sparkles, Calendar, L
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { faculties, englishMasters, campuses, residentialAreas, dorms } from '@/lib/trier-data';
-import teacherImg from '@/assets/ill4.jpg';
-import studentImg from '@/assets/ill6.jpg';
+import teacherImg from '@/assets/teacher-img.jpg';
+import studentImg from '@/assets/student-img.jpg';
 
 interface ProfileBuilderProps {
   user: any;
@@ -93,11 +93,11 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                 </div>
                 <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Academic Identity</h3>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Faculty</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, faculty: v, major: ''})} value={formData.faculty}>
+                  <Select onValueChange={(v) => setFormData({ ...formData, faculty: v, major: '' })} value={formData.faculty}>
                     <SelectTrigger className="neo-input h-12 md:h-14">
                       <SelectValue placeholder="Select Faculty" />
                     </SelectTrigger>
@@ -109,8 +109,8 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
 
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Department / Subject</Label>
-                  <Select 
-                    onValueChange={(v) => setFormData({...formData, major: v})} 
+                  <Select
+                    onValueChange={(v) => setFormData({ ...formData, major: v })}
                     value={formData.major}
                     disabled={!formData.faculty}
                   >
@@ -124,9 +124,9 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                 </div>
 
                 <div className="flex items-center gap-4 py-4 border-y-2 border-black border-dashed">
-                  <Switch 
+                  <Switch
                     checked={formData.isEnglishProgramme}
-                    onCheckedChange={(v) => setFormData({...formData, isEnglishProgramme: v, englishProgramme: ''})}
+                    onCheckedChange={(v) => setFormData({ ...formData, isEnglishProgramme: v, englishProgramme: '' })}
                   />
                   <Label className="font-bold text-xs uppercase italic">I am in an English-taught Master's Programme</Label>
                 </div>
@@ -134,7 +134,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                 {formData.isEnglishProgramme && (
                   <div className="space-y-2 animate-in slide-in-from-top-2">
                     <Label className="font-bold uppercase text-[10px] md:text-xs">English Programme</Label>
-                    <Select onValueChange={(v) => setFormData({...formData, englishProgramme: v})} value={formData.englishProgramme}>
+                    <Select onValueChange={(v) => setFormData({ ...formData, englishProgramme: v })} value={formData.englishProgramme}>
                       <SelectTrigger className="neo-input h-12 md:h-14">
                         <SelectValue placeholder="Select Programme" />
                       </SelectTrigger>
@@ -147,7 +147,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
 
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Study Year</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, year: v})} value={formData.year}>
+                  <Select onValueChange={(v) => setFormData({ ...formData, year: v })} value={formData.year}>
                     <SelectTrigger className="neo-input h-12 md:h-14">
                       <SelectValue placeholder="Select Year" />
                     </SelectTrigger>
@@ -173,11 +173,11 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                 </div>
                 <h3 className="text-2xl md:text-4xl font-black italic leading-tight">Campus & Residence</h3>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Primary Campus</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, campus: v})} value={formData.campus}>
+                  <Select onValueChange={(v) => setFormData({ ...formData, campus: v })} value={formData.campus}>
                     <SelectTrigger className="neo-input h-12 md:h-14">
                       <SelectValue placeholder="Select Campus" />
                     </SelectTrigger>
@@ -189,7 +189,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
 
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Residential Area</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, residentialArea: v})} value={formData.residentialArea}>
+                  <Select onValueChange={(v) => setFormData({ ...formData, residentialArea: v })} value={formData.residentialArea}>
                     <SelectTrigger className="neo-input h-12 md:h-14">
                       <SelectValue placeholder="Select Area" />
                     </SelectTrigger>
@@ -201,7 +201,7 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
 
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Dormitory (Optional)</Label>
-                  <Select onValueChange={(v) => setFormData({...formData, dorm: v})} value={formData.dorm}>
+                  <Select onValueChange={(v) => setFormData({ ...formData, dorm: v })} value={formData.dorm}>
                     <SelectTrigger className="neo-input h-12 md:h-14">
                       <SelectValue placeholder="Select Dorm (if applicable)" />
                     </SelectTrigger>
@@ -233,9 +233,9 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-2">
                     {languages.map(lang => (
-                      <button 
+                      <button
                         key={lang}
-                        onClick={() => setFormData({...formData, nativeLanguage: lang})}
+                        onClick={() => setFormData({ ...formData, nativeLanguage: lang })}
                         className={cn(
                           "p-2 text-xs font-bold border-2 border-black transition-all",
                           formData.nativeLanguage === lang ? "bg-primary shadow-none translate-x-[2px] translate-y-[2px]" : "bg-white shadow-neo-sm"
@@ -255,9 +255,9 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 gap-2">
                     {languages.map(lang => (
-                      <button 
+                      <button
                         key={lang}
-                        onClick={() => setFormData({...formData, targetLanguage: lang})}
+                        onClick={() => setFormData({ ...formData, targetLanguage: lang })}
                         className={cn(
                           "p-2 text-xs font-bold border-2 border-black transition-all",
                           formData.targetLanguage === lang ? "bg-accent shadow-none translate-x-[2px] translate-y-[2px]" : "bg-white shadow-neo-sm"
@@ -283,21 +283,21 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
               <div className="space-y-6">
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Academic Goals & Interests</Label>
-                  <Textarea 
-                    placeholder="e.g. I want to study for the Law exams together and learn German terminology..." 
+                  <Textarea
+                    placeholder="e.g. I want to study for the Law exams together and learn German terminology..."
                     className="neo-input min-h-[100px] md:min-h-[120px]"
                     value={formData.academicGoals}
-                    onChange={(e) => setFormData({...formData, academicGoals: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, academicGoals: e.target.value })}
                   />
                   <p className="text-[10px] md:text-xs font-bold text-muted-foreground">{formData.academicGoals.length}/20 min chars</p>
                 </div>
                 <div className="space-y-2">
                   <Label className="font-bold uppercase text-[10px] md:text-xs">Social Goals & Activities</Label>
-                  <Textarea 
-                    placeholder="e.g. I love hiking in the vineyards near Trier and want to talk about films..." 
+                  <Textarea
+                    placeholder="e.g. I love hiking in the vineyards near Trier and want to talk about films..."
                     className="neo-input min-h-[100px] md:min-h-[120px]"
                     value={formData.socialGoals}
-                    onChange={(e) => setFormData({...formData, socialGoals: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, socialGoals: e.target.value })}
                   />
                   <p className="text-[10px] md:text-xs font-bold text-muted-foreground">{formData.socialGoals.length}/20 min chars</p>
                 </div>
@@ -359,27 +359,27 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <Label className="font-bold uppercase text-[10px] md:text-xs">Instagram Username</Label>
-                      <Input 
-                        placeholder="@username" 
+                      <Input
+                        placeholder="@username"
                         className="neo-input h-12"
                         value={formData.instagram}
-                        onChange={(e) => setFormData({...formData, instagram: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                       />
                     </div>
                     <div className="space-y-2">
                       <Label className="font-bold uppercase text-[10px] md:text-xs">Telegram Handle</Label>
-                      <Input 
-                        placeholder="@t_username" 
+                      <Input
+                        placeholder="@t_username"
                         className="neo-input h-12"
                         value={formData.telegram}
-                        onChange={(e) => setFormData({...formData, telegram: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-4 pt-4 border-t-2 border-black">
-                    <Switch 
+                    <Switch
                       checked={formData.showContactOnMatch}
-                      onCheckedChange={(v) => setFormData({...formData, showContactOnMatch: v})}
+                      onCheckedChange={(v) => setFormData({ ...formData, showContactOnMatch: v })}
                     />
                     <Label className="font-bold text-xs md:text-sm">Reveal handles only after mutual match acceptance.</Label>
                   </div>
@@ -390,26 +390,26 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
         </div>
 
         <footer className="mt-auto py-4 md:py-8 border-t-2 border-black flex justify-between items-center bg-white p-4 neo-card shrink-0">
-          <Button 
-            variant="outline" 
-            onClick={prevStep} 
+          <Button
+            variant="outline"
+            onClick={prevStep}
             disabled={step === 1}
             className="neo-button bg-white disabled:opacity-50 h-10 md:h-12 text-xs md:text-sm px-4 md:px-6"
           >
             <ChevronLeft className="mr-1 md:mr-2 h-3 w-3 md:h-4 md:w-4" /> BACK
           </Button>
-          
+
           {step < 6 ? (
-            <Button 
-              onClick={nextStep} 
+            <Button
+              onClick={nextStep}
               disabled={!isStepValid()}
               className="neo-button min-w-[100px] md:min-w-[120px] h-10 md:h-12 text-xs md:text-sm px-4 md:px-6"
             >
               NEXT <ChevronRight className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />
             </Button>
           ) : (
-            <Button 
-              onClick={handleFinish} 
+            <Button
+              onClick={handleFinish}
               className="neo-button bg-accent min-w-[100px] md:min-w-[120px] h-10 md:h-12 text-xs md:text-sm px-4 md:px-6"
             >
               LAUNCH! <Sparkles className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />

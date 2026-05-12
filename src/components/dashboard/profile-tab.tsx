@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLanguage } from '@/context/language-context';
-import teacherImg from '@/assets/ill4.jpg';
-import studentImg from '@/assets/ill6.jpg';
+import teacherImg from '@/assets/teacher-img.jpg';
+import studentImg from '@/assets/student-img.jpg';
 
 export function ProfileTab({ profile }: { profile: any }) {
   const { t } = useLanguage();

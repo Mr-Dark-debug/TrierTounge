@@ -8,7 +8,7 @@ import { Database, ShieldCheck, UserCheck, ArrowLeft, Globe, Zap, Send } from 'l
 import Link from 'next/link';
 import Image from 'next/image';
 import adminImg from '@/assets/ill8.jpg';
-import visionImg from '@/assets/ill7.jpg';
+import visionImg from '@/assets/vision-img.jpg';
 
 export default function PitchPage() {
   const { t } = useLanguage();
@@ -44,17 +44,17 @@ export default function PitchPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           <div className="space-y-6">
-            <PitchPoint 
+            <PitchPoint
               icon={<Zap className="h-8 w-8 text-primary" />}
               title={t('pitchPoint1')}
               desc={t('pitchPoint1Desc')}
             />
-            <PitchPoint 
+            <PitchPoint
               icon={<ShieldCheck className="h-8 w-8 text-accent" />}
               title={t('pitchPoint2')}
               desc={t('pitchPoint2Desc')}
             />
-            <PitchPoint 
+            <PitchPoint
               icon={<Database className="h-8 w-8 text-black" />}
               title={t('pitchPoint3')}
               desc={t('pitchPoint3Desc')}
@@ -62,7 +62,7 @@ export default function PitchPage() {
           </div>
           <div className="neo-card bg-white p-8 border-dashed flex flex-col justify-center items-center text-center space-y-8">
             <div className="relative w-48 h-48 border-4 border-black overflow-hidden">
-               <Image src={adminImg} alt="Administration" fill className="object-cover" />
+              <Image src={adminImg} alt="Administration" fill className="object-cover" />
             </div>
             <div className="space-y-4">
               <h3 className="text-2xl font-black uppercase italic tracking-tight">Request a Demo for Studierendenwerk or HR</h3>
@@ -75,20 +75,19 @@ export default function PitchPage() {
         </div>
 
         {/* Our Vision */}
-        <div className="neo-card bg-accent text-white p-10 space-y-8 mb-12">
+        <div className="neo-card bg-accent text-black p-10 space-y-8 mb-12">
           <div className="flex flex-col md:flex-row items-center gap-10">
             <div className="relative w-full md:w-1/3 aspect-square border-4 border-black overflow-hidden bg-white shrink-0">
                <Image src={visionImg} alt="Our Vision" fill className="object-cover" />
             </div>
             <div className="space-y-4">
-              <h3 className="text-4xl font-black italic uppercase text-white">Our Vision</h3>
+              <h3 className="text-4xl font-black italic uppercase text-black">Our Vision</h3>
               <p className="text-xl font-bold italic leading-tight">
                 To create a unified campus where language is a bridge, not a barrier. We envision every student at University of Trier graduating with global perspectives and local roots.
               </p>
             </div>
           </div>
         </div>
-
         {/* Integration Details - Commented out as requested
         <div className="neo-card bg-black text-white p-10 space-y-8">
           <h3 className="text-4xl font-black italic uppercase text-primary">Technical Specs</h3>
