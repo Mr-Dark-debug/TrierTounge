@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { Database, ShieldCheck, UserCheck, ArrowLeft, Globe, Zap, Send } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import adminImg from '@/assets/ill8.jpg';
 
 export default function PitchPage() {
   const { t } = useLanguage();
@@ -59,8 +60,8 @@ export default function PitchPage() {
             />
           </div>
           <div className="neo-card bg-white p-8 border-dashed flex flex-col justify-center items-center text-center space-y-8">
-            <div className="relative w-48 h-48 border-4 border-black overflow-hidden grayscale">
-               <Image src="https://picsum.photos/seed/trier-admin/400/400" alt="Administration" fill className="object-cover" />
+            <div className="relative w-48 h-48 border-4 border-black overflow-hidden">
+               <Image src={adminImg} alt="Administration" fill className="object-cover" />
             </div>
             <div className="space-y-4">
               <h3 className="text-2xl font-black uppercase italic tracking-tight">Request a Demo for Studierendenwerk or HR</h3>

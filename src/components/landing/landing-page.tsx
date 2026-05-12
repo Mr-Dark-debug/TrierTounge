@@ -12,6 +12,10 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import bgImage from '@/assets/bg 2.jpg';
+import step1Img from '@/assets/ill 3.jpg';
+import step2Img from '@/assets/ill2.jpg';
+import step3Img from '@/assets/ill3.jpg';
 
 export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const { t } = useLanguage();
@@ -35,24 +39,37 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-16 md:pt-48 md:pb-32 px-4 md:px-8 text-center bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat">
-        <div className="max-w-5xl mx-auto">
-          <div className="inline-block bg-accent px-4 py-1 border-2 border-black mb-8 font-black uppercase tracking-widest text-xs md:text-sm rotate-2">
+      <section className="relative min-h-[100dvh] pt-32 pb-16 md:pt-48 md:pb-32 px-4 md:px-8 flex flex-col items-center justify-center text-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src={bgImage} 
+            alt="Hero Background" 
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+        </div>
+        
+        <div className="relative z-10 max-w-5xl mx-auto w-full">
+          <div className="inline-block bg-accent px-4 py-1 border-2 border-black mb-6 md:mb-8 font-black uppercase tracking-widest text-xs md:text-sm rotate-2">
             {t('exclusive')}
           </div>
-          <h2 className="text-5xl sm:text-7xl md:text-9xl font-black leading-[0.85] mb-8 tracking-tighter italic text-black">
+          <h2 
+            className="text-[clamp(3.5rem,8vw,8.5rem)] font-black leading-[0.85] mb-8 md:mb-14 tracking-tighter italic text-white break-words"
+            style={{
+              WebkitTextStroke: '2px black',
+              textShadow: '4px 4px 0px black, 6px 6px 0px rgba(0,0,0,0.2)'
+            }}
+          >
             {t('heroTitle')}<br/>
-            <span className="text-accent underline decoration-black underline-offset-8">{t('heroHighlight')}</span>
+            <span className="text-accent underline decoration-black md:decoration-8 underline-offset-4 md:underline-offset-8">{t('heroHighlight')}</span>
           </h2>
-          <p className="text-lg md:text-2xl font-bold max-w-2xl mx-auto leading-tight mb-12 uppercase italic">
-            {t('heroSub')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button onClick={onGetStarted} className="w-full sm:w-auto neo-button text-lg md:text-2xl py-8 md:py-10 px-10 group bg-primary">
-              {t('getStarted')} <ArrowRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md sm:max-w-none mx-auto">
+            <Button onClick={onGetStarted} className="w-full sm:w-auto neo-button text-base sm:text-lg md:text-2xl py-6 sm:py-8 md:py-10 px-8 sm:px-10 group bg-primary">
+              {t('getStarted')} <ArrowRight className="ml-2 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Link href="/pitch" className="w-full sm:w-auto">
-              <Button variant="outline" className="w-full neo-button-pink text-lg md:text-2xl py-8 md:py-10 px-10">
+              <Button variant="outline" className="w-full neo-button-pink text-base sm:text-lg md:text-2xl py-6 sm:py-8 md:py-10 px-8 sm:px-10">
                 {t('forUni')}
               </Button>
             </Link>
@@ -71,19 +88,19 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <LandingCard 
-              icon={<UserCheck className="h-10 w-10" />} 
+              icon={<Image src={step1Img} alt="Step 1" width={160} height={160} className="w-40 h-40 object-cover" />} 
               title={t('step1Title')} 
               desc={t('step1Desc')} 
               bgColor="bg-primary/20"
             />
             <LandingCard 
-              icon={<Sparkles className="h-10 w-10" />} 
+              icon={<Image src={step2Img} alt="Step 2" width={160} height={160} className="w-40 h-40 object-cover" />} 
               title={t('step2Title')} 
               desc={t('step2Desc')} 
               bgColor="bg-accent/20"
             />
             <LandingCard 
-              icon={<MapPin className="h-10 w-10" />} 
+              icon={<Image src={step3Img} alt="Step 3" width={160} height={160} className="w-40 h-40 object-cover" />} 
               title={t('step3Title')} 
               desc={t('step3Desc')} 
               bgColor="bg-white"
@@ -384,7 +401,7 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
 function LandingCard({ icon, title, desc, bgColor }: any) {
   return (
     <div className={cn("neo-card p-8 flex flex-col items-center text-center space-y-4", bgColor)}>
-      <div className="p-4 bg-white border-2 border-black mb-4">
+      <div className="bg-white border-2 border-black mb-4 flex items-center justify-center overflow-hidden">
         {icon}
       </div>
       <h3 className="text-2xl font-black uppercase italic">{title}</h3>
