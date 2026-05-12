@@ -3,6 +3,10 @@
 
 **TrierTongue** is a high-contrast, neo-brutalist language exchange platform designed exclusively for students at the **University of Trier**. It bridges the gap between domestic and international students through reciprocal matching and smart campus integration.
 
+---
+<img width="1919" height="926" alt="image" src="https://github.com/user-attachments/assets/63a2078a-1bc7-4b78-9f4e-1551c7de5157" />
+---
+
 ## 🚀 Key Features
 
 ### 1. Reciprocal Matching (Powered by Genkit)
