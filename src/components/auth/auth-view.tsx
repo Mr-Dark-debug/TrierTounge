@@ -25,6 +25,26 @@ export function AuthView({ onBack }: { onBack: () => void }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!auth) return;
+
+    // Enforce @uni-trier.de email domain
+    if (!email.toLowerCase().endsWith('@uni-trier.de')) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Email Domain",
+        description: "Only @uni-trier.de university email addresses are allowed. Please use your university email."
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Weak Password",
+        description: "Password must be at least 6 characters long."
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -34,10 +54,25 @@ export function AuthView({ onBack }: { onBack: () => void }) {
         await createUserWithEmailAndPassword(auth, email, password);
       }
     } catch (error: any) {
+      let friendlyMessage = error.message;
+      const code = error.code || '';
+      
+      if (code === 'auth/configuration-not-found') {
+        friendlyMessage = 'Email/Password sign-in is not enabled in the Firebase Console. Go to Firebase Console → Authentication → Sign-in method → Enable Email/Password.';
+      } else if (code === 'auth/email-already-in-use') {
+        friendlyMessage = 'This email is already registered. Try logging in instead.';
+      } else if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
+        friendlyMessage = 'Invalid email or password. Please check your credentials.';
+      } else if (code === 'auth/too-many-requests') {
+        friendlyMessage = 'Too many failed attempts. Please try again later.';
+      } else if (code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.') {
+        friendlyMessage = 'Firebase API key is invalid. Please check your .env configuration.';
+      }
+
       toast({
         variant: "destructive",
         title: "Auth Error",
-        description: error.message
+        description: friendlyMessage
       });
     } finally {
       setLoading(false);

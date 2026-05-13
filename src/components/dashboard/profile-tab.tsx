@@ -39,7 +39,7 @@ export function ProfileTab({ profile }: { profile: any }) {
             <div className="relative h-48 w-48 mx-auto border-2 border-black bg-muted grayscale">
               <Image 
                 src={`https://picsum.photos/seed/${profile.uid}/400/400`} 
-                alt={profile.name} 
+                alt={profile.name || "Profile Picture"} 
                 fill 
                 className="object-cover"
               />
@@ -129,7 +129,7 @@ export function ProfileTab({ profile }: { profile: any }) {
               <ShieldCheck className="h-10 w-10 text-primary shrink-0" />
               <div>
                 <h4 className="font-black italic uppercase text-lg leading-none mb-1">{t('safetyPrivacy')}</h4>
-                <p className="text-xs text-white/60">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
+                <p className="text-sm font-bold opacity-90">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
               </div>
             </div>
             <Link href="/settings">

@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Search, Filter, Sparkles, X } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
+import Image from 'next/image';
+import ill13 from '@/assets/ill13.jpg';
 
 export function DiscoveryTab({ profile }: { profile: any }) {
   const db = useFirestore();
@@ -48,7 +50,8 @@ export function DiscoveryTab({ profile }: { profile: any }) {
       const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             s.major.toLowerCase().includes(searchQuery.toLowerCase()) ||
                             s.nativeLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            s.targetLanguage.toLowerCase().includes(searchQuery.toLowerCase());
+                            s.targetLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            (s.profileCode && s.profileCode.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesMajor = !filterMajor || s.major === filterMajor;
       return matchesSearch && matchesMajor;
     });
@@ -72,7 +75,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input 
               placeholder={t('searchPlaceholder')} 
-              className="neo-input pl-12 h-12 md:h-14 w-full text-base md:text-lg"
+              className="neo-input !pl-12 h-12 md:h-14 w-full text-base md:text-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -133,13 +136,25 @@ export function DiscoveryTab({ profile }: { profile: any }) {
               <MatchCard key={student.uid} currentUser={profile} student={student} />
             ))
           ) : (
-            <div className="col-span-full py-16 md:py-20 text-center neo-card bg-white border-dashed p-6">
-              <Sparkles className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
-              <p className="text-lg md:text-xl font-black italic uppercase text-muted-foreground">{t('noStudents')}</p>
+            <div className="col-span-full py-12 md:py-16 text-center neo-card bg-white p-6 md:p-10 flex flex-col items-center">
+              <div className="relative h-48 w-48 md:h-64 md:w-64 border-2 border-black shadow-neo mb-8 overflow-hidden">
+                <Image 
+                  src={ill13} 
+                  alt="No results" 
+                  fill 
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter mb-2">
+                No students found for this search.
+              </h3>
+              <p className="text-sm font-bold text-muted-foreground uppercase mb-8">
+                Try adjusting your filters or search terms
+              </p>
               <Button 
                 variant="outline" 
                 onClick={() => {setSearchQuery(''); setFilterMajor(null);}}
-                className="mt-6 neo-button bg-white"
+                className="neo-button bg-white h-12 md:h-14 px-8"
               >
                 CLEAR ALL FILTERS
               </Button>

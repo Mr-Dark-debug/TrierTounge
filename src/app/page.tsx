@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AuthView } from '@/components/auth/auth-view';
 import { DashboardView } from '@/components/dashboard/dashboard-view';
 import { ProfileBuilder } from '@/components/onboarding/profile-builder';
@@ -16,9 +16,11 @@ export default function Home() {
   const db = useFirestore();
   const auth = useAuth();
   
-  const { data: profile, loading: profileLoading } = useDoc(
-    user && db ? doc(db, 'users', user.uid) : null
-  );
+  const profileRef = useMemo(() => {
+    return user && db ? doc(db, 'users', user.uid) : null;
+  }, [user, db]);
+
+  const { data: profile, loading: profileLoading } = useDoc(profileRef);
 
   const handleLogout = async () => {
     if (auth) {
