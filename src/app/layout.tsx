@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from '@/firebase';
 import { LanguageProvider } from '@/context/language-context';
 import PageLoader from '@/components/ui/page-loader';
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function RootLayout({
   children,
@@ -27,6 +29,8 @@ export default function RootLayout({
             <Toaster />
           </LanguageProvider>
         </FirebaseClientProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
