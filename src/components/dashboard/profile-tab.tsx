@@ -2,17 +2,55 @@
 "use client"
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { GraduationCap, Languages, Sparkles, MapPin, Instagram, Send, Edit, ShieldCheck, Building2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState, useRef } from 'react';
 import { useLanguage } from '@/context/language-context';
+import { useToast } from '@/hooks/use-toast';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getFirestore, doc, updateDoc } from 'firebase/firestore';
+import { getFirebaseApp } from '@/firebase/config';
 import teacherImg from '@/assets/teacher-img.jpg';
 import studentImg from '@/assets/student-img.jpg';
 
 export function ProfileTab({ profile }: { profile: any }) {
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: 'File too large', description: 'Please select an image under 5MB.', variant: 'destructive' });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const storage = getStorage(getFirebaseApp());
+      const storageRef = ref(storage, `profile_pictures/${profile.uid}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+      
+      const db = getFirestore(getFirebaseApp());
+      await updateDoc(doc(db, 'users', profile.uid), {
+        photoURL: downloadURL
+      });
+      
+      toast({ title: 'Success', description: 'Profile picture updated!' });
+    } catch (err: any) {
+      console.error("Upload error:", err);
+      toast({ title: 'Upload failed', description: 'Make sure Firebase Storage is enabled in your console.', variant: 'destructive' });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const displayYear = ['1', '2', '3', '4'].includes(String(profile.year)) ? `Year ${profile.year}` : profile.year;
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-500 pb-12">
@@ -36,18 +74,33 @@ export function ProfileTab({ profile }: { profile: any }) {
         {/* Identity Card */}
         <div className="lg:col-span-1 space-y-8">
           <div className="neo-card bg-white p-6 text-center space-y-6">
-            <div className="relative h-48 w-48 mx-auto border-2 border-black bg-muted grayscale">
+            <div className="relative h-48 w-48 mx-auto border-2 border-black bg-muted group overflow-hidden">
               <Image 
-                src={`https://picsum.photos/seed/${profile.uid}/400/400`} 
+                src={profile.photoURL || `https://picsum.photos/seed/${profile.uid}/400/400`} 
                 alt={profile.name || "Profile Picture"} 
                 fill 
-                className="object-cover"
+                className="object-cover transition-transform group-hover:scale-105"
+              />
+              <div 
+                className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center cursor-pointer transition-opacity"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <span className="text-white font-bold text-xs uppercase tracking-widest bg-black px-3 py-1 border-2 border-white">
+                  {isUploading ? 'Uploading...' : 'Upload Photo'}
+                </span>
+              </div>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleImageUpload} 
+                accept="image/*" 
+                className="hidden" 
               />
             </div>
             <div>
               <h3 className="text-4xl font-black italic tracking-tighter uppercase leading-none mb-2">{profile.name}</h3>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{profile.major}</p>
-              <p className="text-[10px] font-black text-primary uppercase">Year {profile.year}</p>
+              <p className="text-[10px] font-black text-primary uppercase">{displayYear}</p>
             </div>
             <div className="p-4 bg-primary/20 border-2 border-black border-dashed">
               <span className="text-[10px] font-black uppercase block mb-1">{t('profileCode')}</span>
@@ -124,16 +177,16 @@ export function ProfileTab({ profile }: { profile: any }) {
             </div>
           </div>
 
-          <div className="neo-card bg-black text-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="neo-card bg-primary text-black p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border-2 border-black">
             <div className="flex items-center gap-4">
-              <ShieldCheck className="h-10 w-10 text-primary shrink-0" />
+              <ShieldCheck className="h-10 w-10 text-black shrink-0" />
               <div>
-                <h4 className="font-black italic uppercase text-lg leading-none mb-1">{t('safetyPrivacy')}</h4>
-                <p className="text-sm font-bold opacity-90">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
+                <h4 className="font-black italic uppercase text-lg leading-none mb-1 text-black">{t('safetyPrivacy')}</h4>
+                <p className="text-sm font-bold text-black/80">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
               </div>
             </div>
             <Link href="/settings">
-              <Button variant="outline" className="w-full md:w-auto border-white text-white hover:bg-white hover:text-black neo-button bg-transparent">
+              <Button variant="outline" className="w-full md:w-auto border-black text-black hover:bg-black hover:text-white neo-button bg-white">
                 {t('settings')}
               </Button>
             </Link>

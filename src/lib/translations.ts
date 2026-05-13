@@ -32,7 +32,7 @@ export const translations = {
     reciprocalMatchingDesc: "AI-powered pairing based on what you need and what you can give.",
     campusFocused: "Campus Focused",
     campusFocusedDesc: "Filters for Trier majors, study years, and local meeting spots.",
-    searchPlaceholder: "Search by major, name...",
+    searchPlaceholder: "Search by major, name, or profile code...",
     noStudents: "No students found for this search.",
     activeLinks: "Active Links",
     noMatches: "No matches yet. Go to Discovery!",

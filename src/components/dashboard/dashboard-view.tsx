@@ -25,6 +25,12 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
 
+  const handleLogoutClick = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      onLogout();
+    }
+  };
+
   const handleOpenChat = (chatId: string) => {
     setSelectedChatId(chatId);
     setActiveTab('chat');
@@ -41,13 +47,17 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
       {/* Sidebar - Desktop */}
-      <aside className={cn("hidden md:flex flex-col p-6 bg-white shrink-0 sticky top-0 h-screen overflow-y-auto border-r-2 border-black transition-all duration-300", isSidebarOpen ? "w-72" : "w-24 px-4 items-center")}>
-        <div className={cn("flex items-center mb-12", isSidebarOpen ? "justify-between" : "justify-center mt-2")}>
+      <aside className={cn("hidden md:flex flex-col p-6 bg-white shrink-0 sticky top-0 h-screen overflow-y-auto border-r-2 border-black transition-all duration-300 relative", isSidebarOpen ? "w-72" : "w-24 px-4 items-center")}>
+        <div className={cn("flex items-center mb-12", isSidebarOpen ? "justify-start" : "justify-center mt-2")}>
           {isSidebarOpen && <h1 className="text-3xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>}
-          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="neo-button bg-white h-8 w-8 p-0 shrink-0">
-            {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-          </Button>
         </div>
+        
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+          className="absolute -right-4 top-8 bg-primary border-2 border-black rounded-full h-8 w-8 flex items-center justify-center shrink-0 z-50 hover:bg-primary/80 transition-transform hover:scale-110"
+        >
+          {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
         
         <nav className="flex-1 space-y-4 w-full">
           <NavButton 
@@ -80,6 +90,9 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             isSidebarOpen={isSidebarOpen}
             titleText={t('chat')}
           />
+        </nav>
+
+        <div className="mt-auto pt-6 border-t-2 border-black space-y-4 w-full flex flex-col items-center">
           <NavButton 
             icon={<User className="h-5 w-5 shrink-0" />} 
             label={isSidebarOpen ? t('profile') : ''} 
@@ -91,9 +104,6 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             isSidebarOpen={isSidebarOpen}
             titleText={t('profile')}
           />
-        </nav>
-
-        <div className="mt-auto pt-6 border-t-2 border-black space-y-4 w-full flex flex-col items-center">
           {isSidebarOpen ? (
             <button onClick={copyProfileCode} className="w-full text-left p-3 bg-accent/10 border-2 border-black border-dashed hover:bg-accent/20 transition-colors cursor-pointer group relative">
               <div className="flex items-center gap-2 mb-1">
@@ -109,7 +119,15 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
               <div className="absolute top-1/2 left-full ml-4 -translate-y-1/2 bg-black text-white px-2 py-1 text-xs whitespace-nowrap hidden group-hover:block z-50 font-bold uppercase pointer-events-none">Copy Code</div>
             </button>
           )}
-          <Button onClick={onLogout} variant="outline" className={cn("neo-button bg-white text-xs", isSidebarOpen ? "w-full py-2" : "p-2 w-full h-12 flex justify-center items-center")} title={isSidebarOpen ? '' : t('logout')}>
+          <Button 
+            onClick={handleLogoutClick} 
+            variant="outline" 
+            className={cn(
+              "border-2 border-black text-xs font-bold uppercase transition-all duration-200 hover:bg-red-500 hover:text-white hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]", 
+              isSidebarOpen ? "w-full py-2" : "p-2 w-full h-12 flex justify-center items-center"
+            )} 
+            title={isSidebarOpen ? '' : t('logout')}
+          >
             <LogOut className={cn("h-4 w-4 shrink-0", isSidebarOpen && "mr-2")} /> {isSidebarOpen && t('logout')}
           </Button>
         </div>
