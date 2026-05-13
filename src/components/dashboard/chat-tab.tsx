@@ -10,6 +10,8 @@ import { Send, MessageSquareCode, Video, Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
+import Image from 'next/image';
+import illChat from '@/assets/ill chat.jpg';
 
 export function ChatTab({ profile, initialChatId }: { profile: any, initialChatId?: string | null }) {
   const db = useFirestore();
@@ -65,8 +67,10 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
   if (!activeChatId) {
     return (
       <div className="h-[60vh] md:h-[70vh] flex flex-col items-center justify-center neo-card bg-white border-dashed p-4 text-center">
-        <MessageSquareCode className="h-16 w-16 mb-6 text-muted-foreground opacity-20" />
-        <h2 className="text-2xl md:text-3xl font-black italic uppercase text-muted-foreground tracking-tighter">Select a link to start chatting</h2>
+        <div className="relative h-48 w-48 mb-6 border-2 border-black overflow-hidden bg-muted shadow-neo-sm">
+          <Image src={illChat} alt="Select chat" fill className="object-cover" />
+        </div>
+        <h2 className="text-2xl md:text-3xl font-black italic uppercase text-muted-foreground tracking-tighter">First Get some friends to chat...</h2>
         <p className="font-bold text-muted-foreground/60 mt-2 text-sm md:text-base">Communication is key to exchange.</p>
       </div>
     );
@@ -96,7 +100,7 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
       </div>
 
       {/* Messages */}
-      <div 
+      <div
         ref={scrollRef}
         className="flex-1 p-4 md:p-6 overflow-y-auto space-y-6 bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat"
       >
@@ -117,10 +121,10 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
 
       {/* Input */}
       <form onSubmit={sendMessage} className="p-4 md:p-6 border-t-2 border-black bg-white flex gap-2 md:gap-4 shrink-0">
-        <Input 
+        <Input
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type..." 
+          placeholder="Type..."
           className="neo-input h-12 md:h-14 text-base md:text-lg flex-1"
         />
         <Button type="submit" className="neo-button h-12 w-12 md:h-14 md:w-14 p-0 bg-primary shrink-0">

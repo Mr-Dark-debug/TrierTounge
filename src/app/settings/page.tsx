@@ -14,6 +14,8 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { ArrowLeft, Save, Shield, User, Bell, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 
+import Loader from '@/components/ui/loader';
+
 export default function SettingsPage() {
   const { user } = useUser();
   const db = useFirestore();
@@ -55,7 +57,7 @@ export default function SettingsPage() {
   };
 
   if (loading || !formData) {
-    return <div className="min-h-screen flex items-center justify-center font-black italic uppercase animate-pulse">Loading Settings...</div>;
+    return <Loader />;
   }
 
   return (

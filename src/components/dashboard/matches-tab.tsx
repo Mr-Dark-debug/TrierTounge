@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { MessageSquare, CheckCircle, UserPlus, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useLanguage } from '@/context/language-context';
+import illMutual from '@/assets/ill mututal.jpg';
 
 export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: (id: string) => void }) {
   const db = useFirestore();
@@ -103,8 +104,10 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
               </div>
             ))
           ) : (
-            <div className="py-20 text-center neo-card bg-white border-dashed">
-              <UserPlus className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-20" />
+            <div className="py-20 text-center neo-card bg-white border-dashed flex flex-col items-center">
+              <div className="relative h-48 w-48 mb-6 border-2 border-black overflow-hidden bg-muted shadow-neo-sm">
+                <Image src={illMutual} alt="No matches" fill className="object-cover" />
+              </div>
               <p className="text-xl font-black italic uppercase text-muted-foreground">{t('noMatches')}</p>
             </div>
           )}

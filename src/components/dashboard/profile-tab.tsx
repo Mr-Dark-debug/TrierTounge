@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { useState, useRef } from 'react';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 import { getFirebaseApp } from '@/firebase/config';
 import teacherImg from '@/assets/teacher-img.jpg';
@@ -20,31 +19,69 @@ export function ProfileTab({ profile }: { profile: any }) {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const compressImageToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 400;
+          const MAX_HEIGHT = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Get Base64 string directly from canvas
+          const base64String = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(base64String);
+        };
+        img.onerror = (error) => reject(error);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: 'File too large', description: 'Please select an image under 5MB.', variant: 'destructive' });
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: 'File too large', description: 'Please select an image under 10MB.', variant: 'destructive' });
       return;
     }
 
     setIsUploading(true);
     try {
-      const storage = getStorage(getFirebaseApp());
-      const storageRef = ref(storage, `profile_pictures/${profile.uid}`);
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
+      const base64Image = await compressImageToBase64(file);
       
       const db = getFirestore(getFirebaseApp());
       await updateDoc(doc(db, 'users', profile.uid), {
-        photoURL: downloadURL
+        photoURL: base64Image
       });
       
       toast({ title: 'Success', description: 'Profile picture updated!' });
     } catch (err: any) {
       console.error("Upload error:", err);
-      toast({ title: 'Upload failed', description: 'Make sure Firebase Storage is enabled in your console.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Could not process image.', variant: 'destructive' });
     } finally {
       setIsUploading(false);
     }
@@ -82,19 +119,26 @@ export function ProfileTab({ profile }: { profile: any }) {
                 className="object-cover transition-transform group-hover:scale-105"
               />
               <div 
-                className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center cursor-pointer transition-opacity"
-                onClick={() => fileInputRef.current?.click()}
+                className={`absolute inset-0 bg-black/60 flex flex-col items-center justify-center transition-opacity ${isUploading ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 cursor-pointer'}`}
+                onClick={() => !isUploading && fileInputRef.current?.click()}
               >
-                <span className="text-white font-bold text-xs uppercase tracking-widest bg-black px-3 py-1 border-2 border-white">
-                  {isUploading ? 'Uploading...' : 'Upload Photo'}
-                </span>
+                {isUploading ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-4 border-white border-t-primary rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <span className="text-white font-bold text-xs uppercase tracking-widest bg-black px-3 py-1 border-2 border-white">
+                    Upload Photo
+                  </span>
+                )}
               </div>
               <input 
                 type="file" 
                 ref={fileInputRef} 
                 onChange={handleImageUpload} 
                 accept="image/*" 
-                className="hidden" 
+                className="hidden"
+                disabled={isUploading}
               />
             </div>
             <div>

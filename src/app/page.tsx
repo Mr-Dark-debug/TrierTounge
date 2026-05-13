@@ -10,6 +10,7 @@ import { LandingPage } from '@/components/landing/landing-page';
 import { useUser, useDoc, useFirestore, useAuth } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import Loader from '@/components/ui/loader';
 
 export default function Home() {
   const { user, loading: authLoading } = useUser();
@@ -55,11 +56,7 @@ export default function Home() {
   };
 
   if (authLoading || (user && profileLoading)) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-4xl font-black animate-pulse uppercase italic">Loading...</div>
-      </div>
-    );
+    return <Loader />;
   }
 
   // Not logged in
