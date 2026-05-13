@@ -19,6 +19,7 @@ import illDisIcon from '@/assets/ill dis.jpg';
 import illMutualIcon from '@/assets/ill mutual icon.jpg';
 import illChatIcon from '@/assets/ill chat icon.jpg';
 import illEventsIcon from '@/assets/ill events icon.jpg';
+import logoImg from '@/assets/logo.png';
 
 interface DashboardViewProps {
   profile: any;
@@ -57,7 +58,13 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
       <aside className={cn("hidden md:flex flex-col bg-white shrink-0 h-full border-r-2 border-black transition-all duration-300 relative", isSidebarOpen ? "w-72" : "w-24")}>
         <div className={cn("flex flex-col h-full w-full overflow-hidden", isSidebarOpen ? "p-6" : "p-4 items-center")}>
           <div className={cn("flex items-center mb-12", isSidebarOpen ? "justify-start" : "justify-center mt-2")}>
-            {isSidebarOpen && <h1 className="text-3xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>}
+            <Image 
+              src={logoImg} 
+              alt="TrierTongue Logo" 
+              height={40} 
+              className={cn("w-auto transition-all duration-300", isSidebarOpen ? "h-10" : "h-6")}
+              priority
+            />
           </div>
 
           <nav className="flex-1 space-y-4 w-full">
@@ -192,8 +199,15 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
 
         {/* Header - Mobile Only */}
         <div className="md:hidden p-4 border-b-2 border-black bg-white flex items-center justify-between sticky top-0 z-40">
-          <h1 className="text-2xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>
-          <div className="flex items-center gap-2">
+           <Image 
+             src={logoImg} 
+             alt="TrierTongue Logo" 
+             height={40} 
+             className="h-10 w-auto"
+             priority
+           />
+           <div className="flex items-center gap-2">
+
             <Link href="/feedback">
               <Button variant="ghost" size="sm" className="p-2">
                 <MessageSquare className="h-5 w-5" />

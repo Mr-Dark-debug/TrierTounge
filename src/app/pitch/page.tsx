@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import adminImg from '@/assets/ill8.jpg';
 import visionImg from '@/assets/vision-img.jpg';
+import logoImg from '@/assets/logo.png';
 
 export default function PitchPage() {
   const { t } = useLanguage();
@@ -23,7 +24,15 @@ export default function PitchPage() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-black italic tracking-tighter uppercase">{t('appName')} <span className="text-accent">X</span> UNI TRIER</h1>
+          <div className="flex items-center gap-3">
+            <Image 
+              src={logoImg} 
+              alt="TrierTongue Logo" 
+              height={32} 
+              className="h-8 w-auto"
+            />
+            <span className="text-xl font-black italic tracking-tighter uppercase ml-2"><span className="text-accent">X</span> UNI TRIER</span>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <Link href="/feedback">

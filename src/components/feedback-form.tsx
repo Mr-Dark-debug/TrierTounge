@@ -4,6 +4,8 @@ import React from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 import { Github, MessageSquare, Lightbulb, Star, Send } from 'lucide-react';
 import './ui/feedback-background.css';
+import Image from 'next/image';
+import logoImg from '@/assets/logo.png';
 
 export default function FeedbackForm() {
   const [state, handleSubmit] = useForm('mwvyznvj');
@@ -12,7 +14,11 @@ export default function FeedbackForm() {
     return (
       <div className="success-message">
         <h2 className="text-3xl font-black mb-4 uppercase">Submission Received!</h2>
-        <p className="font-bold text-xl mb-6">Thanks for helping us make TrierTounge better!</p>
+        <div className="flex flex-col items-center gap-2 mb-6">
+          <p className="font-bold text-xl">Thanks for helping us make</p>
+          <Image src={logoImg} alt="TrierTongue" height={32} className="h-8 w-auto" />
+          <p className="font-bold text-xl uppercase">better!</p>
+        </div>
         <button 
           onClick={() => window.location.reload()}
           className="neo-button"
@@ -103,7 +109,7 @@ export default function FeedbackForm() {
         <h3 className="feedback-label text-center mb-6">Or Contribute Directly</h3>
         <div className="github-links">
           <a 
-            href="https://github.com/Mr-Dark-debug/TrierTounge/issues/new" 
+            href="https://github.com/Mr-Dark-debug/TrierTongue/issues/new" 
             target="_blank" 
             rel="noopener noreferrer"
             className="github-button"
@@ -112,7 +118,7 @@ export default function FeedbackForm() {
             Raise Issue
           </a>
           <a 
-            href="https://github.com/Mr-Dark-debug/TrierTounge/pulls" 
+            href="https://github.com/Mr-Dark-debug/TrierTongue/pulls" 
             target="_blank" 
             rel="noopener noreferrer"
             className="github-button"

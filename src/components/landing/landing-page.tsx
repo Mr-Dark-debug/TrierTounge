@@ -22,6 +22,8 @@ import asyncImg from '@/assets/async-img.jpg';
 import openSourceImg from '@/assets/opensource-img.jpg';
 import visionImg from '@/assets/vision-img.jpg';
 
+import logoImg from '@/assets/logo.png';
+
 export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const { t } = useLanguage();
 
@@ -29,7 +31,15 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
     <div className="min-h-screen bg-background selection:bg-accent selection:text-white">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 p-4 md:p-6 bg-background/80 backdrop-blur-md border-b-2 border-black flex items-center justify-between">
-        <h1 className="text-2xl md:text-3xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>
+        <Link href="/" className="flex items-center">
+          <Image 
+            src={logoImg} 
+            alt="TrierTongue Logo" 
+            height={40} 
+            className="h-8 md:h-10 w-auto"
+            priority
+          />
+        </Link>
         <div className="flex items-center gap-2 md:gap-4">
           <Link href="/pitch">
             <Button variant="ghost" className="hidden md:flex font-bold text-xs uppercase italic border-2 border-transparent hover:border-black">
@@ -387,7 +397,12 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-12 mb-12">
             <div>
-              <h2 className="text-4xl font-black italic tracking-tighter uppercase mb-4">{t('appName')}</h2>
+              <Image 
+                src={logoImg} 
+                alt="TrierTongue Logo" 
+                height={80} 
+                className="h-16 md:h-20 w-auto mb-4"
+              />
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest italic max-w-xs">{t('campusFocused')}</p>
             </div>
             <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-xs font-black uppercase italic tracking-tighter">

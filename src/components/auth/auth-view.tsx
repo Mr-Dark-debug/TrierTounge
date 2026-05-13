@@ -5,23 +5,38 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Languages, GraduationCap, MapPin, ArrowLeft, ArrowRight, MessageSquare } from 'lucide-react';
+import { Languages, GraduationCap, MapPin, ArrowLeft, ArrowRight, MessageSquare, Eye, EyeOff, Check, X } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
+import Image from 'next/image';
+import logoImg from '@/assets/logo.png';
+import { cn } from '@/lib/utils';
 
 export function AuthView({ onBack }: { onBack: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  const passwordRequirements = [
+    { label: 'At least 8 characters', regex: /.{8,}/ },
+    { label: 'At least one uppercase letter', regex: /[A-Z]/ },
+    { label: 'At least one lowercase letter', regex: /[a-z]/ },
+    { label: 'At least one number', regex: /[0-9]/ },
+    { label: 'At least one special character', regex: /[!@#$%^&*(),.?":{}|<>]/ },
+  ];
+
+  const isPasswordStrong = passwordRequirements.every(req => req.regex.test(password));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,13 +52,24 @@ export function AuthView({ onBack }: { onBack: () => void }) {
       return;
     }
 
-    if (password.length < 6) {
-      toast({
-        variant: "destructive",
-        title: "Weak Password",
-        description: "Password must be at least 6 characters long."
-      });
-      return;
+    if (!isLogin) {
+      if (!isPasswordStrong) {
+        toast({
+          variant: "destructive",
+          title: "Weak Password",
+          description: "Please fulfill all password requirements."
+        });
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        toast({
+          variant: "destructive",
+          title: "Passwords Don't Match",
+          description: "Please make sure your passwords match."
+        });
+        return;
+      }
     }
 
     setLoading(true);
@@ -100,13 +126,17 @@ export function AuthView({ onBack }: { onBack: () => void }) {
 
       <div className="md:w-1/2 p-6 md:p-16 flex flex-col justify-center border-b-2 md:border-b-0 md:border-r-2 border-black bg-primary/5">
         <div className="mb-8 md:mb-12">
-          <div className="inline-block bg-accent px-3 py-0.5 md:px-4 md:py-1 border-2 border-black mb-4 font-bold uppercase tracking-widest text-[10px] md:text-sm">
+          <div className="inline-block bg-accent px-3 py-0.5 md:px-4 md:py-1 border-2 border-black mb-6 font-bold uppercase tracking-widest text-[10px] md:text-sm">
             {t('exclusive')}
           </div>
-          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.85] mb-6 tracking-tighter italic">
-            TRIER<br/>TONGUE.
-          </h1>
-          <p className="text-lg md:text-2xl font-bold max-w-md leading-tight">
+          <Image 
+            src={logoImg} 
+            alt="TrierTongue Logo" 
+            height={160} 
+            className="h-24 md:h-32 w-auto mb-8"
+            priority
+          />
+          <p className="text-lg md:text-2xl font-bold max-w-md leading-tight mt-4">
             {t('tagline')}
           </p>
         </div>
@@ -166,18 +196,63 @@ export function AuthView({ onBack }: { onBack: () => void }) {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
               <Label htmlFor="pass" className="font-bold uppercase tracking-wider text-[10px]">Password</Label>
-              <Input 
-                id="pass" 
-                type="password" 
-                placeholder="••••••••" 
-                required 
-                className="neo-input h-12" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative">
+                <Input 
+                  id="pass" 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  required 
+                  className="neo-input h-12 pr-12" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-black transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+              
+              {!isLogin && password.length > 0 && (
+                <div className="p-3 bg-muted/30 border-2 border-black space-y-2 mt-2">
+                  <p className="text-[10px] font-black uppercase mb-1">Password Strength</p>
+                  {passwordRequirements.map((req, i) => {
+                    const isMet = req.regex.test(password);
+                    return (
+                      <div key={i} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-tighter italic">
+                        {isMet ? <Check className="h-3 w-3 text-green-600" /> : <X className="h-3 w-3 text-red-600" />}
+                        <span className={isMet ? "text-green-600" : "text-red-600"}>{req.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
+
+            {!isLogin && (
+              <div className="space-y-2">
+                <Label htmlFor="confirmPass" className="font-bold uppercase tracking-wider text-[10px]">Confirm Password</Label>
+                <Input 
+                  id="confirmPass" 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="••••••••" 
+                  required 
+                  className={cn(
+                    "neo-input h-12",
+                    password !== confirmPassword && confirmPassword.length > 0 && "border-red-500 bg-red-50"
+                  )} 
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                {password !== confirmPassword && confirmPassword.length > 0 && (
+                  <p className="text-[10px] font-bold text-red-600 uppercase italic">Passwords do not match</p>
+                )}
+              </div>
+            )}
 
             <Button type="submit" disabled={loading} className="w-full neo-button text-base md:text-lg py-6 md:py-8 group">
               {loading ? t('processing') : (isLogin ? t('login') : t('signup'))} 
@@ -187,7 +262,11 @@ export function AuthView({ onBack }: { onBack: () => void }) {
 
           <div className="mt-6 md:mt-8 pt-6 md:pt-8 border-t-2 border-black flex flex-col items-center gap-4">
             <button 
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setConfirmPassword('');
+                setShowPassword(false);
+              }}
               className="font-black text-xs md:text-sm underline underline-offset-4 hover:text-accent transition-colors uppercase italic"
             >
               {isLogin ? t('noAccount') : t('hasAccount')}
