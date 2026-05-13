@@ -7,12 +7,15 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { Database, ShieldCheck, UserCheck, ArrowLeft, Globe, Zap, Send, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useForm, ValidationError } from '@formspree/react';
 import adminImg from '@/assets/ill8.jpg';
 import visionImg from '@/assets/vision-img.jpg';
 import logoImg from '@/assets/logo.png';
+import uniLogoImg from '@/assets/Logo_Universitaet.svg';
 
 export default function PitchPage() {
   const { t } = useLanguage();
+  const [state, handleSubmit] = useForm('mwvyznvj');
 
   return (
     <div className="min-h-screen bg-[#fdfdfd] selection:bg-accent selection:text-white">
@@ -31,7 +34,13 @@ export default function PitchPage() {
               height={32} 
               className="h-8 w-auto"
             />
-            <span className="text-xl font-black italic tracking-tighter uppercase ml-2"><span className="text-accent">X</span> UNI TRIER</span>
+            <span className="text-xl font-black italic tracking-tighter uppercase ml-2"><span className="text-accent">X</span></span>
+            <Image 
+              src={uniLogoImg} 
+              alt="University of Trier Logo" 
+              height={32} 
+              className="h-8 w-auto ml-2"
+            />
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -81,12 +90,45 @@ export default function PitchPage() {
             <div className="relative w-48 h-48 border-4 border-black overflow-hidden">
               <Image src={adminImg} alt="Administration" fill className="object-cover" />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 w-full">
               <h3 className="text-2xl font-black uppercase italic tracking-tight">Request a Demo for Studierendenwerk or HR</h3>
               <p className="font-bold text-muted-foreground uppercase text-sm italic tracking-widest">Bridging the gap between domestic and international students at University of Trier.</p>
-              <Button className="neo-button bg-primary w-full py-8 text-xl group">
-                {t('contactUni')} <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </Button>
+              
+              {state.succeeded ? (
+                <div className="p-4 bg-green-100 border-2 border-black font-bold uppercase italic text-green-800">
+                  Thanks for reaching out! We will get back to you shortly.
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-left w-full mt-4">
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-bold uppercase mb-1 text-black">Work Email</label>
+                    <input 
+                      id="email" 
+                      type="email" 
+                      name="email" 
+                      required 
+                      className="w-full p-3 border-2 border-black bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-bold text-black"
+                      placeholder="name@uni-trier.de"
+                    />
+                    <ValidationError prefix="Email" field="email" errors={state.errors} className="text-red-500 text-xs mt-1 font-bold uppercase" />
+                  </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-bold uppercase mb-1 text-black">Message</label>
+                    <textarea 
+                      id="message" 
+                      name="message" 
+                      required 
+                      rows={4}
+                      className="w-full p-3 border-2 border-black bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-bold text-black"
+                      placeholder="Tell us about your needs..."
+                    />
+                    <ValidationError prefix="Message" field="message" errors={state.errors} className="text-red-500 text-xs mt-1 font-bold uppercase" />
+                  </div>
+                  <Button type="submit" disabled={state.submitting} className="neo-button bg-primary w-full py-6 text-lg group uppercase italic">
+                    {state.submitting ? 'Sending...' : 'Send Request'} <Send className="ml-2 h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </Button>
+                </form>
+              )}
             </div>
           </div>
         </div>
