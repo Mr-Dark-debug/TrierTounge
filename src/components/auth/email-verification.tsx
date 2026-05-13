@@ -80,8 +80,8 @@ export function EmailVerification({ user, onVerified, onLogout }: EmailVerificat
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const verifyOTP = async () => {
-    const code = otp.join('');
+  const verifyOTP = async (overrideCode?: string) => {
+    const code = overrideCode || otp.join('');
     if (code.length !== 6) {
       setError('Please enter the full 6-digit code.');
       return;
@@ -149,7 +149,7 @@ export function EmailVerification({ user, onVerified, onLogout }: EmailVerificat
     if (digit && index === 5) {
       const code = [...newOtp.slice(0, 5), digit].join('');
       if (code.length === 6) {
-        setTimeout(() => verifyOTP(), 100);
+        setTimeout(() => verifyOTP(code), 100);
       }
     }
   };
@@ -181,7 +181,7 @@ export function EmailVerification({ user, onVerified, onLogout }: EmailVerificat
 
     // Auto-submit if pasted full code
     if (pastedData.length === 6) {
-      setTimeout(() => verifyOTP(), 100);
+      setTimeout(() => verifyOTP(pastedData), 100);
     }
   };
 
@@ -237,7 +237,7 @@ export function EmailVerification({ user, onVerified, onLogout }: EmailVerificat
 
           {/* Verify Button */}
           <Button
-            onClick={verifyOTP}
+            onClick={() => verifyOTP()}
             disabled={otp.join('').length !== 6 || isVerifying}
             className="w-full neo-button h-14 text-base uppercase tracking-wider"
           >
