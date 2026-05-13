@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { AuthView } from '@/components/auth/auth-view';
 import { DashboardView } from '@/components/dashboard/dashboard-view';
 import { ProfileBuilder } from '@/components/onboarding/profile-builder';
+import { EmailVerification } from '@/components/auth/email-verification';
 import { LandingPage } from '@/components/landing/landing-page';
 import { useUser, useDoc, useFirestore, useAuth } from '@/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -13,6 +14,7 @@ import { signOut } from 'firebase/auth';
 export default function Home() {
   const { user, loading: authLoading } = useUser();
   const [showAuth, setShowAuth] = useState(false);
+  const [justVerified, setJustVerified] = useState(false);
   const db = useFirestore();
   const auth = useAuth();
   
@@ -26,6 +28,7 @@ export default function Home() {
     if (auth) {
       await signOut(auth);
       setShowAuth(false);
+      setJustVerified(false);
     }
   };
 
@@ -39,11 +42,16 @@ export default function Home() {
       uid: user.uid,
       email: user.email,
       profileCode,
+      isVerified: true,
       onboardingCompleted: true,
       createdAt: new Date().toISOString()
     };
 
     setDoc(doc(db, 'users', user.uid), fullProfile, { merge: true });
+  };
+
+  const handleVerified = () => {
+    setJustVerified(true);
   };
 
   if (authLoading || (user && profileLoading)) {
@@ -62,11 +70,17 @@ export default function Home() {
     return <LandingPage onGetStarted={() => setShowAuth(true)} />;
   }
 
-  // Logged in but profile incomplete
+  // Logged in but email NOT verified
+  if (!profile?.isVerified && !justVerified) {
+    return <EmailVerification user={user} onVerified={handleVerified} onLogout={handleLogout} />;
+  }
+
+  // Logged in, verified, but profile incomplete
   if (!profile || !profile.onboardingCompleted) {
     return <ProfileBuilder user={user} onComplete={handleProfileComplete} onLogout={handleLogout} />;
   }
 
-  // Logged in and complete
+  // Logged in, verified, and complete
   return <DashboardView profile={profile} onLogout={handleLogout} />;
 }
+
