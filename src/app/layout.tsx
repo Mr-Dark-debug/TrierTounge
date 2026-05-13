@@ -5,6 +5,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { FirebaseClientProvider } from '@/firebase';
 import { LanguageProvider } from '@/context/language-context';
+import PageLoader from '@/components/ui/page-loader';
 
 export default function RootLayout({
   children,
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className="font-body antialiased selection:bg-accent selection:text-white" suppressHydrationWarning>
         <FirebaseClientProvider>
           <LanguageProvider>
+            <PageLoader />
             {children}
             <Toaster />
           </LanguageProvider>

@@ -8,17 +8,26 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+  const [dataPath, setDataPath] = useState<string | null>(null);
+
+  // We use a string derived from the ref to avoid infinite loops
+  // if the caller passes a new DocumentReference object on every render
+  const refPath = ref?.path || null;
 
   useEffect(() => {
     if (!ref) {
       setLoading(false);
+      setDataPath(null);
       return;
     }
+
+    setLoading(true);
 
     const unsubscribe = onSnapshot(
       ref,
       (snapshot) => {
         setData(snapshot.data() as T || null);
+        setDataPath(ref.path);
         setLoading(false);
       },
       async (err) => {
@@ -28,12 +37,17 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
         } satisfies SecurityRuleContext);
         errorEmitter.emit('permission-error', permissionError);
         setError(err);
+        setDataPath(ref.path);
         setLoading(false);
       }
     );
 
     return () => unsubscribe();
-  }, [ref]);
+  }, [refPath]); // depend on refPath string, not the ref object
 
-  return { data, loading, error };
+  // If we have a ref, but the data we have is from a different path (or no path yet),
+  // we are definitely still loading, even if the state update hasn't run yet.
+  const isActuallyLoading = ref ? (loading || dataPath !== ref.path) : loading;
+
+  return { data, loading: isActuallyLoading, error };
 }
