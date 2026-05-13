@@ -17,39 +17,9 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ currentUser, student }: MatchCardProps) {
-  const [isAIAnalyzing, setIsAIAnalyzing] = useState(false);
-  const [aiSummary, setAiSummary] = useState<AiMatchCompatibilitySummaryOutput | null>(null);
   const [isMatchPending, setIsMatchPending] = useState(false);
-  const [showHeatmap, setShowHeatmap] = useState(false);
   const db = useFirestore();
   const { toast } = useToast();
-
-  const runAnalysis = async () => {
-    setIsAIAnalyzing(true);
-    try {
-      const result = await aiMatchCompatibilitySummary({
-        studentA: {
-          name: currentUser.name,
-          targetLanguage: currentUser.targetLanguage,
-          nativeLanguage: currentUser.nativeLanguage,
-          academicGoals: currentUser.academicGoals,
-          socialGoals: currentUser.socialGoals,
-        },
-        studentB: {
-          name: student.name,
-          targetLanguage: student.targetLanguage,
-          nativeLanguage: student.nativeLanguage,
-          academicGoals: student.academicGoals,
-          socialGoals: student.socialGoals,
-        }
-      });
-      setAiSummary(result);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsAIAnalyzing(false);
-    }
-  };
 
   const handleMatchRequest = async () => {
     if (!db) return;
@@ -61,7 +31,7 @@ export function MatchCard({ currentUser, student }: MatchCardProps) {
       });
       setIsMatchPending(true);
       toast({
-        title: "Match Request Sent!",
+        title: "Friend Request Sent!",
         description: `Waiting for ${student.name} to accept.`
       });
     } catch (e: any) {
@@ -74,130 +44,48 @@ export function MatchCard({ currentUser, student }: MatchCardProps) {
   };
 
   return (
-    <div className="neo-card bg-white flex flex-col overflow-hidden transition-all duration-300 sm:hover:rotate-1">
-      <div className="flex flex-col md:flex-row border-b-2 border-black">
-        {/* Profile Image */}
-        <div className="w-full md:w-1/3 relative bg-muted border-b-2 md:border-b-0 md:border-r-2 border-black aspect-square md:aspect-auto">
-          <Image 
-            src={`https://picsum.photos/seed/${student.uid}/400/400`} 
-            alt={student.name}
-            fill
-            className="object-cover grayscale hover:grayscale-0 transition-all duration-500"
-          />
-          <div className="absolute bottom-2 right-2 bg-primary px-2 py-0.5 md:px-3 md:py-1 border-2 border-black font-black text-sm md:text-xl shadow-neo-sm italic tracking-tighter">
-            {student.profileCode}
-          </div>
-        </div>
-
-        {/* Basic Info */}
-        <div className="flex-1 p-4 md:p-8">
-          <div className="flex flex-col gap-2 mb-4 md:mb-6">
-            <h3 className="text-3xl md:text-4xl font-black italic tracking-tighter uppercase leading-none">{student.name}</h3>
-            <div className="flex items-center gap-2 text-[10px] md:text-sm font-bold text-muted-foreground uppercase tracking-widest">
-              <GraduationCap className="h-3 w-3 md:h-4 w-4 shrink-0" /> {student.major} • Year {student.year}
+    <div className="mx-auto w-full bg-[#fefefe] rounded-[1rem] p-2 text-[#141417] border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform">
+      <article className="w-full">
+        <section className="bg-primary/20 rounded-[0.5rem_0.5rem_0_0] p-6 text-sm border-2 border-black border-b-0">
+          <header className="flex justify-between items-center font-bold">
+            <span className="uppercase text-[10px] tracking-widest bg-white border-2 border-black px-2 py-1 shadow-neo-sm">
+              #{student.profileCode || 'NEW-USER'}
+            </span>
+            <div className="w-8 h-8 flex items-center justify-center border-2 border-black bg-white rounded-full shadow-neo-sm">
+              <svg height={16} width={16} stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" strokeLinejoin="round" strokeLinecap="round" />
+              </svg>
             </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2 md:gap-4 mb-4 md:mb-8">
-            <div className="bg-primary/10 border-2 border-black px-2 py-1 md:px-3 md:py-2 flex items-center gap-2 md:gap-3">
-              <span className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground italic">Fluent</span>
-              <span className="font-bold text-sm md:text-lg">{student.nativeLanguage}</span>
+          </header>
+          <p className="mt-8 mb-4 text-3xl md:text-4xl font-black uppercase italic leading-none">{student.name}</p>
+        </section>
+        
+        <footer className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 gap-4 font-bold text-sm border-2 border-black bg-white rounded-[0_0_0.5rem_0.5rem]">
+          <div className="flex justify-start items-center gap-3">
+            <div className="w-12 h-12 border-2 border-black bg-muted/10 flex items-center justify-center shrink-0 shadow-neo-sm rounded">
+              <svg height={28} width={28} viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027" />
+                <path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1" />
+                <path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82 0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602l42.356-32.782" />
+                <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251" />
+              </svg>
             </div>
-            <div className="bg-accent/10 border-2 border-black px-2 py-1 md:px-3 md:py-2 flex items-center gap-2 md:gap-3">
-              <span className="text-[8px] md:text-[10px] font-black uppercase text-muted-foreground italic">Target</span>
-              <span className="font-bold text-sm md:text-lg">{student.targetLanguage}</span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-sm md:text-base italic border-l-4 border-black pl-4 line-clamp-2 md:line-clamp-3 leading-relaxed">
-              "{student.academicGoals}"
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* AI Compatibility / Tabs Section */}
-      <div className="flex-1 flex flex-col p-4 md:p-6 bg-[#fafafa]">
-        {aiSummary ? (
-          <div className="neo-card p-4 md:p-6 bg-white border-dashed mb-4 md:mb-6 animate-in slide-in-from-top-4 duration-500">
-            <div className="flex items-center gap-2 mb-3 md:mb-4">
-              <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-accent" />
-              <h4 className="font-black text-[10px] md:text-sm uppercase italic tracking-widest">AI Reciprocity Insight</h4>
-            </div>
-            <p className="text-sm md:text-base font-medium leading-relaxed mb-4 md:mb-6 italic">"{aiSummary.summary}"</p>
-            <div className="flex flex-wrap gap-2 md:gap-3">
-              {aiSummary.sharedInterests.map((interest, idx) => (
-                <span key={idx} className="bg-muted px-2 py-0.5 border-2 border-black text-[10px] md:text-xs font-bold uppercase italic tracking-tight">{interest}</span>
-              ))}
-            </div>
-            <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t-2 border-black border-dotted">
-              <p className="text-[10px] md:text-xs font-bold uppercase flex items-center gap-2 md:gap-3 italic tracking-tight">
-                <Languages className="h-3 w-3 md:h-4 md:w-4 text-primary shrink-0" /> {aiSummary.reciprocalLanguageBenefit}
+            <div>
+              <p className="uppercase text-sm font-black italic leading-tight">{student.major}</p>
+              <p className="uppercase text-[10px] text-muted-foreground mt-1">
+                {student.nativeLanguage} <span className="text-black">→</span> {student.targetLanguage}
               </p>
             </div>
           </div>
-        ) : (
-          <div className="mb-6 md:mb-8 flex flex-col items-center justify-center p-6 md:p-10 border-2 border-black border-dashed bg-white text-center">
-            <MessageSquareCode className="h-10 w-10 md:h-12 md:w-12 mb-4 text-muted-foreground opacity-30" />
-            <p className="text-[10px] md:text-sm font-black text-muted-foreground uppercase mb-4 md:mb-6 tracking-widest italic opacity-50">Compare Profiles with AI</p>
-            <Button 
-              onClick={runAnalysis} 
-              disabled={isAIAnalyzing}
-              className="neo-button bg-white text-[10px] md:text-xs px-6 md:px-10 h-10 md:h-12 w-full sm:w-auto"
-            >
-              {isAIAnalyzing ? 'ANALYZING...' : 'PREVIEW COMPATIBILITY'}
-            </Button>
-          </div>
-        )}
-
-        <div className="mt-auto flex flex-col sm:flex-row gap-4 items-center pt-4 md:pt-6 border-t-2 border-black border-dotted">
           <button 
-            onClick={() => setShowHeatmap(!showHeatmap)}
-            className="text-[10px] md:text-xs font-black underline underline-offset-4 uppercase tracking-tighter hover:text-accent transition-colors flex items-center gap-2 italic"
+            onClick={handleMatchRequest}
+            disabled={isMatchPending}
+            className="w-full sm:w-max font-black border-2 border-black px-6 py-3 bg-[#141417] text-white text-xs uppercase hover:bg-white hover:text-black hover:shadow-neo transition-all disabled:opacity-50 rounded-full"
           >
-            <Calendar className="h-4 w-4 md:h-5 md:w-5" /> {showHeatmap ? 'HIDE SCHEDULE' : 'SHOW OVERLAP'}
+            {isMatchPending ? 'REQUEST SENT' : 'BEFRIEND'}
           </button>
-          
-          <div className="ml-auto w-full sm:w-auto">
-            {isMatchPending ? (
-              <Button disabled className="w-full sm:w-auto neo-button bg-muted italic text-[10px] md:text-sm">
-                REQUEST PENDING
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleMatchRequest}
-                className="w-full sm:w-auto neo-button bg-primary px-6 md:px-8 h-12 md:h-14 text-sm"
-              >
-                INITIATE EXCHANGE <ChevronRight className="h-4 w-4 md:h-5 md:w-5 ml-2" />
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {showHeatmap && (
-          <div className="mt-6 md:mt-8 p-4 md:p-6 neo-card bg-white animate-in slide-in-from-bottom-4">
-            <h5 className="text-[8px] md:text-[10px] font-black uppercase mb-4 md:mb-6 flex items-center gap-2 md:gap-3 tracking-widest">
-              <div className="w-2 h-2 md:w-3 md:h-3 bg-accent border-2 border-black" /> Potential Meeting Heatmap
-            </h5>
-            <div className="grid grid-cols-7 gap-1 md:gap-2">
-              {Array(21).fill(0).map((_, idx) => {
-                const isOverlapping = student.availability?.[idx] && currentUser.availability?.[idx];
-                return (
-                  <div 
-                    key={idx} 
-                    className={cn(
-                      "aspect-square border border-black md:border-2 transition-all",
-                      isOverlapping ? "bg-accent" : "bg-muted/10"
-                    )}
-                  />
-                );
-              })}
-            </div>
-            <p className="text-[8px] md:text-[10px] font-bold text-center mt-4 uppercase italic opacity-60">Colored blocks represent shared free time in Mensa/Library slots.</p>
-          </div>
-        )}
-      </div>
+        </footer>
+      </article>
     </div>
   );
 }

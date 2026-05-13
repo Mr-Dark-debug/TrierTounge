@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@formspree/react": "^3.0.0",
     "@genkit-ai/google-genai": "^1.28.0",
     "@getbrevo/brevo": "^5.0.4",
     "@gsap/react": "^2.1.1",

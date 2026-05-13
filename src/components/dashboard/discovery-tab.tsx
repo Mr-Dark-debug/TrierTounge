@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useTransition } from 'react';
 import { useCollection, useFirestore } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { MatchCard } from '@/components/dashboard/match-card';
@@ -16,17 +16,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Search, Filter, Sparkles, X } from 'lucide-react';
+import { Search, Filter, Sparkles, X, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import Image from 'next/image';
 import noResultsIll from '../../assets/ill13.jpg';
 
 export function DiscoveryTab({ profile }: { profile: any }) {
   const db = useFirestore();
+  const [inputValue, setInputValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMajor, setFilterMajor] = useState<string | null>(null);
   const [filterNative, setFilterNative] = useState<string | null>(null);
   const [filterTarget, setFilterTarget] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   const { t } = useLanguage();
 
   const studentsQuery = useMemo(() => {
@@ -89,12 +91,21 @@ export function DiscoveryTab({ profile }: { profile: any }) {
 
         <div className="flex flex-col sm:flex-row gap-3 w-full">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            {isPending ? (
+              <Loader2 className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground animate-spin" />
+            ) : (
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            )}
             <Input
               placeholder={t('searchPlaceholder')}
               className="neo-input !pl-12 h-12 md:h-14 w-full text-base md:text-lg"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                startTransition(() => {
+                  setSearchQuery(e.target.value);
+                });
+              }}
             />
           </div>
 
@@ -111,9 +122,11 @@ export function DiscoveryTab({ profile }: { profile: any }) {
               <DropdownMenuContent align="end" className="neo-card bg-white p-1 max-h-[400px] overflow-y-auto w-64">
                 <DropdownMenuItem
                   onClick={() => {
-                    setFilterMajor(null);
-                    setFilterNative(null);
-                    setFilterTarget(null);
+                    startTransition(() => {
+                      setFilterMajor(null);
+                      setFilterNative(null);
+                      setFilterTarget(null);
+                    });
                   }}
                   className="font-black uppercase text-xs p-3 hover:bg-red-500 hover:text-white"
                 >
@@ -123,7 +136,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
                 <DropdownMenuSeparator className="bg-black" />
                 <DropdownMenuLabel className="font-black italic uppercase text-[10px] tracking-widest text-primary">By Native Language</DropdownMenuLabel>
                 {nativeLangs.map(lang => (
-                  <DropdownMenuItem key={`n-${lang}`} onClick={() => setFilterNative(lang)} className={cn("font-bold uppercase text-xs p-3 hover:bg-primary", filterNative === lang && "bg-primary")}>
+                  <DropdownMenuItem key={`n-${lang}`} onClick={() => startTransition(() => setFilterNative(lang))} className={cn("font-bold uppercase text-xs p-3 hover:bg-primary", filterNative === lang && "bg-primary")}>
                     {lang}
                   </DropdownMenuItem>
                 ))}
@@ -131,7 +144,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
                 <DropdownMenuSeparator className="bg-black" />
                 <DropdownMenuLabel className="font-black italic uppercase text-[10px] tracking-widest text-accent">By Target Language</DropdownMenuLabel>
                 {targetLangs.map(lang => (
-                  <DropdownMenuItem key={`t-${lang}`} onClick={() => setFilterTarget(lang)} className={cn("font-bold uppercase text-xs p-3 hover:bg-accent", filterTarget === lang && "bg-accent")}>
+                  <DropdownMenuItem key={`t-${lang}`} onClick={() => startTransition(() => setFilterTarget(lang))} className={cn("font-bold uppercase text-xs p-3 hover:bg-accent", filterTarget === lang && "bg-accent")}>
                     {lang}
                   </DropdownMenuItem>
                 ))}
@@ -139,7 +152,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
                 <DropdownMenuSeparator className="bg-black" />
                 <DropdownMenuLabel className="font-black italic uppercase text-[10px] tracking-widest">By Major</DropdownMenuLabel>
                 {majors.map(major => (
-                  <DropdownMenuItem key={`m-${major}`} onClick={() => setFilterMajor(major)} className={cn("font-bold uppercase text-xs p-3 hover:bg-muted", filterMajor === major && "bg-muted")}>
+                  <DropdownMenuItem key={`m-${major}`} onClick={() => startTransition(() => setFilterMajor(major))} className={cn("font-bold uppercase text-xs p-3 hover:bg-muted", filterMajor === major && "bg-muted")}>
                     {major}
                   </DropdownMenuItem>
                 ))}
@@ -149,9 +162,11 @@ export function DiscoveryTab({ profile }: { profile: any }) {
             {(filterMajor || filterNative || filterTarget) && (
               <Button
                 onClick={() => {
-                  setFilterMajor(null);
-                  setFilterNative(null);
-                  setFilterTarget(null);
+                  startTransition(() => {
+                    setFilterMajor(null);
+                    setFilterNative(null);
+                    setFilterTarget(null);
+                  });
                 }}
                 variant="destructive"
                 className="neo-button h-12 md:h-14 aspect-square p-0"
@@ -192,10 +207,13 @@ export function DiscoveryTab({ profile }: { profile: any }) {
               <Button
                 variant="outline"
                 onClick={() => {
-                  setSearchQuery('');
-                  setFilterMajor(null);
-                  setFilterNative(null);
-                  setFilterTarget(null);
+                  setInputValue('');
+                  startTransition(() => {
+                    setSearchQuery('');
+                    setFilterMajor(null);
+                    setFilterNative(null);
+                    setFilterTarget(null);
+                  });
                 }}
                 className="neo-button bg-white h-12 md:h-14 px-8"
               >

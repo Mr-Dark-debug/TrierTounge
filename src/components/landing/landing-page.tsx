@@ -36,6 +36,12 @@ export function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
               {t('forUni')}
             </Button>
           </Link>
+          <Link href="/feedback">
+            <Button variant="ghost" size="sm" className="font-bold text-xs uppercase italic border-2 border-transparent hover:border-black gap-2">
+              <MessageCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">Feedback</span>
+            </Button>
+          </Link>
           <LanguageSwitcher />
           <Button onClick={onGetStarted} className="neo-button bg-primary text-xs md:text-sm">
             {t('login')}

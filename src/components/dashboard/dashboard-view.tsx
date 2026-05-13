@@ -12,6 +12,7 @@ import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 interface DashboardViewProps {
   profile: any;
@@ -45,19 +46,13 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row">
+    <div className="h-screen bg-background flex flex-col md:flex-row overflow-hidden">
       {/* Sidebar - Desktop */}
-      <aside className={cn("hidden md:flex flex-col p-6 bg-white shrink-0 sticky top-0 h-screen overflow-y-auto border-r-2 border-black transition-all duration-300 relative", isSidebarOpen ? "w-72" : "w-24 px-4 items-center")}>
-        <div className={cn("flex items-center mb-12", isSidebarOpen ? "justify-start" : "justify-center mt-2")}>
-          {isSidebarOpen && <h1 className="text-3xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>}
-        </div>
-        
-        <button 
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-          className="absolute -right-4 top-8 bg-primary border-2 border-black rounded-full h-8 w-8 flex items-center justify-center shrink-0 z-50 hover:bg-primary/80 transition-transform hover:scale-110"
-        >
-          {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </button>
+      <aside className={cn("hidden md:flex flex-col bg-white shrink-0 h-full border-r-2 border-black transition-all duration-300 relative", isSidebarOpen ? "w-72" : "w-24")}>
+        <div className={cn("flex flex-col h-full w-full overflow-hidden", isSidebarOpen ? "p-6" : "p-4 items-center")}>
+          <div className={cn("flex items-center mb-12", isSidebarOpen ? "justify-start" : "justify-center mt-2")}>
+            {isSidebarOpen && <h1 className="text-3xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>}
+          </div>
         
         <nav className="flex-1 space-y-4 w-full">
           <NavButton 
@@ -131,18 +126,39 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             <LogOut className={cn("h-4 w-4 shrink-0", isSidebarOpen && "mr-2")} /> {isSidebarOpen && t('logout')}
           </Button>
         </div>
+        </div>
+        
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+          className="absolute -right-4 top-8 bg-primary border-2 border-black rounded-full h-8 w-8 flex items-center justify-center shrink-0 z-50 hover:bg-primary/80 transition-transform hover:scale-110"
+        >
+          {isSidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden pb-24 md:pb-0 relative">
-        <div className="hidden md:block absolute top-4 right-4 z-50">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 md:pb-0 relative">
+        <div className="hidden md:flex absolute top-4 right-4 z-50 items-center gap-2">
+           <Link href="/feedback">
+             <Button variant="ghost" size="sm" className="font-bold text-xs uppercase italic border-2 border-transparent hover:border-black gap-2">
+               <MessageSquare className="h-4 w-4" />
+               <span>Feedback</span>
+             </Button>
+           </Link>
            <LanguageSwitcher />
         </div>
         
         {/* Header - Mobile Only */}
         <div className="md:hidden p-4 border-b-2 border-black bg-white flex items-center justify-between sticky top-0 z-40">
            <h1 className="text-2xl font-black italic tracking-tighter uppercase">{t('appName')}</h1>
-           <LanguageSwitcher />
+           <div className="flex items-center gap-2">
+             <Link href="/feedback">
+               <Button variant="ghost" size="sm" className="p-2">
+                 <MessageSquare className="h-5 w-5" />
+               </Button>
+             </Link>
+             <LanguageSwitcher />
+           </div>
         </div>
         <div className="p-4 md:p-10 max-w-7xl mx-auto md:mt-8">
           {activeTab === 'discovery' && <DiscoveryTab profile={profile} />}

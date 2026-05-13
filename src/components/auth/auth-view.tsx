@@ -5,12 +5,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Languages, GraduationCap, MapPin, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Languages, GraduationCap, MapPin, ArrowLeft, ArrowRight, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { useLanguage } from '@/context/language-context';
+import Link from 'next/link';
 
 export function AuthView({ onBack }: { onBack: () => void }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -87,7 +88,13 @@ export function AuthView({ onBack }: { onBack: () => void }) {
           <ArrowLeft className="h-5 w-5" />
         </Button>
       </div>
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+        <Link href="/feedback">
+          <Button variant="ghost" size="sm" className="font-bold text-xs uppercase italic border-2 border-transparent hover:border-black gap-2">
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">Feedback</span>
+          </Button>
+        </Link>
         <LanguageSwitcher />
       </div>
 

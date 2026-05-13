@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
-import { PhoneOff, Mic, Video, Sparkles, MessageSquare, ArrowLeft } from 'lucide-react';
+import { PhoneOff, Mic, Video, Sparkles, MessageSquare, ArrowLeft, User } from 'lucide-react';
 import { generateConversationStarters } from '@/ai/flows/conversation-starters';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';

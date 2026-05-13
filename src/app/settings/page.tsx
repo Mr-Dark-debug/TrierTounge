@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { ArrowLeft, Save, Shield, User, Bell } from 'lucide-react';
+import { ArrowLeft, Save, Shield, User, Bell, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SettingsPage() {
@@ -69,7 +69,15 @@ export default function SettingsPage() {
           </Link>
           <h1 className="text-3xl font-black italic tracking-tighter uppercase">{t('settingsTitle')}</h1>
         </div>
+        <div className="flex items-center gap-2">
+        <Link href="/feedback">
+          <Button variant="ghost" size="sm" className="font-bold text-xs uppercase italic border-2 border-transparent hover:border-black gap-2">
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">Feedback</span>
+          </Button>
+        </Link>
         <LanguageSwitcher />
+      </div>
       </nav>
 
       <main className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -91,7 +99,7 @@ export default function SettingsPage() {
           
           <div className="p-4 border-2 border-black border-dashed bg-white text-center">
             <span className="text-[10px] font-black uppercase text-muted-foreground block mb-1">Your Campus ID</span>
-            <span className="text-xl font-black tracking-widest">{profile.profileCode}</span>
+            <span className="text-xl font-black tracking-widest">{profile?.profileCode || '...'}</span>
           </div>
         </aside>
 

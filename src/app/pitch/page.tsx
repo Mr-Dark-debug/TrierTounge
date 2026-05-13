@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/language-context';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
-import { Database, ShieldCheck, UserCheck, ArrowLeft, Globe, Zap, Send } from 'lucide-react';
+import { Database, ShieldCheck, UserCheck, ArrowLeft, Globe, Zap, Send, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import adminImg from '@/assets/ill8.jpg';
@@ -25,7 +25,15 @@ export default function PitchPage() {
           </Link>
           <h1 className="text-2xl font-black italic tracking-tighter uppercase">{t('appName')} <span className="text-accent">X</span> UNI TRIER</h1>
         </div>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-2">
+          <Link href="/feedback">
+            <Button variant="ghost" size="sm" className="font-bold text-xs uppercase italic border-2 border-transparent hover:border-black gap-2">
+              <MessageSquare className="h-4 w-4" />
+              <span className="hidden sm:inline">Feedback</span>
+            </Button>
+          </Link>
+          <LanguageSwitcher />
+        </div>
       </nav>
 
       {/* Pitch Content */}
