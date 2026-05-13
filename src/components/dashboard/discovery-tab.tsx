@@ -18,7 +18,7 @@ import {
 import { Search, Filter, Sparkles, X } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import Image from 'next/image';
-import ill13 from '@/assets/ill13.jpg';
+import noResultsIll from '../../assets/ill13.jpg';
 
 export function DiscoveryTab({ profile }: { profile: any }) {
   const db = useFirestore();
@@ -139,7 +139,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
             <div className="col-span-full py-12 md:py-16 text-center neo-card bg-white p-6 md:p-10 flex flex-col items-center">
               <div className="relative h-48 w-48 md:h-64 md:w-64 border-2 border-black shadow-neo mb-8 overflow-hidden">
                 <Image 
-                  src={ill13} 
+                  src={noResultsIll} 
                   alt="No results" 
                   fill 
                   className="object-cover"
