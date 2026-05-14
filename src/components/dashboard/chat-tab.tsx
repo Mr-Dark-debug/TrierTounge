@@ -1,17 +1,17 @@
-
 "use client"
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useCollection, useFirestore } from '@/firebase';
-import { collection, query, orderBy, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, addDoc, serverTimestamp, doc, getDoc, where, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, MessageSquareCode, Video, Mic } from 'lucide-react';
+import { Send, MessageSquareCode, Video, Mic, ArrowLeft, MoreVertical, Search, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
 import Image from 'next/image';
 import illChat from '@/assets/ill chat.jpg';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export function ChatTab({ profile, initialChatId }: { profile: any, initialChatId?: string | null }) {
   const db = useFirestore();
@@ -19,8 +19,50 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
   const [activeChatId, setActiveChatId] = useState<string | null>(initialChatId || null);
   const [chatUser, setChatUser] = useState<any>(null);
   const [messageText, setMessageText] = useState('');
+  const [friends, setFriends] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [contextMenu, setContextMenu] = useState<{x: number, y: number, matchId: string, otherUserId: string} | null>(null);
 
+  // Close context menu on any click
+  useEffect(() => {
+    const handleClick = () => setContextMenu(null);
+    window.addEventListener('click', handleClick);
+    return () => window.removeEventListener('click', handleClick);
+  }, []);
+
+  // Fetch all accepted matches for sidebar
+  const friendsQuery = useMemo(() => {
+    if (!db) return null;
+    return query(
+      collection(db, 'matches'),
+      where('participants', 'array-contains', profile.uid)
+    );
+  }, [db, profile.uid]);
+
+  const { data: matches } = useCollection(friendsQuery);
+
+  useEffect(() => {
+    if (!matches || !db) return;
+    const fetchDetails = async () => {
+      const acceptedMatches = matches.filter(m => m.status === 'accepted');
+      const details = await Promise.all(acceptedMatches.map(async (m) => {
+        const otherId = m.participants.find((p: string) => p !== profile.uid);
+        const userDoc = await getDoc(doc(db, 'users', otherId));
+        return {
+          ...m,
+          otherUser: userDoc.data() || {},
+          matchId: m.id
+        };
+      }));
+      // Sort by lastMessageAt desc
+      details.sort((a, b) => (b.lastMessageAt?.toMillis() || 0) - (a.lastMessageAt?.toMillis() || 0));
+      setFriends(details);
+    };
+    fetchDetails();
+  }, [matches, db, profile.uid]);
+
+  // Active chat messages
   const messagesQuery = useMemo(() => {
     if (!db || !activeChatId) return null;
     return query(
@@ -31,20 +73,27 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
 
   const { data: messages } = useCollection(messagesQuery);
 
+  // Fetch active chat user details and clear unread flag
   useEffect(() => {
     if (activeChatId && db) {
       const fetchChatUser = async () => {
         const matchDoc = await getDoc(doc(db, 'matches', activeChatId));
         if (matchDoc.exists()) {
-          const otherId = matchDoc.data().participants.find((p: string) => p !== profile.uid);
+          const matchData = matchDoc.data();
+          const otherId = matchData.participants.find((p: string) => p !== profile.uid);
           const userDoc = await getDoc(doc(db, 'users', otherId));
           setChatUser(userDoc.data());
+
+          if (matchData.unreadBy === profile.uid) {
+            updateDoc(doc(db, 'matches', activeChatId), { unreadBy: null });
+          }
         }
       };
       fetchChatUser();
     }
   }, [activeChatId, db, profile.uid]);
 
+  // Scroll to bottom
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -55,82 +104,310 @@ export function ChatTab({ profile, initialChatId }: { profile: any, initialChatI
     e.preventDefault();
     if (!db || !activeChatId || !messageText.trim()) return;
 
-    addDoc(collection(db, 'matches', activeChatId, 'messages'), {
+    const msg = messageText;
+    setMessageText('');
+
+    await addDoc(collection(db, 'matches', activeChatId, 'messages'), {
       senderId: profile.uid,
-      text: messageText,
+      text: msg,
       timestamp: serverTimestamp()
     });
 
-    setMessageText('');
+    if (chatUser) {
+      await updateDoc(doc(db, 'matches', activeChatId), { 
+        unreadBy: chatUser.uid,
+        lastMessageAt: serverTimestamp(),
+        lastMessageText: msg
+      });
+    }
   };
 
-  if (!activeChatId) {
-    return (
-      <div className="h-[60vh] md:h-[70vh] flex flex-col items-center justify-center neo-card bg-white border-dashed p-4 text-center">
-        <div className="relative h-48 w-48 mb-6 border-2 border-black overflow-hidden bg-muted shadow-neo-sm">
-          <Image src={illChat} alt="Select chat" fill className="object-cover" />
-        </div>
-        <h2 className="text-2xl md:text-3xl font-black italic uppercase text-muted-foreground tracking-tighter">First Get some friends to chat...</h2>
-        <p className="font-bold text-muted-foreground/60 mt-2 text-sm md:text-base">Communication is key to exchange.</p>
-      </div>
-    );
-  }
+  const getAvatar = (uid: string, photoURL?: string) => {
+    if (photoURL) return photoURL;
+    if (!uid) return '/avatars/1.png';
+    let hash = 0;
+    for (let i = 0; i < uid.length; i++) hash = uid.charCodeAt(i) + ((hash << 5) - hash);
+    const index = (Math.abs(hash) % 10) + 1;
+    return `/avatars/${index}.png`;
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, matchId: string, otherUserId: string) => {
+    e.preventDefault();
+    setContextMenu({ x: e.clientX, y: e.clientY, matchId, otherUserId });
+  };
+
+  const filteredFriends = friends.filter(f => 
+    f.otherUser?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    f.otherUser?.profileCode?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="h-[calc(100vh-12rem)] md:h-[80vh] flex flex-col neo-card bg-white overflow-hidden animate-in zoom-in-95 duration-300">
-      {/* Header */}
-      <div className="p-4 md:p-6 border-b-2 border-black flex items-center justify-between bg-accent/5 shrink-0">
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl md:text-2xl font-black italic uppercase tracking-tighter truncate max-w-[150px] md:max-w-none">
-            {chatUser?.name || 'Loading...'}
-          </h2>
-          <div className="hidden sm:block text-[10px] font-bold uppercase text-muted-foreground">Language Reciprocity active</div>
+    <div className="h-full w-full flex bg-white border-2 md:border-4 border-black overflow-hidden animate-in fade-in duration-300 relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+      
+      {/* Context Menu Floating Layer */}
+      {contextMenu && (
+        <div 
+          className="fixed z-[100] bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col p-1 w-56"
+          style={{ top: Math.min(contextMenu.y, window.innerHeight - 150), left: Math.min(contextMenu.x, window.innerWidth - 224) }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button 
+             className="px-4 py-3 text-left text-sm font-black uppercase hover:bg-primary/20 transition-colors border-b-2 border-black/10 flex items-center gap-2"
+             onClick={() => { setActiveChatId(contextMenu.matchId); setContextMenu(null); }}
+          >
+            <MessageSquareCode className="h-4 w-4" /> Open Chat
+          </button>
+          <button 
+             className="px-4 py-3 text-left text-sm font-black uppercase hover:bg-accent/20 transition-colors border-b-2 border-black/10 flex items-center gap-2"
+             onClick={() => { navigator.clipboard.writeText(contextMenu.otherUserId); setContextMenu(null); }}
+          >
+            <User className="h-4 w-4" /> Copy User ID
+          </button>
+          <button 
+             className="px-4 py-3 text-left text-sm font-black uppercase text-white bg-red-500 hover:bg-red-600 transition-colors flex items-center gap-2 mt-1"
+             onClick={async () => {
+                if(window.confirm('Are you sure you want to completely remove this connection?')) {
+                   if (!db) return;
+                   await deleteDoc(doc(db, 'matches', contextMenu.matchId));
+                   if(activeChatId === contextMenu.matchId) setActiveChatId(null);
+                }
+                setContextMenu(null);
+             }}
+          >
+            Remove Match
+          </button>
         </div>
-        <div className="flex items-center gap-2 md:gap-4">
-          <Link href={`/call/${activeChatId}`}>
-            <Button className="neo-button bg-primary h-10 md:h-12 px-3 md:px-4 flex items-center gap-2">
-              <Video className="h-4 w-4 md:h-5 md:w-5" />
-              <span className="hidden sm:inline text-xs font-black uppercase italic">{t('startCall')}</span>
+      )}
+
+      {/* Left Sidebar - Friend List */}
+      <div className={cn(
+        "w-full md:w-80 lg:w-[400px] border-r-4 border-black flex-col shrink-0 bg-[#fefefe]",
+        activeChatId ? "hidden md:flex" : "flex"
+      )}>
+        {/* Sidebar Header */}
+        <div className="h-16 md:h-20 border-b-4 border-black bg-primary/20 flex items-center px-4 md:px-6 shrink-0 justify-between">
+          <h2 className="text-2xl font-black uppercase italic tracking-tighter">Chats</h2>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" className="h-10 w-10 p-0 rounded-full hover:bg-white border-2 border-transparent hover:border-black transition-all">
+              <MoreVertical className="h-5 w-5" />
             </Button>
-          </Link>
-          <div className="text-[10px] md:text-xs font-black bg-white border-2 border-black px-2 py-1 uppercase italic shadow-neo-sm shrink-0">
-            {chatUser?.profileCode}
           </div>
         </div>
+        
+        {/* Search Bar */}
+        <div className="p-3 border-b-4 border-black bg-white shrink-0">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Search or start new chat" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="neo-input pl-9 h-10 w-full bg-muted/20"
+            />
+          </div>
+        </div>
+
+        {/* Chat List */}
+        <div className="flex-1 overflow-y-auto">
+          {filteredFriends.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">
+              <p className="font-bold uppercase text-xs italic">No chats found.</p>
+            </div>
+          ) : (
+            filteredFriends.map(f => {
+              const isActive = activeChatId === f.matchId;
+              const hasUnread = f.unreadBy === profile.uid;
+              return (
+                <div 
+                  key={f.matchId}
+                  onClick={() => setActiveChatId(f.matchId)}
+                  onContextMenu={(e) => handleContextMenu(e, f.matchId, f.otherUser?.uid)}
+                  className={cn(
+                    "flex items-center gap-3 md:gap-4 p-3 md:p-4 border-b-2 border-black/10 cursor-pointer transition-colors relative group",
+                    isActive ? "bg-accent/20" : "hover:bg-muted/30"
+                  )}
+                >
+                  {/* Hover indicator block */}
+                  <div className={cn("absolute left-0 top-0 bottom-0 w-1 bg-black transition-transform", isActive ? "scale-y-100" : "scale-y-0 group-hover:scale-y-50")} />
+                  
+                  <div className="relative h-12 w-12 md:h-14 md:w-14 border-2 border-black rounded-full overflow-hidden shrink-0 bg-white">
+                    <Image src={getAvatar(f.otherUser?.uid, f.otherUser?.photoURL)} alt={f.otherUser?.name || 'Avatar'} fill className="object-cover" />
+                  </div>
+                  
+                  <div className="flex-1 min-w-0 flex flex-col justify-center">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <span className="font-black text-sm md:text-base uppercase truncate pr-2">{f.otherUser?.name || 'Anonymous User'}</span>
+                      {f.lastMessageAt && (
+                        <span className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase shrink-0">
+                          {new Date(f.lastMessageAt.toMillis()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center gap-2">
+                      <span className={cn("text-xs truncate", hasUnread ? "font-black" : "font-medium text-muted-foreground")}>
+                        {f.lastMessageText || <span className="italic text-[10px] uppercase">Language: {f.otherUser?.nativeLanguage}</span>}
+                      </span>
+                      {hasUnread && (
+                        <div className="h-4 w-4 rounded-full bg-accent border border-black shrink-0 flex items-center justify-center">
+                          <div className="h-1.5 w-1.5 bg-black rounded-full" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
-      {/* Messages */}
-      <div
-        ref={scrollRef}
-        className="flex-1 p-4 md:p-6 overflow-y-auto space-y-6 bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat"
-      >
-        {messages?.map((msg) => {
-          const isMine = msg.senderId === profile.uid;
-          return (
-            <div key={msg.id} className={cn("flex w-full", isMine ? "justify-end" : "justify-start")}>
-              <div className={cn(
-                "max-w-[90%] md:max-w-[80%] p-3 md:p-4 border-2 border-black font-medium shadow-neo-sm text-sm md:text-base",
-                isMine ? "bg-primary" : "bg-white"
-              )}>
-                {msg.text}
+      {/* Main Chat Area */}
+      <div className={cn(
+        "flex-1 flex-col bg-[url('https://www.toptal.com/designers/subtlepatterns/uploads/dot-grid.png')] bg-repeat relative",
+        !activeChatId ? "hidden md:flex" : "flex"
+      )}>
+        {!activeChatId ? (
+          <div className="h-full flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm p-4 text-center">
+            <div className="relative h-48 w-48 mb-6 border-4 border-black overflow-hidden bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <Image src={illChat} alt="Select chat" fill className="object-cover" />
+            </div>
+            <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mb-4">NO one to chat with ??</h2>
+            <p className="font-bold text-muted-foreground max-w-md mx-auto text-sm md:text-base border-2 border-black p-4 bg-primary/10">
+              Select a friend from the left sidebar to start messaging. Mutual matches ensure high-quality language exchange.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Chat Header */}
+            <div className="h-16 md:h-20 p-2 md:p-4 border-b-4 border-black flex items-center justify-between bg-white shrink-0 z-10 shadow-sm">
+              <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setActiveChatId(null)}
+                  className="md:hidden h-10 w-10 p-0 mr-1 rounded-full border-2 border-transparent active:border-black"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                </Button>
+                
+                <div className="relative h-10 w-10 md:h-12 md:w-12 border-2 border-black rounded-full overflow-hidden shrink-0 bg-muted">
+                  <Image src={getAvatar(chatUser?.uid, chatUser?.photoURL)} alt={chatUser?.name || 'Avatar'} fill className="object-cover" />
+                </div>
+                
+                <div className="flex flex-col min-w-0">
+                  <h2 className="text-lg md:text-xl font-black italic uppercase tracking-tight truncate">
+                    {chatUser?.name || 'Loading...'}
+                  </h2>
+                  <div className="text-[10px] font-bold uppercase text-green-600 flex items-center gap-1">
+                    <div className="h-1.5 w-1.5 bg-green-500 rounded-full" /> Connected
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 md:gap-4 shrink-0">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-10 w-10 p-0 rounded-full hover:bg-muted hidden sm:flex">
+                      <Search className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 border-2 border-black shadow-neo rounded-none">
+                    <DropdownMenuItem className="font-bold uppercase text-xs focus:bg-primary/20">Search in chat</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Link href={`/call/${activeChatId}`}>
+                  <Button className="neo-button bg-primary h-10 md:h-12 px-3 md:px-5 flex items-center gap-2">
+                    <Video className="h-4 w-4 md:h-5 md:w-5" />
+                    <span className="hidden sm:inline text-xs font-black uppercase italic">{t('startCall')}</span>
+                  </Button>
+                </Link>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="h-10 w-10 p-0 rounded-full hover:bg-muted hidden sm:flex">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48 border-2 border-black shadow-neo rounded-none">
+                    <DropdownMenuItem className="font-bold uppercase text-xs focus:bg-primary/20">Contact Info</DropdownMenuItem>
+                    <DropdownMenuItem className="font-bold uppercase text-xs focus:bg-primary/20">Clear Messages</DropdownMenuItem>
+                    <DropdownMenuItem className="font-bold uppercase text-xs text-red-600 focus:bg-red-50" onClick={() => setActiveChatId(null)}>Close Chat</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
-          );
-        })}
-      </div>
 
-      {/* Input */}
-      <form onSubmit={sendMessage} className="p-4 md:p-6 border-t-2 border-black bg-white flex gap-2 md:gap-4 shrink-0">
-        <Input
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type..."
-          className="neo-input h-12 md:h-14 text-base md:text-lg flex-1"
-        />
-        <Button type="submit" className="neo-button h-12 w-12 md:h-14 md:w-14 p-0 bg-primary shrink-0">
-          <Send className="h-5 w-5 md:h-6 w-6" />
-        </Button>
-      </form>
+            {/* Messages Area */}
+            <div
+              ref={scrollRef}
+              className="flex-1 p-4 md:p-8 overflow-y-auto space-y-6 flex flex-col bg-white/60"
+            >
+              {/* Encrypted Disclaimer */}
+              <div className="mx-auto bg-accent/20 border-2 border-black px-4 py-2 text-[10px] md:text-xs font-bold uppercase text-center max-w-sm mb-4">
+                Messages and calls are end-to-end encrypted. No one outside of this chat, not even TrierTongue, can read or listen to them.
+              </div>
+
+              {messages?.map((msg, i) => {
+                const isMine = msg.senderId === profile.uid;
+                const prevMsg = i > 0 ? messages[i-1] : null;
+                const showTail = !prevMsg || prevMsg.senderId !== msg.senderId;
+
+                return (
+                  <div key={msg.id} className={cn("flex w-full", isMine ? "justify-end" : "justify-start")}>
+                    <div className={cn(
+                      "max-w-[85%] md:max-w-[70%] p-3 md:p-4 border-2 border-black font-medium text-sm md:text-base relative group shadow-sm",
+                      isMine ? "bg-[#dcf8c6] ml-auto" : "bg-white mr-auto",
+                      showTail && isMine && "rounded-tr-none",
+                      showTail && !isMine && "rounded-tl-none"
+                    )}>
+                      {/* Message Tail CSS tricks */}
+                      {showTail && (
+                        <div className={cn(
+                          "absolute top-[-2px] w-4 h-4 border-t-2 border-black z-[-1]",
+                          isMine ? "right-[-10px] border-r-2 bg-[#dcf8c6]" : "left-[-10px] border-l-2 bg-white",
+                        )} style={{ clipPath: isMine ? 'polygon(0 0, 100% 0, 0 100%)' : 'polygon(0 0, 100% 0, 100% 100%)' }} />
+                      )}
+
+                      <div className="flex flex-col">
+                        <span className="whitespace-pre-wrap break-words">{msg.text}</span>
+                        <span className="text-[9px] md:text-[10px] font-bold text-black/50 self-end mt-1 uppercase select-none">
+                          {msg.timestamp ? new Date(msg.timestamp.toMillis()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Input Area */}
+            <div className="p-3 md:p-4 border-t-4 border-black bg-[#f0f2f5] shrink-0">
+              <form onSubmit={sendMessage} className="flex gap-2 md:gap-4 items-center max-w-5xl mx-auto">
+                <Button type="button" variant="ghost" className="h-10 w-10 md:h-12 md:w-12 p-0 rounded-full hover:bg-black/5 shrink-0 hidden sm:flex">
+                  <span className="text-xl">😊</span>
+                </Button>
+                
+                <Input
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  placeholder="Type a message"
+                  className="neo-input h-12 md:h-14 text-base md:text-lg flex-1 rounded-full px-6 bg-white shadow-sm"
+                />
+                
+                {messageText.trim() ? (
+                  <Button type="submit" className="neo-button rounded-full h-12 w-12 md:h-14 md:w-14 p-0 bg-primary shrink-0 transition-transform hover:scale-105">
+                    <Send className="h-5 w-5 md:h-6 md:w-6 ml-1" />
+                  </Button>
+                ) : (
+                  <Button type="button" className="neo-button rounded-full h-12 w-12 md:h-14 md:w-14 p-0 bg-accent shrink-0 transition-transform hover:scale-105">
+                    <Mic className="h-5 w-5 md:h-6 md:w-6" />
+                  </Button>
+                )}
+              </form>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

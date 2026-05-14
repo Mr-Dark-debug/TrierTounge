@@ -48,7 +48,11 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
 
   const acceptMatch = async (matchId: string) => {
     if (!db) return;
-    updateDoc(doc(db, 'matches', matchId), { status: 'accepted' });
+    const match = matchDetails.find(m => m.matchId === matchId);
+    updateDoc(doc(db, 'matches', matchId), { 
+      status: 'accepted',
+      newlyAcceptedFor: match?.initiator || null
+    });
   };
 
   const removeMatch = async (matchId: string) => {
