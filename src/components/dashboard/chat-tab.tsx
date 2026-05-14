@@ -5,7 +5,7 @@ import { useCollection, useFirestore } from '@/firebase';
 import { collection, query, orderBy, addDoc, serverTimestamp, doc, getDoc, where, updateDoc, deleteDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, MessageSquareCode, Video, Mic, ArrowLeft, MoreVertical, Search, User, Check, CheckCheck, Phone, Info } from 'lucide-react';
+import { Send, MessageSquareCode, Video, Mic, ArrowLeft, MoreVertical, Search, User, Check, CheckCheck, Phone, Info, Smile, Paperclip, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/language-context';
 import Link from 'next/link';
@@ -24,12 +24,13 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
   const { toast } = useToast();
   const [activeChatId, setActiveChatId] = useState<string | null>(initialChatId || null);
 
-  const { messages, sendEncryptedMessage, isReady } = useE2EEChat(profile?.uid, activeChatId, privateKey || null);
+  const { messages, sendEncryptedMessage, isEncrypted } = useE2EEChat(profile?.uid, activeChatId, privateKey || null);
 
   const [chatUser, setChatUser] = useState<any>(null);
   const [messageText, setMessageText] = useState('');
   const [friends, setFriends] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filter, setFilter] = useState<'all' | 'unread' | 'groups'>('all');
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [sidebarWidth, setSidebarWidth] = useState(350);
@@ -185,7 +186,7 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!db || !activeChatId || !messageText.trim() || !isReady) return;
+    if (!db || !activeChatId || !messageText.trim()) return;
 
     const msg = messageText;
     setMessageText('');
@@ -196,7 +197,7 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
       await updateDoc(doc(db, 'matches', activeChatId), {
         unreadBy: chatUser.uid,
         lastMessageAt: serverTimestamp(),
-        lastMessageText: '[Encrypted Message]'
+        lastMessageText: isEncrypted ? '[Encrypted Message]' : msg.substring(0, 50)
       });
     }
   };
@@ -268,10 +269,16 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
     document.body.style.userSelect = 'auto';
   };
 
-  const filteredFriends = friends.filter(f => 
-    f.otherUser?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    f.otherUser?.profileCode?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredFriends = friends.filter(f => {
+    const matchesSearch = f.otherUser?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         f.otherUser?.profileCode?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (!matchesSearch) return false;
+    
+    if (filter === 'unread') return f.unreadBy === profile.uid;
+    if (filter === 'groups') return false; // Not implemented yet
+    return true;
+  });
 
   return (
     <div ref={containerRef} className="h-full w-full flex bg-white border-2 md:border-4 border-black overflow-hidden animate-in fade-in duration-300 relative shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
@@ -331,7 +338,19 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
         <div className="h-16 md:h-20 border-b-4 border-black bg-primary/20 flex items-center px-4 md:px-6 shrink-0 justify-between">
           <h2 className="text-2xl font-black uppercase italic tracking-tighter">Chats</h2>
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm" className="h-10 w-10 p-0 rounded-full hover:bg-white border-2 border-transparent hover:border-black transition-all">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-10 w-10 p-0 rounded-full hover:bg-white border-2 border-transparent hover:border-black transition-all">
+                  <Filter className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 border-2 border-black shadow-neo rounded-none">
+                <DropdownMenuItem onClick={() => setFilter('all')} className={cn("font-bold uppercase text-xs", filter === 'all' && "bg-primary/20")}>All Chats</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter('unread')} className={cn("font-bold uppercase text-xs", filter === 'unread' && "bg-primary/20")}>Unread</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter('groups')} className={cn("font-bold uppercase text-xs", filter === 'groups' && "bg-primary/20")}>Groups (Soon)</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button onClick={comingSoon} variant="ghost" size="sm" className="h-10 w-10 p-0 rounded-full hover:bg-white border-2 border-transparent hover:border-black transition-all">
               <MoreVertical className="h-5 w-5" />
             </Button>
           </div>
@@ -340,12 +359,13 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
         {/* Search Bar */}
         <div className="p-3 border-b-4 border-black bg-white shrink-0">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-black/40 z-10 pointer-events-none" />
             <Input 
               placeholder="Search or start new chat" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="neo-input pl-12 h-10 w-full bg-muted/20"
+              className="border-2 border-black/40 bg-muted/20 h-11 w-full outline-none focus:ring-2 focus:ring-primary pr-3 py-2"
+              style={{ paddingLeft: '3.5rem' }}
             />
           </div>
         </div>
@@ -566,35 +586,45 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
                   type="button" 
                   variant="ghost" 
                   className={cn(
-                    "h-10 w-10 md:h-12 md:w-12 p-0 rounded-full shrink-0 hidden sm:flex transition-all",
+                    "h-10 w-10 md:h-12 md:w-12 p-0 rounded-full shrink-0 transition-all",
                     showEmojiPicker ? "bg-black text-white" : "hover:bg-black/5"
                   )}
                 >
-                  <span className="text-xl">😊</span>
+                  <Smile className="h-6 w-6" />
+                </Button>
+
+                <Button 
+                  onClick={comingSoon} 
+                  type="button" 
+                  variant="ghost" 
+                  className="h-10 w-10 md:h-12 md:w-12 p-0 rounded-full shrink-0 transition-all hover:bg-black/5"
+                >
+                  <Paperclip className="h-5 w-5" />
                 </Button>
                 
                 <Textarea
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={isReady ? "Type an encrypted message..." : "Establishing secure connection..."}
-                  disabled={!isReady}
+                  placeholder="Type a message..."
                   className="neo-input min-h-[48px] md:min-h-[56px] max-h-[150px] text-base md:text-lg flex-1 rounded-2xl px-6 bg-white shadow-sm py-3 resize-none"
                   rows={1}
                 />
 
-                <div className="flex gap-2 shrink-0 mb-1">
+                <div className="flex gap-1 md:gap-2 shrink-0 mb-1 items-center">
                   <Button
                     type="submit"
-                    disabled={!messageText.trim() || !isReady}
+                    disabled={!messageText.trim()}
+                    variant="ghost"
                     className={cn(
-                      "neo-button rounded-full h-12 w-12 md:h-14 md:w-14 p-0 transition-all",
-                      messageText.trim() && isReady ? "bg-primary scale-100 opacity-100" : "bg-muted scale-90 opacity-50"
+                      "h-12 w-12 p-0 transition-all hover:bg-primary/20 rounded-full",
+                      messageText.trim() ? "text-primary scale-110" : "text-muted-foreground scale-90 opacity-50"
                     )}
-                  >                    <Send className="h-5 w-5 md:h-6 md:w-6 ml-1" />
+                  >
+                    <Send className="h-6 w-6 ml-1" />
                   </Button>
-                  <Button onClick={comingSoon} type="button" className="neo-button rounded-full h-12 w-12 md:h-14 md:w-14 p-0 bg-accent shrink-0 transition-transform hover:scale-105">
-                    <Mic className="h-5 w-5 md:h-6 md:w-6" />
+                  <Button onClick={comingSoon} variant="ghost" className="h-12 w-12 p-0 rounded-full hover:bg-black/5 transition-transform hover:scale-105">
+                    <Mic className="h-6 w-6" />
                   </Button>
                 </div>
               </form>

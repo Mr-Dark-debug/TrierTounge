@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFirestore } from '@/firebase';
-import { collection, query, where, onSnapshot, orderBy, limit } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { AppNotification } from '@/firebase/notifications';
 import { useToast } from './use-toast';
 
@@ -13,13 +13,11 @@ export function useNotifications(userId?: string) {
   useEffect(() => {
     if (!db || !userId) return;
 
-    // We query notifications where recipient is the current user.
-    // We order by createdAt descending to show newest first.
+    // Only use a simple equality filter — no orderBy — to avoid needing
+    // a composite index.  We sort client-side after receiving results.
     const q = query(
       collection(db, 'notifications'),
-      where('recipientId', '==', userId),
-      orderBy('createdAt', 'desc'),
-      limit(50) // Limit to recent 50 to avoid massive reads
+      where('recipientId', '==', userId)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -27,25 +25,22 @@ export function useNotifications(userId?: string) {
       let unread = 0;
 
       snapshot.docChanges().forEach((change) => {
-        // If a new high-priority notification comes in (e.g. Call or Message)
-        // and the component isn't mounting for the first time, show a toast.
-        if (change.type === 'added' && snapshot.metadata.hasPendingWrites) {
-           const data = change.doc.data() as AppNotification;
-           if (!data.isRead) {
-              if (data.type === 'CALL_INVITE') {
-                 // Trigger full screen interactive call modal in a real app
-                 toast({
-                   title: `📞 Incoming Call`,
-                   description: data.body,
-                   duration: 10000,
-                 });
-              } else {
-                 toast({
-                   title: data.title,
-                   description: data.body,
-                 });
-              }
-           }
+        if (change.type === 'added' && !snapshot.metadata.fromCache) {
+          const data = change.doc.data() as AppNotification;
+          if (!data.isRead) {
+            if (data.type === 'CALL_INVITE') {
+              toast({
+                title: `📞 Incoming Call`,
+                description: data.body,
+                duration: 10000,
+              });
+            } else {
+              toast({
+                title: data.title,
+                description: data.body,
+              });
+            }
+          }
         }
       });
 
@@ -55,10 +50,19 @@ export function useNotifications(userId?: string) {
         if (!data.isRead) unread++;
       });
 
-      setNotifications(notifs);
+      // Sort client-side: newest first, then cap at 50
+      notifs.sort((a: any, b: any) => {
+        const aTime = a.createdAt?.toMillis?.() || 0;
+        const bTime = b.createdAt?.toMillis?.() || 0;
+        return bTime - aTime;
+      });
+
+      setNotifications(notifs.slice(0, 50));
       setUnreadCount(unread);
     }, (error) => {
-      console.error('Notifications snapshot error (check rules):', error);
+      console.warn('Notifications listener error:', error.message);
+      setNotifications([]);
+      setUnreadCount(0);
     });
 
     return () => unsubscribe();

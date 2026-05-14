@@ -64,11 +64,13 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
       <aside className={cn("hidden md:flex flex-col bg-white shrink-0 h-full border-r-2 border-black transition-all duration-300 relative", isSidebarOpen ? "w-72" : "w-24")}>
         <div className={cn("flex flex-col h-full w-full overflow-hidden", isSidebarOpen ? "p-6" : "p-4 items-center")}>
           <div className={cn("flex items-center mb-12", isSidebarOpen ? "justify-start" : "justify-center mt-2")}>
-            <Image 
-              src={logoImg} 
-              alt="TrierTongue Logo" 
-              height={40} 
-              className={cn("w-auto transition-all duration-300", isSidebarOpen ? "h-10" : "h-6")}
+            <Image
+              src={logoImg}
+              alt="TrierTongue Logo"
+              height={96}
+              width={96}
+              className={cn("transition-all duration-300", isSidebarOpen ? "h-24" : "h-6")}
+              style={{ width: 'auto', height: 'auto' }}
               priority
             />
           </div>
@@ -77,7 +79,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             <NavButton
               icon={
                 <div className={cn("relative shrink-0 border border-black overflow-hidden bg-white", isSidebarOpen ? "h-6 w-6" : "h-full w-full")}>
-                  <Image src={illDisIcon} alt="Discovery" fill className="object-cover" />
+                  <Image src={illDisIcon} alt="Discovery" fill sizes="48px" className="object-cover" />
                 </div>
               }
               label={isSidebarOpen ? t('discovery') : ''}
@@ -92,7 +94,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             <NavButton
               icon={
                 <div className={cn("relative shrink-0 border border-black overflow-hidden bg-white", isSidebarOpen ? "h-6 w-6" : "h-full w-full")}>
-                  <Image src={illEventsIcon} alt="Events" fill className="object-cover" />
+                  <Image src={illEventsIcon} alt="Events" fill sizes="48px" className="object-cover" />
                 </div>
               }
               label={isSidebarOpen ? 'EVENTS' : ''}
@@ -107,7 +109,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             <NavButton
               icon={
                 <div className={cn("relative shrink-0 border border-black overflow-hidden bg-white", isSidebarOpen ? "h-6 w-6" : "h-full w-full")}>
-                  <Image src={illMutualIcon} alt="Matches" fill className="object-cover" />
+                  <Image src={illMutualIcon} alt="Matches" fill sizes="48px" className="object-cover" />
                 </div>
               }
               label={isSidebarOpen ? t('matches') : ''}
@@ -122,7 +124,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
             <NavButton
               icon={
                 <div className={cn("relative shrink-0 border border-black overflow-hidden bg-white", isSidebarOpen ? "h-6 w-6" : "h-full w-full")}>
-                  <Image src={illChatIcon} alt="Chat" fill className="object-cover" />
+                  <Image src={illChatIcon} alt="Chat" fill sizes="48px" className="object-cover" />
                 </div>
               }
               label={isSidebarOpen ? t('chat') : ''}
@@ -212,14 +214,14 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
           "p-4 border-b-2 border-black bg-white items-center justify-between sticky top-0 z-40",
           activeTab === 'chat' ? "hidden" : "flex md:hidden"
         )}>
-           <Image 
-             src={logoImg} 
-             alt="TrierTongue Logo" 
-             height={40} 
-             className="h-10 w-auto"
-             priority
-           />
-           <div className="flex items-center gap-2">
+          <Image
+            src={logoImg}
+            alt="TrierTongue Logo"
+            height={40}
+            className="h-10 w-auto"
+            priority
+          />
+          <div className="flex items-center gap-2">
             <NotificationBell profile={profile} onNavigate={(tab) => { setActiveTab(tab); setSelectedChatId(null); }} />
             <Link href="/feedback">
               <Button variant="ghost" size="sm" className="p-2">
@@ -248,7 +250,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
         <MobileNavButton
           icon={
             <div className="relative h-6 w-6 border border-black overflow-hidden bg-white">
-              <Image src={illDisIcon} alt="Discovery" fill className="object-cover" />
+              <Image src={illDisIcon} alt="Discovery" fill sizes="24px" className="object-cover" />
             </div>
           }
           active={activeTab === 'discovery'}
@@ -260,7 +262,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
         <MobileNavButton
           icon={
             <div className="relative h-6 w-6 border border-black overflow-hidden bg-white">
-              <Image src={illEventsIcon} alt="Events" fill className="object-cover" />
+              <Image src={illEventsIcon} alt="Events" fill sizes="24px" className="object-cover" />
             </div>
           }
           active={activeTab === 'events'}
@@ -272,7 +274,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
         <MobileNavButton
           icon={
             <div className="relative h-6 w-6 border border-black overflow-hidden bg-white">
-              <Image src={illMutualIcon} alt="Matches" fill className="object-cover" />
+              <Image src={illMutualIcon} alt="Matches" fill sizes="24px" className="object-cover" />
             </div>
           }
           active={activeTab === 'matches'}
@@ -284,7 +286,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
         <MobileNavButton
           icon={
             <div className="relative h-6 w-6 border border-black overflow-hidden bg-white">
-              <Image src={illChatIcon} alt="Chat" fill className="object-cover" />
+              <Image src={illChatIcon} alt="Chat" fill sizes="24px" className="object-cover" />
             </div>
           }
           active={activeTab === 'chat'}
@@ -297,6 +299,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
                 src={profile.photoURL || `https://picsum.photos/seed/${profile.uid}/200/200`}
                 alt={profile.name || "Profile"}
                 fill
+                sizes="24px"
                 className="object-cover"
               />
             </div>
@@ -311,11 +314,11 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
 
       {/* Global Modals */}
       <SystemAnnouncementModal userId={profile.uid} />
-      <E2ESetupModal 
-        isSetup={isSetup} 
-        isUnlocked={isUnlocked} 
-        setupE2E={setupE2E} 
-        unlockE2E={unlockE2E} 
+      <E2ESetupModal
+        isSetup={isSetup}
+        isUnlocked={isUnlocked}
+        setupE2E={setupE2E}
+        unlockE2E={unlockE2E}
       />
     </div>
   );

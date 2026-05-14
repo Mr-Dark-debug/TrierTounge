@@ -26,9 +26,10 @@ export function E2ESetupModal({
   const [passphrase, setPassphrase] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
 
-  // If we don't know the status yet, or it's already unlocked, don't show anything
-  if (isSetup === null || isUnlocked) return null;
+  // If we don't know the status yet, or it's already unlocked, or user dismissed
+  if (isSetup === null || isUnlocked || dismissed) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,8 +61,8 @@ export function E2ESetupModal({
   };
 
   return (
-    <Dialog open={true} onOpenChange={() => {}}>
-      <DialogContent className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none sm:max-w-md pointer-events-auto" onInteractOutside={(e) => e.preventDefault()}>
+    <Dialog open={true} onOpenChange={() => setDismissed(true)}>
+      <DialogContent className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none sm:max-w-md pointer-events-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-black uppercase text-xl italic tracking-tight">
              {isSetup ? <Lock className="h-5 w-5 text-primary" /> : <KeyRound className="h-5 w-5 text-primary" />}
@@ -70,7 +71,7 @@ export function E2ESetupModal({
           <DialogDescription className="font-bold text-muted-foreground">
              {isSetup 
                ? 'Enter your backup passphrase to decrypt your private key and unlock your messages on this device.' 
-               : 'Create a strong backup passphrase. This secures your messages end-to-end.'}
+               : 'Create a strong backup passphrase. This secures your messages end-to-end. You can skip this and set it up later.'}
           </DialogDescription>
         </DialogHeader>
         
@@ -78,7 +79,7 @@ export function E2ESetupModal({
           <div className="bg-yellow-100 border-2 border-yellow-500 p-3 flex gap-3 text-sm font-medium">
              <AlertTriangle className="h-5 w-5 shrink-0 text-yellow-600" />
              <p className="text-yellow-800">
-               <strong>CRITICAL:</strong> Please write this passphrase down or save it in a password manager. If you lose it, you will lose access to all your chats on new devices. We cannot recover it for you.
+               <strong>NOTE:</strong> Without encryption, your messages will be sent as plain text. You can set up encryption anytime from your profile settings.
              </p>
           </div>
         )}
@@ -93,13 +94,23 @@ export function E2ESetupModal({
              required
           />
           {error && <p className="text-red-500 text-xs font-bold uppercase">{error}</p>}
-          <Button 
-            type="submit" 
-            disabled={loading}
-            className="neo-button w-full bg-primary font-black uppercase tracking-widest text-xs" 
-          >
-            {loading ? 'Processing...' : (isSetup ? 'Unlock' : 'Secure My Chats')}
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="neo-button flex-1 bg-primary font-black uppercase tracking-widest text-xs" 
+            >
+              {loading ? 'Processing...' : (isSetup ? 'Unlock' : 'Secure My Chats')}
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={() => setDismissed(true)}
+              className="neo-button font-black uppercase tracking-widest text-xs border-2 border-black" 
+            >
+              Skip
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

@@ -120,31 +120,38 @@ export function useE2EEChat(userId: string | undefined, activeChatId: string | n
   const [messages, setMessages] = useState<any[]>([]);
   const [sharedSecret, setSharedSecret] = useState<CryptoKey | null>(null);
 
-  // Derive shared secret
+  // Derive shared secret in background (non-blocking)
   useEffect(() => {
-    if (!db || !userId || !activeChatId || !privateKey) return;
+    if (!db || !userId || !activeChatId || !privateKey) {
+      setSharedSecret(null);
+      return;
+    }
 
     const deriveSecret = async () => {
-      const matchDoc = await getDoc(doc(db, 'matches', activeChatId));
-      if (matchDoc.exists()) {
-        const otherId = matchDoc.data().participants.find((p: string) => p !== userId);
-        const otherUserDoc = await getDoc(doc(db, 'users', otherId));
-        if (otherUserDoc.exists()) {
-          const otherPublicKeyJwk = otherUserDoc.data().publicKey;
-          if (otherPublicKeyJwk) {
-            const otherPublicKey = await importPublicKey(otherPublicKeyJwk);
-            const secret = await deriveSharedSecret(privateKey, otherPublicKey);
-            setSharedSecret(secret);
+      try {
+        const matchDoc = await getDoc(doc(db, 'matches', activeChatId));
+        if (matchDoc.exists()) {
+          const otherId = matchDoc.data().participants.find((p: string) => p !== userId);
+          const otherUserDoc = await getDoc(doc(db, 'users', otherId));
+          if (otherUserDoc.exists()) {
+            const otherPublicKeyJwk = otherUserDoc.data().publicKey;
+            if (otherPublicKeyJwk) {
+              const otherPublicKey = await importPublicKey(otherPublicKeyJwk);
+              const secret = await deriveSharedSecret(privateKey, otherPublicKey);
+              setSharedSecret(secret);
+            }
           }
         }
+      } catch (err) {
+        console.warn('E2EE key derivation failed, using plaintext:', err);
       }
     };
     deriveSecret();
   }, [db, userId, activeChatId, privateKey]);
 
-  // Listen to messages and decrypt
+  // Listen to messages IMMEDIATELY — don't wait for sharedSecret
   useEffect(() => {
-    if (!db || !activeChatId || !sharedSecret) return;
+    if (!db || !activeChatId) return;
 
     const q = query(
       collection(db, 'matches', activeChatId, 'messages'),
@@ -153,41 +160,60 @@ export function useE2EEChat(userId: string | undefined, activeChatId: string | n
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const newMessages: any[] = [];
-      for (const doc of snapshot.docs) {
-        const data = doc.data();
-        if (data.ciphertext && data.iv) {
-          const plainText = await decryptText(data.ciphertext, data.iv, sharedSecret);
-          newMessages.push({ id: doc.id, ...data, text: plainText });
-        } else {
-          // Fallback for unencrypted old messages
-          newMessages.push({ id: doc.id, ...data });
+      for (const msgDoc of snapshot.docs) {
+        const data = msgDoc.data();
+        if (data.ciphertext && data.iv && sharedSecret) {
+          try {
+            const plainText = await decryptText(data.ciphertext, data.iv, sharedSecret);
+            newMessages.push({ id: msgDoc.id, ...data, text: plainText });
+          } catch {
+            newMessages.push({ id: msgDoc.id, ...data, text: '🔒 Encrypted' });
+          }
+        } else if (data.text) {
+          // Plaintext message (legacy or fallback)
+          newMessages.push({ id: msgDoc.id, ...data });
+        } else if (data.ciphertext) {
+          // Encrypted but no key yet
+          newMessages.push({ id: msgDoc.id, ...data, text: '🔒 Decrypting...' });
         }
       }
       setMessages(newMessages);
     }, (error) => {
-      console.error('Messages snapshot error (check rules):', error);
+      console.error('Messages snapshot error:', error);
     });
 
     return () => unsubscribe();
   }, [db, activeChatId, sharedSecret]);
 
   const sendEncryptedMessage = async (text: string) => {
-    if (!db || !activeChatId || !sharedSecret || !userId) return;
+    if (!db || !activeChatId || !userId) return;
 
-    const { ciphertext, iv } = await encryptText(text, sharedSecret);
-
-    await addDoc(collection(db, 'matches', activeChatId, 'messages'), {
-      senderId: userId,
-      ciphertext,
-      iv,
-      timestamp: serverTimestamp(),
-      status: 'sent'
-    });
+    if (sharedSecret) {
+      // E2EE is ready — send encrypted
+      const { ciphertext, iv } = await encryptText(text, sharedSecret);
+      await addDoc(collection(db, 'matches', activeChatId, 'messages'), {
+        senderId: userId,
+        ciphertext,
+        iv,
+        timestamp: serverTimestamp(),
+        status: 'sent'
+      });
+    } else {
+      // E2EE not ready yet — send plaintext so user isn't blocked
+      await addDoc(collection(db, 'matches', activeChatId, 'messages'), {
+        senderId: userId,
+        text,
+        timestamp: serverTimestamp(),
+        status: 'sent'
+      });
+    }
   };
 
   return {
     messages,
     sendEncryptedMessage,
-    isReady: !!sharedSecret
+    // Always ready — E2EE bootstraps in background
+    isReady: true,
+    isEncrypted: !!sharedSecret
   };
 }

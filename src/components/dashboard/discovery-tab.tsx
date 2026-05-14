@@ -214,6 +214,8 @@ export function DiscoveryTab({ profile }: { profile: any }) {
                   src={noResultsIll}
                   alt="No results"
                   fill
+                  sizes="256px"
+                  priority
                   className="object-cover"
                 />
               </div>
