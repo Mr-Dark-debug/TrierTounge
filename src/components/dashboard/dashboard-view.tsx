@@ -11,6 +11,9 @@ import { ProfileTab } from '@/components/dashboard/profile-tab';
 import { EventsTab } from '@/components/dashboard/events-tab';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { NotificationBell } from '@/components/dashboard/notification-bell';
+import { SystemAnnouncementModal } from '@/components/dashboard/system-announcement-modal';
+import { E2ESetupModal } from '@/components/dashboard/e2e-setup-modal';
+import { useE2E } from '@/hooks/use-e2e-chat';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/context/language-context';
 import { useToast } from '@/hooks/use-toast';
@@ -33,6 +36,8 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { t } = useLanguage();
   const { toast } = useToast();
+
+  const { isSetup, isUnlocked, setupE2E, unlockE2E, privateKey } = useE2E(profile?.uid);
 
   const handleLogoutClick = () => {
     if (window.confirm("Are you sure you want to log out?")) {
@@ -188,7 +193,10 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 md:pb-0 relative">
-        <div className="hidden md:flex absolute top-4 right-4 z-50 items-center gap-2">
+        <div className={cn(
+          "absolute top-4 right-4 z-50 items-center gap-2",
+          activeTab === 'chat' ? "hidden" : "hidden md:flex"
+        )}>
           <NotificationBell profile={profile} onNavigate={(tab) => { setActiveTab(tab); setSelectedChatId(null); }} />
           <Link href="/feedback">
             <Button variant="ghost" size="sm" className="font-bold text-xs uppercase italic border-2 border-transparent hover:border-black gap-2">
@@ -200,7 +208,10 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
         </div>
 
         {/* Header - Mobile Only */}
-        <div className="md:hidden p-4 border-b-2 border-black bg-white flex items-center justify-between sticky top-0 z-40">
+        <div className={cn(
+          "p-4 border-b-2 border-black bg-white items-center justify-between sticky top-0 z-40",
+          activeTab === 'chat' ? "hidden" : "flex md:hidden"
+        )}>
            <Image 
              src={logoImg} 
              alt="TrierTongue Logo" 
@@ -220,7 +231,7 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
         </div>
         {activeTab === 'chat' ? (
           <div className="h-[calc(100vh-4rem)] md:h-screen w-full">
-            <ChatTab profile={profile} initialChatId={selectedChatId} />
+            <ChatTab profile={profile} initialChatId={selectedChatId} privateKey={privateKey} />
           </div>
         ) : (
           <div className="p-4 md:p-10 max-w-7xl mx-auto md:mt-8">
@@ -297,6 +308,15 @@ export function DashboardView({ profile, onLogout }: DashboardViewProps) {
           }}
         />
       </nav>
+
+      {/* Global Modals */}
+      <SystemAnnouncementModal userId={profile.uid} />
+      <E2ESetupModal 
+        isSetup={isSetup} 
+        isUnlocked={isUnlocked} 
+        setupE2E={setupE2E} 
+        unlockE2E={unlockE2E} 
+      />
     </div>
   );
 }
