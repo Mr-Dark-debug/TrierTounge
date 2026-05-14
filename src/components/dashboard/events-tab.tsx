@@ -44,7 +44,8 @@ function EventsListView({ profile, onCreateClick, onEventClick }: any) {
 
   const filteredEvents = useMemo(() => {
     if (!events) return [];
-    return events.filter((e: any) => e.title.toLowerCase().includes(search.toLowerCase()) || e.location.toLowerCase().includes(search.toLowerCase()));
+    const sq = search.toLowerCase();
+    return events.filter((e: any) => e.title?.toLowerCase().includes(sq) || e.location?.toLowerCase().includes(sq));
   }, [events, search]);
 
   return (

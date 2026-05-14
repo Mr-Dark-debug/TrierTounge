@@ -64,11 +64,12 @@ export function DiscoveryTab({ profile }: { profile: any }) {
     if (!students) return [];
     return students.filter(s => {
       if (s.uid === profile.uid) return false;
-      const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.major.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.nativeLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.targetLanguage.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (s.profileCode && s.profileCode.toLowerCase().includes(searchQuery.toLowerCase()));
+      const sq = searchQuery.toLowerCase();
+      const matchesSearch = s.name?.toLowerCase().includes(sq) ||
+        s.major?.toLowerCase().includes(sq) ||
+        s.nativeLanguage?.toLowerCase().includes(sq) ||
+        s.targetLanguage?.toLowerCase().includes(sq) ||
+        (s.profileCode && s.profileCode.toLowerCase().includes(sq));
       const matchesMajor = !filterMajor || s.major === filterMajor;
       const matchesNative = !filterNative || s.nativeLanguage === filterNative;
       const matchesTarget = !filterTarget || s.targetLanguage === filterTarget;
