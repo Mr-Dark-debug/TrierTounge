@@ -16,7 +16,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import { Search, Filter, Sparkles, X, Loader2 } from 'lucide-react';
+import { Search, Filter, Sparkles, X, Loader2, LayoutGrid, List } from 'lucide-react';
 import { useLanguage } from '@/context/language-context';
 import Image from 'next/image';
 import noResultsIll from '../../assets/ill13.jpg';
@@ -28,6 +28,7 @@ export function DiscoveryTab({ profile }: { profile: any }) {
   const [filterMajor, setFilterMajor] = useState<string | null>(null);
   const [filterNative, setFilterNative] = useState<string | null>(null);
   const [filterTarget, setFilterTarget] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isPending, startTransition] = useTransition();
   const { t } = useLanguage();
 
@@ -111,6 +112,23 @@ export function DiscoveryTab({ profile }: { profile: any }) {
           </div>
 
           <div className="flex gap-2">
+            <div className="hidden sm:flex gap-1 bg-white neo-card p-1 items-center h-12 md:h-14">
+              <Button 
+                variant={viewMode === 'list' ? 'default' : 'ghost'} 
+                onClick={() => setViewMode('list')} 
+                className={cn("h-full aspect-square p-0 rounded-sm", viewMode === 'list' ? 'bg-black text-white hover:bg-black/80' : 'hover:bg-muted')}
+              >
+                <List className="h-5 w-5" />
+              </Button>
+              <Button 
+                variant={viewMode === 'grid' ? 'default' : 'ghost'} 
+                onClick={() => setViewMode('grid')} 
+                className={cn("h-full aspect-square p-0 rounded-sm", viewMode === 'grid' ? 'bg-black text-white hover:bg-black/80' : 'hover:bg-muted')}
+              >
+                <LayoutGrid className="h-5 w-5" />
+              </Button>
+            </div>
+            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="neo-button h-12 md:h-14 bg-white px-6 grow sm:grow-0">
@@ -184,10 +202,10 @@ export function DiscoveryTab({ profile }: { profile: any }) {
           {[1, 2, 3, 4].map(i => <div key={i} className="neo-card h-[300px] md:h-[400px] bg-white animate-pulse" />)}
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-10">
+        <div className={cn("grid gap-6 md:gap-10", viewMode === 'grid' ? "grid-cols-1 xl:grid-cols-2" : "grid-cols-1")}>
           {filteredStudents.length > 0 ? (
             filteredStudents.map(student => (
-              <MatchCard key={student.uid} currentUser={profile} student={student} />
+              <MatchCard key={student.uid} currentUser={profile} student={student} viewMode={viewMode} />
             ))
           ) : (
             <div className="col-span-full py-12 md:py-16 text-center neo-card bg-white p-6 md:p-10 flex flex-col items-center">

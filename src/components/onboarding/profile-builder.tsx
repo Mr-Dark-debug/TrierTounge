@@ -53,9 +53,11 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
 
   const isStepValid = () => {
     if (step === 1) return formData.faculty && formData.major && formData.year;
-    if (step === 2) return formData.campus && formData.residentialArea;
+    if (step === 2) return formData.campus && formData.residentialArea && formData.dorm;
     if (step === 3) return formData.nativeLanguage && formData.targetLanguage;
-    if (step === 4) return formData.academicGoals.length >= 20 && formData.socialGoals.length >= 20;
+    if (step === 4) return formData.academicGoals.trim().length >= 20 && formData.socialGoals.trim().length >= 20;
+    if (step === 5) return formData.availability.some(v => v);
+    if (step === 6) return formData.instagram.trim() !== '' && formData.telegram.trim() !== '';
     return true;
   };
 
@@ -200,10 +202,10 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="font-bold uppercase text-[10px] md:text-xs">Dormitory (Optional)</Label>
+                  <Label className="font-bold uppercase text-[10px] md:text-xs">Dormitory</Label>
                   <Select onValueChange={(v) => setFormData({ ...formData, dorm: v })} value={formData.dorm}>
                     <SelectTrigger className="neo-input h-12 md:h-14">
-                      <SelectValue placeholder="Select Dorm (if applicable)" />
+                      <SelectValue placeholder="Select Dorm" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">Not in a Dorm</SelectItem>
