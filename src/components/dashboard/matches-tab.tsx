@@ -85,6 +85,8 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
     return `/avatars/${index}.jpg`;
   };
 
+  const getDisplayName = (user: any) => user?.name || user?.email?.split('@')[0] || 'Anonymous User';
+
   return (
     <div className="space-y-8 animate-in slide-in-from-right-10 duration-500">
       <header className="flex flex-col gap-6">
@@ -153,13 +155,13 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
                     <div className="relative w-full md:w-48 h-48 md:h-auto border-b-4 md:border-b-0 md:border-r-4 border-black overflow-hidden bg-muted shrink-0">
                       <Image 
                         src={getAvatar(m.otherUser?.uid, m.otherUser?.photoURL)} 
-                        alt={m.otherUser?.name || 'User'} 
+                        alt={getDisplayName(m.otherUser)} 
                         fill 
                         className="object-cover"
                       />
                     </div>
                     <div className="flex-1 p-6 flex flex-col justify-center">
-                      <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tight">{m.otherUser?.name}</h3>
+                      <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tight">{getDisplayName(m.otherUser)}</h3>
                       <p className="text-sm font-bold text-muted-foreground mb-4">
                         {m.otherUser?.major} student looking to practice conversational {m.otherUser?.targetLanguage}.
                       </p>
@@ -197,14 +199,14 @@ export function MatchesTab({ profile, onChatOpen }: { profile: any, onChatOpen: 
                     <div className="relative h-64 w-full border-4 border-black overflow-hidden bg-muted mb-4">
                       <Image 
                         src={getAvatar(m.otherUser?.uid, m.otherUser?.photoURL)} 
-                        alt={m.otherUser?.name || 'User'} 
+                        alt={getDisplayName(m.otherUser)} 
                         fill 
                         className="object-cover"
                       />
                     </div>
                     
                     <div className="flex-1 text-left flex flex-col">
-                      <h3 className="text-2xl font-black uppercase italic tracking-tight">{m.otherUser?.name}</h3>
+                      <h3 className="text-2xl font-black uppercase italic tracking-tight">{getDisplayName(m.otherUser)}</h3>
                       <p className="text-sm font-bold text-muted-foreground mb-4">
                         {m.otherUser?.major} student looking to practice conversational {m.otherUser?.targetLanguage}.
                       </p>

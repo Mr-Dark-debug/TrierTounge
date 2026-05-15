@@ -88,6 +88,14 @@ export function ProfileTab({ profile }: { profile: any }) {
   };
 
   const displayYear = ['1', '2', '3', '4'].includes(String(profile.year)) ? `Year ${profile.year}` : profile.year;
+  const contactEntries = [
+    { label: 'Instagram', value: profile.instagram },
+    { label: 'Telegram', value: profile.telegram },
+    { label: 'WhatsApp', value: profile.whatsapp },
+    { label: 'Discord', value: profile.discord },
+    { label: 'Signal', value: profile.signal },
+    { label: profile.otherContactLabel || 'Other', value: profile.otherContactHandle },
+  ].filter(entry => entry.value);
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-10 duration-500 pb-12">
@@ -145,6 +153,7 @@ export function ProfileTab({ profile }: { profile: any }) {
               <h3 className="text-4xl font-black italic tracking-tighter uppercase leading-none mb-2">{profile.name}</h3>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{profile.major}</p>
               <p className="text-[10px] font-black text-primary uppercase">{displayYear}</p>
+              {profile.faculty && <p className="text-[10px] font-bold uppercase tracking-wider mt-2">{profile.faculty}</p>}
             </div>
             <div className="p-4 bg-primary/20 border-2 border-black border-dashed">
               <span className="text-[10px] font-black uppercase block mb-1">{t('profileCode')}</span>
@@ -226,7 +235,14 @@ export function ProfileTab({ profile }: { profile: any }) {
               <ShieldCheck className="h-10 w-10 text-black shrink-0" />
               <div>
                 <h4 className="font-black italic uppercase text-lg leading-none mb-1 text-black">{t('safetyPrivacy')}</h4>
-                <p className="text-sm font-bold text-black/80">Your handles (Instagram: {profile.instagram || 'None'}, Telegram: {profile.telegram || 'None'}) are shared only with mutual matches.</p>
+                <p className="text-sm font-bold text-black/80">
+                  {contactEntries.length > 0
+                    ? `Saved contact methods: ${contactEntries.map(entry => `${entry.label}: ${entry.value}`).join(' • ')}`
+                    : 'No contact handles saved yet.'}
+                </p>
+                <p className="text-xs font-bold uppercase mt-2 text-black/70">
+                  {profile.showContactOnMatch ? 'Configured to reveal handles after mutual match acceptance.' : 'Configured to keep handles visible on profile.'}
+                </p>
               </div>
             </div>
             <Link href="/settings">

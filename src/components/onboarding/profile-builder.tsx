@@ -39,6 +39,11 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
     availability: Array(21).fill(false),
     instagram: '',
     telegram: '',
+    whatsapp: '',
+    discord: '',
+    signal: '',
+    otherContactLabel: '',
+    otherContactHandle: '',
     showContactOnMatch: true
   });
 
@@ -57,7 +62,16 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
     if (step === 3) return formData.nativeLanguage && formData.targetLanguage;
     if (step === 4) return formData.academicGoals.trim().length >= 20 && formData.socialGoals.trim().length >= 20;
     if (step === 5) return formData.availability.some(v => v);
-    if (step === 6) return formData.instagram.trim() !== '' && formData.telegram.trim() !== '';
+    if (step === 6) {
+      return [
+        formData.instagram,
+        formData.telegram,
+        formData.whatsapp,
+        formData.discord,
+        formData.signal,
+        formData.otherContactHandle,
+      ].some(v => v.trim() !== '');
+    }
     return true;
   };
 
@@ -375,6 +389,51 @@ export function ProfileBuilder({ user, onComplete, onLogout }: ProfileBuilderPro
                         className="neo-input h-12"
                         value={formData.telegram}
                         onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="font-bold uppercase text-[10px] md:text-xs">WhatsApp</Label>
+                      <Input
+                        placeholder="+49..."
+                        className="neo-input h-12"
+                        value={formData.whatsapp}
+                        onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="font-bold uppercase text-[10px] md:text-xs">Discord</Label>
+                      <Input
+                        placeholder="@discord"
+                        className="neo-input h-12"
+                        value={formData.discord}
+                        onChange={(e) => setFormData({ ...formData, discord: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="font-bold uppercase text-[10px] md:text-xs">Signal</Label>
+                      <Input
+                        placeholder="+49..."
+                        className="neo-input h-12"
+                        value={formData.signal}
+                        onChange={(e) => setFormData({ ...formData, signal: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="font-bold uppercase text-[10px] md:text-xs">Other Contact Label</Label>
+                      <Input
+                        placeholder="e.g. WeChat"
+                        className="neo-input h-12"
+                        value={formData.otherContactLabel}
+                        onChange={(e) => setFormData({ ...formData, otherContactLabel: e.target.value })}
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <Label className="font-bold uppercase text-[10px] md:text-xs">Other Contact Handle</Label>
+                      <Input
+                        placeholder="Your handle or username"
+                        className="neo-input h-12"
+                        value={formData.otherContactHandle}
+                        onChange={(e) => setFormData({ ...formData, otherContactHandle: e.target.value })}
                       />
                     </div>
                   </div>

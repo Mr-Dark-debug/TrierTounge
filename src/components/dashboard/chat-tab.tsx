@@ -210,6 +210,8 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
     return `/avatars/${index}.jpg`;
   };
 
+  const getDisplayName = (user: any) => user?.name || user?.email?.split('@')[0] || 'Anonymous User';
+
   const handleContextMenu = (e: React.MouseEvent, matchId: string, otherUserId: string) => {
     e.preventDefault();
     setContextMenu({ x: e.clientX, y: e.clientY, matchId, otherUserId });
@@ -394,12 +396,12 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
                   <div className={cn("absolute left-0 top-0 bottom-0 w-1 bg-black transition-transform", isActive ? "scale-y-100" : "scale-y-0 group-hover:scale-y-50")} />
                   
                   <div className="relative h-12 w-12 md:h-14 md:w-14 border-2 border-black rounded-full overflow-hidden shrink-0 bg-white">
-                    <Image src={getAvatar(f.otherUser?.uid, f.otherUser?.photoURL)} alt={f.otherUser?.name || 'Avatar'} fill className="object-cover" />
+                    <Image src={getAvatar(f.otherUser?.uid, f.otherUser?.photoURL)} alt={getDisplayName(f.otherUser)} fill className="object-cover" />
                   </div>
                   
                   <div className="flex-1 min-w-0 flex flex-col justify-center">
                     <div className="flex justify-between items-baseline mb-1">
-                      <span className="font-black text-sm md:text-base uppercase truncate pr-2">{f.otherUser?.name || 'Anonymous User'}</span>
+                      <span className="font-black text-sm md:text-base uppercase truncate pr-2">{getDisplayName(f.otherUser)}</span>
                       {f.lastMessageAt && (
                         <span className="text-[9px] md:text-[10px] font-bold text-muted-foreground uppercase shrink-0">
                           {new Date(f.lastMessageAt.toMillis()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
@@ -453,12 +455,12 @@ export function ChatTab({ profile, initialChatId, privateKey }: { profile: any, 
                 </Button>
                 
                 <div className="relative h-10 w-10 md:h-12 md:w-12 border-2 border-black rounded-full overflow-hidden shrink-0 bg-muted">
-                  <Image src={getAvatar(chatUser?.uid, chatUser?.photoURL)} alt={chatUser?.name || 'Avatar'} fill className="object-cover" />
+                  <Image src={getAvatar(chatUser?.uid, chatUser?.photoURL)} alt={getDisplayName(chatUser)} fill className="object-cover" />
                 </div>
                 
                 <div className="flex flex-col min-w-0">
                   <h2 className="text-lg md:text-xl font-black italic uppercase tracking-tight truncate">
-                    {chatUser?.name || 'Loading...'}
+                    {chatUser ? getDisplayName(chatUser) : 'Loading...'}
                   </h2>
                   <div className={cn(
                     "text-[10px] font-bold uppercase flex items-center gap-1",

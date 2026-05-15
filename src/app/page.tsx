@@ -84,8 +84,8 @@ export default function Home() {
     return <LandingPage onGetStarted={() => setShowAuth(true)} />;
   }
 
-  // Logged in but email NOT verified
-  if (!profile?.isVerified && !justVerified) {
+  // Only send users to OTP when the profile explicitly says verification is still pending.
+  if (profile?.isVerified === false && !justVerified) {
     return <EmailVerification user={user} onVerified={handleVerified} onLogout={handleLogout} />;
   }
 

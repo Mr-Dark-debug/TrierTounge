@@ -195,18 +195,18 @@ function StudentModal({ student, avatarSrc, onMatch, isMatchPending, displayName
            </div>
            <div className="p-4 border-2 border-black bg-[#fafafa]">
              <h3 className="font-black uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
-               <Sparkles className="h-4 w-4" /> Interests
+               <Sparkles className="h-4 w-4" /> Social Goals
              </h3>
              <p className="font-bold uppercase text-sm">
-               {student.hobbies || student.interests || 'Not specified'}
+               {student.socialGoals || 'Not specified'}
              </p>
            </div>
         </div>
 
         <div>
-          <h3 className="font-black uppercase tracking-widest text-xs mb-3">About {displayName}</h3>
+          <h3 className="font-black uppercase tracking-widest text-xs mb-3">Academic Goals</h3>
           <p className="font-medium whitespace-pre-wrap p-4 border-2 border-black border-dashed bg-white">
-            {student.bio || student.about || 'This user has not written a bio yet.'}
+            {student.academicGoals || 'This user has not added their academic goals yet.'}
           </p>
         </div>
         
