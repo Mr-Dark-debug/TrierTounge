@@ -25,6 +25,21 @@ export default function Home() {
 
   const { data: profile, loading: profileLoading } = useDoc(profileRef);
 
+  useEffect(() => {
+    if (!db || !user || !profileRef) return;
+
+    const resolvedName = profile?.name || user.displayName || user.email?.split('@')[0];
+    if (!resolvedName) return;
+
+    if (profile?.name !== resolvedName || profile?.email !== user.email || profile?.uid !== user.uid) {
+      setDoc(profileRef, {
+        uid: user.uid,
+        email: user.email,
+        name: resolvedName,
+      }, { merge: true });
+    }
+  }, [db, user, profile, profileRef]);
+
   const handleLogout = async () => {
     if (auth) {
       await signOut(auth);
@@ -37,15 +52,17 @@ export default function Home() {
     if (!db || !user) return;
     
     const profileCode = profile?.profileCode || `#${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    const resolvedName = profile?.name || user.displayName || user.email?.split('@')[0] || 'New User';
     
     const fullProfile = {
       ...updatedData,
       uid: user.uid,
       email: user.email,
+      name: resolvedName,
       profileCode,
       isVerified: true,
       onboardingCompleted: true,
-      createdAt: new Date().toISOString()
+      createdAt: profile?.createdAt || new Date().toISOString()
     };
 
     setDoc(doc(db, 'users', user.uid), fullProfile, { merge: true });
@@ -80,4 +97,3 @@ export default function Home() {
   // Logged in, verified, and complete
   return <DashboardView profile={profile} onLogout={handleLogout} />;
 }
-

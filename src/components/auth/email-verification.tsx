@@ -115,7 +115,8 @@ export function EmailVerification({ user, onVerified, onLogout }: EmailVerificat
           isVerified: true,
           verifiedAt: Timestamp.now(),
           email: user.email,
-          uid: user.uid
+          uid: user.uid,
+          name: user.displayName || user.email?.split('@')[0] || ''
         }, { merge: true });
       }
 

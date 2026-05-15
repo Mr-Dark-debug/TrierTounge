@@ -31,6 +31,7 @@ export default function SettingsPage() {
   useEffect(() => {
     if (profile) {
       setFormData({
+        name: profile.name || '',
         academicGoals: profile.academicGoals || '',
         socialGoals: profile.socialGoals || '',
         instagram: profile.instagram || '',
@@ -108,6 +109,15 @@ export default function SettingsPage() {
         <section className="md:col-span-2 space-y-8">
           <div className="neo-card bg-white p-8 space-y-6">
             <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="font-bold uppercase text-xs">Name</Label>
+                <Input 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="neo-input"
+                  placeholder="Your full name"
+                />
+              </div>
               <div className="space-y-2">
                 <Label className="font-bold uppercase text-xs">Academic Goals</Label>
                 <Textarea 

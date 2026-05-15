@@ -35,7 +35,7 @@ export function MatchCard({ currentUser, student, viewMode = 'grid' }: MatchCard
       setIsMatchPending(true);
       toast({
         title: "Friend Request Sent!",
-        description: `Waiting for ${student.name} to accept.`
+        description: `Waiting for ${displayName} to accept.`
       });
     } catch (e: any) {
       toast({
@@ -57,6 +57,10 @@ export function MatchCard({ currentUser, student, viewMode = 'grid' }: MatchCard
     return `/avatars/${index}.jpg`;
   }, [student]);
 
+  const displayName = useMemo(() => {
+    return student.name || student.email?.split('@')[0] || 'Anonymous User';
+  }, [student.email, student.name]);
+
   if (viewMode === 'list') {
     return (
       <Dialog>
@@ -64,10 +68,10 @@ export function MatchCard({ currentUser, student, viewMode = 'grid' }: MatchCard
           <div className="w-full bg-white rounded-[1rem] p-4 flex items-center justify-between border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform cursor-pointer gap-4">
             <div className="flex items-center gap-4">
               <div className="relative w-12 h-12 md:w-16 md:h-16 border-2 border-black rounded-full overflow-hidden shrink-0 bg-muted">
-                 <Image src={avatarSrc} alt={student.name || 'Avatar'} fill className="object-cover" />
+                 <Image src={avatarSrc} alt={displayName} fill className="object-cover" />
               </div>
               <div className="text-left">
-                <p className="font-black uppercase text-lg md:text-xl italic leading-tight">{student.name || 'Anonymous User'}</p>
+                <p className="font-black uppercase text-lg md:text-xl italic leading-tight">{displayName}</p>
                 <p className="text-xs font-bold uppercase text-muted-foreground">{student.major}</p>
               </div>
             </div>
@@ -89,7 +93,7 @@ export function MatchCard({ currentUser, student, viewMode = 'grid' }: MatchCard
             </Button>
           </div>
         </DialogTrigger>
-        <StudentModal student={student} avatarSrc={avatarSrc} onMatch={handleMatchRequest} isMatchPending={isMatchPending} />
+        <StudentModal student={student} avatarSrc={avatarSrc} onMatch={handleMatchRequest} isMatchPending={isMatchPending} displayName={displayName} />
       </Dialog>
     );
   }
@@ -110,7 +114,7 @@ export function MatchCard({ currentUser, student, viewMode = 'grid' }: MatchCard
                 </div>
               </header>
               <div className="flex-1 flex flex-col justify-end">
-                <p className="mt-4 mb-2 text-3xl md:text-4xl font-black uppercase italic leading-none">{student.name || 'Anonymous User'}</p>
+                <p className="mt-4 mb-2 text-3xl md:text-4xl font-black uppercase italic leading-none">{displayName}</p>
               </div>
             </section>
             
@@ -140,12 +144,12 @@ export function MatchCard({ currentUser, student, viewMode = 'grid' }: MatchCard
           </article>
         </div>
       </DialogTrigger>
-      <StudentModal student={student} avatarSrc={avatarSrc} onMatch={handleMatchRequest} isMatchPending={isMatchPending} />
+      <StudentModal student={student} avatarSrc={avatarSrc} onMatch={handleMatchRequest} isMatchPending={isMatchPending} displayName={displayName} />
     </Dialog>
   );
 }
 
-function StudentModal({ student, avatarSrc, onMatch, isMatchPending }: any) {
+function StudentModal({ student, avatarSrc, onMatch, isMatchPending, displayName }: any) {
   const [copied, setCopied] = useState(false);
   
   const handleCopyCode = () => {
@@ -167,10 +171,10 @@ function StudentModal({ student, avatarSrc, onMatch, isMatchPending }: any) {
          </button>
          <div className="flex flex-col md:flex-row items-center gap-6 mt-4 sm:mt-0">
            <div className="relative w-32 h-32 md:w-40 md:h-40 border-4 border-black rounded-full overflow-hidden bg-white shadow-neo shrink-0">
-             <Image src={avatarSrc} alt={student.name || 'Avatar'} fill className="object-cover" />
+             <Image src={avatarSrc} alt={displayName} fill className="object-cover" />
            </div>
            <div className="text-center md:text-left flex-1">
-             <DialogTitle className="text-4xl md:text-6xl font-black uppercase italic leading-none mb-2">{student.name || 'Anonymous User'}</DialogTitle>
+             <DialogTitle className="text-4xl md:text-6xl font-black uppercase italic leading-none mb-2">{displayName}</DialogTitle>
              <p className="text-xl font-bold uppercase italic text-muted-foreground flex items-center justify-center md:justify-start gap-2">
                <GraduationCap className="h-5 w-5" /> {student.major}
              </p>
@@ -200,7 +204,7 @@ function StudentModal({ student, avatarSrc, onMatch, isMatchPending }: any) {
         </div>
 
         <div>
-          <h3 className="font-black uppercase tracking-widest text-xs mb-3">About {student.name || 'Anonymous User'}</h3>
+          <h3 className="font-black uppercase tracking-widest text-xs mb-3">About {displayName}</h3>
           <p className="font-medium whitespace-pre-wrap p-4 border-2 border-black border-dashed bg-white">
             {student.bio || student.about || 'This user has not written a bio yet.'}
           </p>

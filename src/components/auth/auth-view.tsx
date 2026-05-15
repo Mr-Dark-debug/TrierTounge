@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Languages, GraduationCap, MapPin, ArrowLeft, ArrowRight, MessageSquare, Eye, EyeOff, Check, X } from 'lucide-react';
-import { useAuth } from '@/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useAuth, useFirestore } from '@/firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { LanguageSwitcher } from '@/components/ui/language-switcher';
 import { useLanguage } from '@/context/language-context';
@@ -25,6 +26,7 @@ export function AuthView({ onBack }: { onBack: () => void }) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
+  const db = useFirestore();
   const { toast } = useToast();
   const { t } = useLanguage();
 
@@ -78,7 +80,25 @@ export function AuthView({ onBack }: { onBack: () => void }) {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const normalizedName = name.trim();
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+
+        if (normalizedName) {
+          await updateProfile(credential.user, {
+            displayName: normalizedName,
+          });
+        }
+
+        if (db) {
+          await setDoc(doc(db, 'users', credential.user.uid), {
+            uid: credential.user.uid,
+            email: credential.user.email,
+            name: normalizedName || credential.user.email?.split('@')[0] || '',
+            isVerified: false,
+            onboardingCompleted: false,
+            createdAt: serverTimestamp(),
+          }, { merge: true });
+        }
       }
     } catch (error: any) {
       let friendlyMessage = error.message;
